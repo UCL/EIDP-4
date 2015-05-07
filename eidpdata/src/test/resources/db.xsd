@@ -28,125 +28,147 @@ limitations under the License.
     </xs:element>
     
     <xs:complexType name="dataset-type">
-        <xs:sequence>
-            <xs:element name="database-id" type="xs:string" minOccurs="0" />
-            <xs:element name="table" type="table-type" minOccurs="0" maxOccurs="1" />
-            <xs:element name="method" type="method-type" minOccurs="1" maxOccurs="unbounded" />
-        </xs:sequence>
+        <xs:choice>
+            <xs:group ref="dataset-local" maxOccurs="1" />
+            <xs:group ref="dataset-remote" maxOccurs="1" />
+        </xs:choice>
         <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>
+    
+    <xs:group name="dataset-local">
+        <xs:sequence>
+            <xs:element name="table" type="table-type" minOccurs="1" maxOccurs="1" />
+            <xs:element name="method" type="method-local-type" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:group>
+    
+    <xs:group name="dataset-remote">
+        <xs:sequence>
+            <xs:element name="database-id" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="method" type="method-remote-type" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:group>
     
     <xs:complexType name="table-type">
         <xs:sequence>
             <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="field" type="field-type" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="field" type="table-field-type" minOccurs="1" maxOccurs="unbounded" />
             <xs:element name="primary-key" type="xs:string" />
-            <xs:element name="primary-key-generation">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="SERIAL-SEQ" />
-                        <xs:enumeration value="SERIAL" />
-                        <xs:enumeration value="AUTO-STRING" />
-                        <xs:enumeration value="GUID-TO-FILL" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
+            <xs:element name="primary-key-generation" />
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="field-type">
+    <xs:simpleType name="primary-key-generation-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SERIAL-SEQ" />
+            <xs:enumeration value="SERIAL" />
+            <xs:enumeration value="AUTO-STRING" />
+            <xs:enumeration value="GUID-TO-FILL" />
+        </xs:restriction>
+    </xs:simpleType>
+                
+    <xs:complexType name="table-field-type">
         <xs:sequence>
             <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="type" minOccurs="1" maxOccurs="1">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="String" />
-                        <xs:enumeration value="Integer" />
-                        <xs:enumeration value="Float" />
-                        <xs:enumeration value="Date" />
-                        <xs:enumeration value="Time" />
-                        <xs:enumeration value="Timestamp" />
-                        <xs:enumeration value="Double" />
-                        <xs:enumeration value="Long" />
-                        <xs:enumeration value="Boolean" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
+            <xs:element name="type" type="table-field-type-type" minOccurs="1" maxOccurs="1" />
             <xs:element name="size" type="xs:int" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>
 
-    <xs:complexType name="method-type">
+    <xs:simpleType name="table-field-type-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="String" />
+            <xs:enumeration value="Integer" />
+            <xs:enumeration value="Float" />
+            <xs:enumeration value="Date" />
+            <xs:enumeration value="Time" />
+            <xs:enumeration value="Timestamp" />
+            <xs:enumeration value="Double" />
+            <xs:enumeration value="Long" />
+            <xs:enumeration value="Boolean" />
+        </xs:restriction>
+    </xs:simpleType>
+                
+    <xs:complexType name="method-local-type">
+        <xs:complexContent>
+            <xs:extension base="method-remote-type">
+                <xs:sequence>
+                    <xs:element name="type" type="method-type-type" minOccurs="0" maxOccurs="1" />
+                    <xs:element name="fields" type="method-fields-type" minOccurs="0" maxOccurs="1" />
+                    <xs:element name="for" type="method-for-type" minOccurs="0" maxOccurs="unbounded" />     
+                    <xs:element name="order" type="method-order-type" minOccurs="0" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="method-remote-type">
         <xs:sequence>
             <xs:element name="role-name" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="type" minOccurs="0" maxOccurs="1">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="get" />
-                        <xs:enumeration value="set" />
-                        <xs:enumeration value="remove" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="fields" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="for" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element name="type">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:string">
-                                    <xs:enumeration value="and" />
-                                    <xs:enumeration value="or" />
-                                    <xs:enumeration value="not" />
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                        <xs:element name="field" type="xs:string" />
-                        <xs:element name="operator">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:string">
-                                    <xs:enumeration value="equal" />
-                                    <xs:enumeration value="notequal" />
-                                    <xs:enumeration value="like" />
-                                    <xs:enumeration value="isnull" />
-                                    <xs:enumeration value="isnotnull" />
-                                    <xs:enumeration value="gt" />
-                                    <xs:enumeration value="get" />
-                                    <xs:enumeration value="lt" />
-                                    <xs:enumeration value="let" />
-                                    <xs:enumeration value="similarto" />
-                                    <xs:enumeration value="fuzzy" />
-                                    <xs:enumeration value="in" />
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>                        
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="order" minOccurs="0">
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element name="field" type="xs:string" />
-                        <xs:element name="sorting">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:string">
-                                    <xs:enumeration value="ASC" />
-                                    <xs:enumeration value="DESC" />
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>
     
+    <xs:simpleType name="method-type-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="get" />
+            <xs:enumeration value="set" />
+            <xs:enumeration value="remove" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="method-fields-type">
+        <xs:sequence>
+            <xs:element name="field" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+                    
+    <xs:complexType name="method-for-type">
+        <xs:all>
+            <xs:element name="type" type="method-for-type-type" />
+            <xs:element name="field" type="xs:string" />
+            <xs:element name="operator" type="method-for-operator-type" />                   
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:simpleType name="method-for-type-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="and" />
+            <xs:enumeration value="or" />
+            <xs:enumeration value="not" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="method-for-operator-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="equal" />
+            <xs:enumeration value="notequal" />
+            <xs:enumeration value="like" />
+            <xs:enumeration value="isnull" />
+            <xs:enumeration value="isnotnull" />
+            <xs:enumeration value="gt" />
+            <xs:enumeration value="get" />
+            <xs:enumeration value="lt" />
+            <xs:enumeration value="let" />
+            <xs:enumeration value="similarto" />
+            <xs:enumeration value="fuzzy" />
+            <xs:enumeration value="in" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="method-order-type">
+        <xs:all>
+            <xs:element name="field" type="xs:string" />
+            <xs:element name="sorting" type="method-order-sorting-type" />
+        </xs:all>
+    </xs:complexType>
+    
+    <xs:simpleType name="method-order-sorting-type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ASC" />
+            <xs:enumeration value="DESC" />
+        </xs:restriction>
+    </xs:simpleType>
+                
 </xs:schema>
