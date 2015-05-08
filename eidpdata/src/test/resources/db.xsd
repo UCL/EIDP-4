@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<xs:schema version="1.0"
+<xs:schema version="1.1"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified">
 
@@ -38,14 +38,14 @@ limitations under the License.
     <xs:group name="dataset-local">
         <xs:sequence>
             <xs:element name="table" type="table-type" minOccurs="1" maxOccurs="1" />
-            <xs:element name="method" type="method-local-type" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="method" type="method-type" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:group>
     
     <xs:group name="dataset-remote">
         <xs:sequence>
             <xs:element name="database-id" type="xs:string" minOccurs="1" maxOccurs="1" />
-            <xs:element name="method" type="method-remote-type" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="method" type="method-type" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:group>
     
@@ -90,22 +90,13 @@ limitations under the License.
         </xs:restriction>
     </xs:simpleType>
                 
-    <xs:complexType name="method-local-type">
-        <xs:complexContent>
-            <xs:extension base="method-remote-type">
-                <xs:sequence>
-                    <xs:element name="type" type="method-type-type" minOccurs="0" maxOccurs="1" />
-                    <xs:element name="fields" type="method-fields-type" minOccurs="0" maxOccurs="1" />
-                    <xs:element name="for" type="method-for-type" minOccurs="0" maxOccurs="unbounded" />     
-                    <xs:element name="order" type="method-order-type" minOccurs="0" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="method-remote-type">
+    <xs:complexType name="method-type">
         <xs:sequence>
             <xs:element name="role-name" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="type" type="method-type-type" minOccurs="0" maxOccurs="1" />
+            <xs:element name="fields" type="method-fields-type" minOccurs="0" maxOccurs="1" />
+            <xs:element name="for" type="method-for-type" minOccurs="0" maxOccurs="unbounded" />     
+            <xs:element name="order" type="method-order-type" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>
