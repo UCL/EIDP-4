@@ -13,3 +13,5 @@ hs_err_pid*
 
 # use Ivy instead of Maven
 pom.xml
+/eidpdata/target/
+/.nb-gradle/private/
