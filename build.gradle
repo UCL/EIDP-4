@@ -1,21 +1,41 @@
 subprojects {
-   apply plugin: 'java'
-   group = 'uk.ac.ucl.eidp'
-   version = '4.0'
-   repositories {
-      mavenCentral()
-   }
-   dependencies {
-      testCompile 'org.testng:testng:6.8.21'
-   }
+    apply plugin: 'java'
+    group = 'uk.ac.ucl.eidp'
+    version = '4.0'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        testCompile 'org.testng:testng:6.8.21', 'org.mockito:mockito-core:1.10.19'
+    }
 }
 
 project('eidpdata') {
 
-   task runXJC(type:Exec) {
-      workingDir 'src/test'
-      executable 'xjc'
-      args '-d','java','-p','uk.ac.ucl.eidptest.data','resources/db.xsd'
-   }
+    task runXJC(type:Exec) {
+        workingDir 'src/test'
+        executable 'xjc'
+        args '-d','java','-p','uk.ac.ucl.eidptest.data.jaxb','-b','resources/bindings.xml','resources/db.xsd'
+    }
+    
+    task cleanAfterXJC(type: Delete) {
+        String prefix = 'src/test/java/uk/ac/ucl/eidptest/data/'
+        delete prefix + 'DatasetType.java',
+                prefix + 'Db.java',
+                prefix + 'MethodFieldsType.java',
+                prefix + 'MethodForOperatorType.java',
+                prefix + 'MethodForType.java',
+                prefix + 'MethodForTypeType.java',
+                prefix + 'MethodOrderSortingType.java',
+                prefix + 'MethodOrderType.java',
+                prefix + 'MethodType.java',
+                prefix + 'MethodTypeType.java',
+                prefix + 'ObjectFactory.java',
+                prefix + 'PrimaryKeyGenerationType.java',
+                prefix + 'TableFieldType.java',
+                prefix + 'TableFieldTypeType.java',
+                prefix + 'TableType.java'
+        
+    }
 
 }
