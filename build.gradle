@@ -12,13 +12,13 @@ subprojects {
 
 project('eidpdata') {
 
-    task runXJC(type:Exec) {
+    task runXJCTest(type:Exec) {
         workingDir 'src/test'
         executable 'xjc'
         args '-d','java','-p','uk.ac.ucl.eidptest.data.jaxb','-b','resources/bindings.xml','resources/db.xsd'
     }
     
-    task cleanAfterXJC(type: Delete) {
+    task cleanAfterXJCTest(type: Delete) {
         String prefix = 'src/test/java/uk/ac/ucl/eidptest/data/'
         delete prefix + 'DatasetType.java',
                 prefix + 'Db.java',
@@ -36,6 +36,12 @@ project('eidpdata') {
                 prefix + 'TableFieldTypeType.java',
                 prefix + 'TableType.java'
         
+    }
+    
+    task runXJCMain(type:Exec) {
+        workingDir 'src/main'
+        executable 'xjc'
+        args '-d','java','-p','uk.ac.ucl.eidp.data.jaxb','-b','resources/bindings.xml','resources/db.xsd'
     }
 
 }
