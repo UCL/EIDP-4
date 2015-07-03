@@ -15,11 +15,16 @@
  */
 package uk.ac.ucl.eidp.data;
 
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.stream.StreamSource;
+import uk.ac.ucl.eidp.data.jaxb.DatasetType;
 
 /**
  *
@@ -27,17 +32,36 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class JaxbSqlGenerator implements SqlGenerator {
 
+    private String contextCache = "";
+    private final XMLInputFactory xif = XMLInputFactory.newFactory();
+    private final String datasettag = "dataset";
+    
     @Override
-    public String getSqlStatement(String methodpath) {
+    public String getSqlStatement(String methodPath) {
+        
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("methodpath is invalid");
+        
+        DatasetType datasetType;
+        
+        if (!contextCache.equals(methodPath.split(".")[0])) {
+            XMLStreamReader xsr;
+            contextCache = methodPath.split(".")[0];
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(contextCache + "/resources/db.xml")){               
+                xsr = xif.createXMLStreamReader(is, "UTF-8");
+            } catch (XMLStreamException | IOException ex) {
+                throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context", ex);
+            }
+            try {
+                JAXBContext jc = JAXBContext.newInstance(DatasetType.class);
+                Unmarshaller unmarshaller = jc.createUnmarshaller();
+                JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
+                datasetType = jb.getValue();
+            } catch (JAXBException ex) {
+                throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
+            }
+        }
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
- 
-    private XMLStreamReader generateXMLStreamReader() throws XMLStreamException {
-        XMLInputFactory xif = XMLInputFactory.newFactory();
-        StreamSource xml = new StreamSource("src/test/resources/db.xml");
-        XMLStreamReader xsr = xif.createXMLStreamReader(xml);
-
-        return xsr;
     }
 }
