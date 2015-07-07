@@ -27,6 +27,8 @@ import javax.xml.transform.stream.StreamSource;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
+import uk.ac.ucl.eidp.data.SqlGenerator;
+import uk.ac.ucl.eidp.data.SqlGeneratorFactory;
 import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
 
 /**
@@ -41,6 +43,13 @@ public class DbXmlParsing {
     public DbXmlParsing() {
     }
 
+    @Test
+    public void getSqlStatement() {
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        String statement = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin");
+    }
+    
     @Test
     public void staxParse() throws XMLStreamException {  
 

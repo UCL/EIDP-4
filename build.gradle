@@ -41,7 +41,7 @@ project('eidpdata') {
     task runXJCMain(type:Exec) {
         workingDir 'src/main'
         executable 'xjc'
-        args '-d','java','-p','uk.ac.ucl.eidp.data.jaxb','-b','resources/bindings.xml','resources/db.xsd'
+        args '-d','java','-p','uk.ac.ucl.eidp.data.jaxb','-b','resources/META-INF/jaxb/bindings.xml','resources/META-INF/jaxb/db.xsd'
     }
 
 }

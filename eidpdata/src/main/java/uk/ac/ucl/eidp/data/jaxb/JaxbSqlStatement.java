@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.ucl.eidp.data;
+package uk.ac.ucl.eidp.data.jaxb;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public interface SqlGenerator {
+public abstract class JaxbSqlStatement {
     
-    public String getSqlStatement(String methodpath);
+    public String buildStatement(DatasetType datasetType, String method) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
-    public void setSqlDialect(String sqlDialect);
-
 }

@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.ucl.eidp.data;
+package uk.ac.ucl.eidp.data.jaxb;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public interface SqlGenerator {
+public class JaxbSqlAnsi extends JaxbSqlStatement {
     
-    public String getSqlStatement(String methodpath);
-    
-    public void setSqlDialect(String sqlDialect);
-
 }
