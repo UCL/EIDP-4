@@ -19,10 +19,10 @@ package uk.ac.ucl.eidp.data.jaxb;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class JaxbSqlPostgresql extends JaxbSqlStatement {
+public class JaxbSqlPostgresql extends JaxbSqlAnsi {
 
     @Override
-    protected String buildGetStatement() {
+    public String buildGetStatement() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

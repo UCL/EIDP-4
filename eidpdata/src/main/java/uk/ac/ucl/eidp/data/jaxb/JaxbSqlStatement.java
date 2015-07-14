@@ -21,16 +21,19 @@ package uk.ac.ucl.eidp.data.jaxb;
  */
 public abstract class JaxbSqlStatement {
     
+    protected TableType tableType;
     protected MethodType methodType;
     
     public String buildStatement(DatasetType datasetType, String method) {
+        this.tableType = datasetType.getTable();
         methodType = datasetType.getMethod().stream().filter(
                 m -> (m.getId() == null ? method == null : m.getId().equals(method))
         ).findFirst().get();
         
         switch (methodType.getType()) {
             case GET:
-                throw new UnsupportedOperationException("GET Not supported yet.");
+                return buildGetStatement();
+//                throw new UnsupportedOperationException("GET Not supported yet.");
             case SET:
                 throw new UnsupportedOperationException("SET Not supported yet.");
             case REMOVE:
@@ -40,5 +43,15 @@ public abstract class JaxbSqlStatement {
     }
     
     protected abstract String buildGetStatement();
+    
+    protected String translateId(String id) {
+        String tid;
+        tid = tableType.getField().stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .get()
+                .getName();
+        return tid;
+    }
     
 }

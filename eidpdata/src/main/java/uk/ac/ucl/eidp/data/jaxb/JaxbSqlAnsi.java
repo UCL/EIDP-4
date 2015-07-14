@@ -15,6 +15,9 @@
  */
 package uk.ac.ucl.eidp.data.jaxb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
@@ -23,7 +26,40 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
 
     @Override
     protected String buildGetStatement() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder stm = new StringBuilder("SELECT ");
+
+        List<String> queryFields = new ArrayList<>();
+        methodType.getFields().getField().forEach((String f) -> {
+            queryFields.add(translateId(f));
+        });
+        
+        stm.append(String.join(", ", queryFields));
+        stm.append(" FROM ").append(tableType.getName());
+        
+        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
+        methodType.getFor().forEach((MethodForType m) -> {
+            stm.append(translateId(m.getField()));
+            switch (m.getOperator()) {
+                case EQUAL : stm.append(Operator.EQUAL.getOperator());
+            }
+        });
+        
+        return stm.toString();
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    protected enum Operator {
+        
+        EQUAL(" = ");
+        
+        private final String operator;
+        
+        Operator(String operator) {
+            this.operator = operator;
+        }
+        
+        public String getOperator() {
+            return operator;
+        }
+    }
 }

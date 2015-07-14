@@ -29,8 +29,7 @@ limitations under the License.
     
     <xs:complexType name="dataset-type">
         <xs:sequence>
-            <xs:element name="database-id" type="xs:string" minOccurs="0" maxOccurs="1" />
-            <xs:element name="table" type="table-type" minOccurs="0" maxOccurs="1" />
+            <xs:element name="table" type="table-type" minOccurs="1" maxOccurs="1" />
             <xs:element name="method" type="method-type" minOccurs="1" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />

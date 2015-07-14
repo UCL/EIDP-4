@@ -48,6 +48,7 @@ public class DbXmlParsing {
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         String statement = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin");
+        System.out.println(statement);
     }
     
     @Test

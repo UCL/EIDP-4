@@ -84,7 +84,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
             Logger.getLogger(JaxbSqlGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
         }
         
-        JaxbSqlStatement jaxbSqlStatement = null;
+        JaxbSqlStatement jaxbSqlStatement;
         try {
             jaxbSqlStatement = (JaxbSqlStatement) Class.forName(SQL_DIALECT).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
