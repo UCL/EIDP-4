@@ -15,13 +15,15 @@
  */
 package uk.ac.ucl.eidp.data;
 
+import java.util.Map;
+
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
 public interface SqlGenerator {
     
-    public String getSqlStatement(String methodpath);
+    public String getSqlStatement(String methodpath, Map<String, String> parametermap);
     
     public void setSqlDialect(String sqlDialect);
 

@@ -15,6 +15,8 @@
  */
 package uk.ac.ucl.eidp.data.jaxb;
 
+import java.util.Map;
+
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
@@ -23,9 +25,11 @@ public abstract class JaxbSqlStatement {
     
     protected TableType tableType;
     protected MethodType methodType;
+    protected Map<String, String> parametermap;
     
-    public String buildStatement(DatasetType datasetType, String method) {
+    public String buildStatement(DatasetType datasetType, String method, Map<String, String> parametermap) {
         this.tableType = datasetType.getTable();
+        this.parametermap = parametermap;
         methodType = datasetType.getMethod().stream().filter(
                 m -> (m.getId() == null ? method == null : m.getId().equals(method))
         ).findFirst().get();
@@ -52,6 +56,15 @@ public abstract class JaxbSqlStatement {
                 .get()
                 .getName();
         return tid;
+    }
+    
+    protected boolean isQuotation(String id) {
+        return tableType.getField().stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .get()
+                .getType()
+                .value().matches("String|Date|Timestamp");
     }
     
 }

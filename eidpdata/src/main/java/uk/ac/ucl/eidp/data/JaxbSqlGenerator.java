@@ -17,6 +17,7 @@ package uk.ac.ucl.eidp.data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -42,7 +43,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
     private String SQL_DIALECT = "";
     
     @Override
-    public String getSqlStatement(String methodPath) {
+    public String getSqlStatement(String methodPath, Map<String, String> parametermap) {
         
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
             throw new IllegalArgumentException("methodpath is invalid");
@@ -92,7 +93,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
             jaxbSqlStatement = new JaxbSqlAnsi();
         }
         
-        return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2]);
+        return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2], parametermap);
 
     }
 

@@ -15,6 +15,8 @@
  */
 package uk.ac.ucl.eidptest.data;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -47,7 +49,9 @@ public class DbXmlParsing {
     public void getSqlStatement() {
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        String statement = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin");
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "usertest");
+        String statement = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin", m);
         System.out.println(statement);
     }
     

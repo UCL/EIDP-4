@@ -42,9 +42,14 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             switch (m.getOperator()) {
                 case EQUAL : stm.append(Operator.EQUAL.getOperator());
             }
+            if (isQuotation(m.getField())) {
+                stm.append("'").append(parametermap.get(m.getField())).append("'");
+            } else {
+                stm.append(parametermap.get(m.getField()));
+            }
         });
         
-        return stm.toString();
+        return stm.append(";").toString();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
