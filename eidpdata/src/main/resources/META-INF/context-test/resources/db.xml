@@ -29,6 +29,11 @@
 	  <field>login</field>
 	  <operator>equal</operator>
 	</for>
+        <for>
+	  <type>and</type>
+	  <field>center_id</field>
+	  <operator>equal</operator>
+	</for>
       </method>
       <!-- no role-name required since this is an EIDP auth method -->
       <method id="setLoginError">

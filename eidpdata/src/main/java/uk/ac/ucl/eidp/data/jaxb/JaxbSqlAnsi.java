@@ -91,6 +91,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     protected String generateWhereClause() {
         StringBuilder stm = new StringBuilder(" WHERE ");
         methodType.getFor().forEach((MethodForType m) -> {
+            if (!stm.substring(stm.length() - 6).equals("WHERE ")) stm.append(" ").append(m.getType()).append(" ");
             stm.append(translateId(m.getField()));
             switch (m.getOperator()) {
                 case EQUAL : stm.append(Operator.EQUAL.getOperator());

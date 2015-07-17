@@ -80,6 +80,17 @@ public class DbXmlParsing {
     }
     
     @Test
+    public void whereClause() {
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("center_id", "10000");
+        String generated = sqlGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin", m);
+        System.out.println(generated);
+    }
+    
+    @Test
     public void staxParse() throws XMLStreamException {  
 
         XMLStreamReader msr = mock(XMLStreamReader.class);
