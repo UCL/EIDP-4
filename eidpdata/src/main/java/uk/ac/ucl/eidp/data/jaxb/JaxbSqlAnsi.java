@@ -50,7 +50,60 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         });
         
         return stm.append(";").toString();
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected String buildSetStatement() {
+        StringBuilder stm = new StringBuilder("UPDATE ");
+        stm.append(tableType.getName()).append(" SET ");
+        
+        methodType.getFields().getField().forEach((String f) -> {
+            if (!stm.substring(stm.length() - 4).equals("SET ")) stm.append(", ");
+            stm.append(f);
+            stm.append(" = ");
+            if (isQuotation(f)) {
+                stm.append("'").append(parametermap.get(f)).append("'");
+            } else {
+                stm.append(parametermap.get(f));
+            }
+        });
+        
+        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
+        methodType.getFor().forEach((MethodForType m) -> {
+            stm.append(translateId(m.getField()));
+            switch (m.getOperator()) {
+                case EQUAL : stm.append(Operator.EQUAL.getOperator());
+            }
+            if (isQuotation(m.getField())) {
+                stm.append("'").append(parametermap.get(m.getField())).append("'");
+            } else {
+                stm.append(parametermap.get(m.getField()));
+            }
+        });
+        
+        stm.append(";INSERT INTO ");
+        stm.append(tableType.getName()).append(" (");
+        methodType.getFields().getField().forEach((String f) -> {
+            stm.append(f);
+            stm.append(", ");
+        });
+        stm.append(tableType.getPrimaryKey());
+        stm.append(") VALUES (");
+        methodType.getFields().getField().forEach((String f) -> {
+            if (isQuotation(f)) {
+                stm.append("'").append(parametermap.get(f)).append("'");
+            } else {
+                stm.append(parametermap.get(f));
+            }
+            stm.append(", ");
+        });
+        stm.append("nextval('").append(generateId()).append("'))");
+        return stm.append(";").toString();
+    }
+    
+    protected String generateId() {
+        String sequenceName = tableType.getName() + "_id_seq";
+        return sequenceName;
     }
     
     protected enum Operator {

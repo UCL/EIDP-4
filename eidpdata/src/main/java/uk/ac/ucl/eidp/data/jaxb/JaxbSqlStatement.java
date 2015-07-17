@@ -37,9 +37,8 @@ public abstract class JaxbSqlStatement {
         switch (methodType.getType()) {
             case GET:
                 return buildGetStatement();
-//                throw new UnsupportedOperationException("GET Not supported yet.");
             case SET:
-                throw new UnsupportedOperationException("SET Not supported yet.");
+                return buildSetStatement();
             case REMOVE:
                 throw new UnsupportedOperationException("REMOVE Not supported yet.");
         }
@@ -47,6 +46,8 @@ public abstract class JaxbSqlStatement {
     }
     
     protected abstract String buildGetStatement();
+    
+    protected abstract String buildSetStatement();
     
     protected String translateId(String id) {
         String tid;

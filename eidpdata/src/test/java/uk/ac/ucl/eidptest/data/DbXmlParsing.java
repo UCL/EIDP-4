@@ -46,13 +46,26 @@ public class DbXmlParsing {
     }
 
     @Test
-    public void getSqlStatement() {
+    public void basicGetStatement() {
+        String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = 'usertest';";
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
         m.put("login", "usertest");
-        String statement = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin", m);
-        System.out.println(statement);
+        String generated = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin", m);
+        assertEquals(expected, generated);
+    }
+    
+    @Test
+    public void basicSetStatement() {
+        String expected = "UPDATE UCLBRIT.T_USERS SET password = 'testpassword', modify_timestamp = 'null' WHERE id = 10;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES ('testpassword', 'null', nextval('UCLBRIT.T_USERS_id_seq'));";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("id", "10");
+        m.put("password", "testpassword");
+        String generated = sqlGenerator.getSqlStatement("context-test.USERS.setPassword", m);
+        assertEquals(expected, generated);
     }
     
     @Test
