@@ -69,6 +69,17 @@ public class DbXmlParsing {
     }
     
     @Test
+    public void basicDelStatement() {
+        String expected = "DELETE FROM UCLBRIT.T_ROLES WHERE login = 'testuser';";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        String generated = sqlGenerator.getSqlStatement("context-test.ROLES.removeRolesForLogin", m);
+        assertEquals(expected, generated);
+    }
+    
+    @Test
     public void staxParse() throws XMLStreamException {  
 
         XMLStreamReader msr = mock(XMLStreamReader.class);

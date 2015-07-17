@@ -40,7 +40,7 @@ public abstract class JaxbSqlStatement {
             case SET:
                 return buildSetStatement();
             case REMOVE:
-                throw new UnsupportedOperationException("REMOVE Not supported yet.");
+                return buildDelStatement();
         }
         throw new UnsupportedOperationException("Not supported yet." + methodType.getId());
     }
@@ -48,6 +48,8 @@ public abstract class JaxbSqlStatement {
     protected abstract String buildGetStatement();
     
     protected abstract String buildSetStatement();
+    
+    protected abstract String buildDelStatement();
     
     protected String translateId(String id) {
         String tid;

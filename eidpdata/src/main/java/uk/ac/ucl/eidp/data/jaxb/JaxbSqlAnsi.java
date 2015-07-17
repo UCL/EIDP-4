@@ -101,11 +101,30 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         return stm.append(";").toString();
     }
     
+    @Override
+    protected String buildDelStatement() {
+        StringBuilder stm = new StringBuilder("DELETE FROM ");
+        stm.append(tableType.getName());
+        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
+        methodType.getFor().forEach((MethodForType m) -> {
+            stm.append(translateId(m.getField()));
+            switch (m.getOperator()) {
+                case EQUAL : stm.append(Operator.EQUAL.getOperator());
+            }
+            if (isQuotation(m.getField())) {
+                stm.append("'").append(parametermap.get(m.getField())).append("'");
+            } else {
+                stm.append(parametermap.get(m.getField()));
+            }
+        });
+        return stm.append(";").toString();
+    }
+    
     protected String generateId() {
         String sequenceName = tableType.getName() + "_id_seq";
         return sequenceName;
     }
-    
+
     protected enum Operator {
         
         EQUAL(" = ");
