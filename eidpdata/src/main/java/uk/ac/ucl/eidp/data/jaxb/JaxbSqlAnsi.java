@@ -36,18 +36,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(String.join(", ", queryFields));
         stm.append(" FROM ").append(tableType.getName());
         
-        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
-        methodType.getFor().forEach((MethodForType m) -> {
-            stm.append(translateId(m.getField()));
-            switch (m.getOperator()) {
-                case EQUAL : stm.append(Operator.EQUAL.getOperator());
-            }
-            if (isQuotation(m.getField())) {
-                stm.append("'").append(parametermap.get(m.getField())).append("'");
-            } else {
-                stm.append(parametermap.get(m.getField()));
-            }
-        });
+        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
         
         return stm.append(";").toString();
     }
@@ -68,20 +57,10 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             }
         });
         
-        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
-        methodType.getFor().forEach((MethodForType m) -> {
-            stm.append(translateId(m.getField()));
-            switch (m.getOperator()) {
-                case EQUAL : stm.append(Operator.EQUAL.getOperator());
-            }
-            if (isQuotation(m.getField())) {
-                stm.append("'").append(parametermap.get(m.getField())).append("'");
-            } else {
-                stm.append(parametermap.get(m.getField()));
-            }
-        });
-        
-        stm.append(";INSERT INTO ");
+        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+      
+        stm.append(";");
+        stm.append("INSERT INTO ");
         stm.append(tableType.getName()).append(" (");
         methodType.getFields().getField().forEach((String f) -> {
             stm.append(f);
@@ -105,7 +84,12 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     protected String buildDelStatement() {
         StringBuilder stm = new StringBuilder("DELETE FROM ");
         stm.append(tableType.getName());
-        if (!methodType.getFor().isEmpty()) stm.append(" WHERE ");
+        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+        return stm.append(";").toString();
+    }
+    
+    protected String generateWhereClause() {
+        StringBuilder stm = new StringBuilder(" WHERE ");
         methodType.getFor().forEach((MethodForType m) -> {
             stm.append(translateId(m.getField()));
             switch (m.getOperator()) {
@@ -117,7 +101,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
                 stm.append(parametermap.get(m.getField()));
             }
         });
-        return stm.append(";").toString();
+        return stm.toString();
     }
     
     protected String generateId() {
