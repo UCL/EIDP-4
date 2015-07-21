@@ -53,19 +53,19 @@ public class DbXmlParsing {
         Map<String, String> m = new HashMap<>();
         m.put("login", "usertest");
         String generated = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin", m);
-        assertEquals(expected, generated);
+        assertEquals(generated, expected);
     }
     
     @Test
     public void basicSetStatement() {
-        String expected = "UPDATE UCLBRIT.T_USERS SET password = 'testpassword', modify_timestamp = 'null' WHERE id = 10;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES ('testpassword', 'null', nextval('UCLBRIT.T_USERS_id_seq'));";
+        String expected = "UPDATE UCLBRIT.T_USERS SET password = 'testpassword', modify_timestamp = null WHERE id = 10;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES ('testpassword', null, nextval('UCLBRIT.T_USERS_id_seq'));";
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
         m.put("id", "10");
         m.put("password", "testpassword");
         String generated = sqlGenerator.getSqlStatement("context-test.USERS.setPassword", m);
-        assertEquals(expected, generated);
+        assertEquals(generated, expected);
     }
     
     @Test
@@ -76,18 +76,29 @@ public class DbXmlParsing {
         Map<String, String> m = new HashMap<>();
         m.put("login", "testuser");
         String generated = sqlGenerator.getSqlStatement("context-test.ROLES.removeRolesForLogin", m);
-        assertEquals(expected, generated);
+        assertEquals(generated, expected);
     }
     
     @Test
     public void whereClause() {
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = 'testuser' AND center_id = 10000;";
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
         m.put("login", "testuser");
         m.put("center_id", "10000");
         String generated = sqlGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin", m);
-        System.out.println(generated);
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void sortingGetStatement() {
+        String expected = "SELECT id, center_id, login, create_timestamp, modify_timestamp, forename, surname FROM UCLBRIT.T_USERS ORDER BY login ASC, create_timestamp DESC;";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        String generated = sqlGenerator.getSqlStatement("context-test.USERS.getAllUserData", m);
+        assertEquals(generated, expected);
     }
     
     @Test

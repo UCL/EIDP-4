@@ -82,7 +82,7 @@ limitations under the License.
             <xs:element name="type" type="method-type-type" minOccurs="0" maxOccurs="1" />
             <xs:element name="fields" type="method-fields-type" minOccurs="0" maxOccurs="1" />
             <xs:element name="for" type="method-for-type" minOccurs="0" maxOccurs="unbounded" />     
-            <xs:element name="order" type="method-order-type" minOccurs="0" />
+            <xs:element name="order" type="method-order-type" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>

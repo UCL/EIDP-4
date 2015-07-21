@@ -72,6 +72,10 @@
 	  <field>login</field>
 	  <sorting>ASC</sorting>
 	</order>
+        <order>
+	  <field>create_timestamp</field>
+	  <sorting>DESC</sorting>
+	</order>
       </method>
       <!-- admin method -->
       <method id="setNewUserDataForID">

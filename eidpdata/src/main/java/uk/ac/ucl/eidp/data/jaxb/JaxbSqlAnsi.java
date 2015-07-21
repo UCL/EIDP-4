@@ -17,6 +17,7 @@ package uk.ac.ucl.eidp.data.jaxb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -37,6 +38,16 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(" FROM ").append(tableType.getName());
         
         if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+             
+        if (!methodType.getOrder().isEmpty()) {
+            stm.append(" ORDER BY ");
+            methodType.getOrder().forEach((MethodOrderType o) -> {
+                if (!stm.substring(stm.length() - 9).equals("ORDER BY ")) stm.append(", ");
+                stm.append(translateId(o.getField()));
+                stm.append(" ");
+                stm.append(o.getSorting().value());
+            });
+        }
         
         return stm.append(";").toString();
     }
@@ -50,7 +61,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             if (!stm.substring(stm.length() - 4).equals("SET ")) stm.append(", ");
             stm.append(f);
             stm.append(" = ");
-            if (isQuotation(f)) {
+            if (parametermap.containsKey(f) && isQuotation(f)) {
                 stm.append("'").append(parametermap.get(f)).append("'");
             } else {
                 stm.append(parametermap.get(f));
@@ -69,7 +80,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(tableType.getPrimaryKey());
         stm.append(") VALUES (");
         methodType.getFields().getField().forEach((String f) -> {
-            if (isQuotation(f)) {
+            if (parametermap.containsKey(f) && isQuotation(f)) {
                 stm.append("'").append(parametermap.get(f)).append("'");
             } else {
                 stm.append(parametermap.get(f));
@@ -96,7 +107,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             switch (m.getOperator()) {
                 case EQUAL : stm.append(Operator.EQUAL.getOperator());
             }
-            if (isQuotation(m.getField())) {
+            if (parametermap.containsKey(m.getField()) && isQuotation(m.getField())) {
                 stm.append("'").append(parametermap.get(m.getField())).append("'");
             } else {
                 stm.append(parametermap.get(m.getField()));
