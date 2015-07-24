@@ -15,6 +15,9 @@
  */
 package uk.ac.ucl.eidptest.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
@@ -31,6 +34,7 @@ import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.SqlGenerator;
 import uk.ac.ucl.eidp.data.SqlGeneratorFactory;
+import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
 import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
 
 /**
@@ -41,6 +45,7 @@ public class DbXmlParsing {
     
     private final String datasettag = "dataset";
     private final String datasetid = "ROLES";
+    private final XMLInputFactory factory = XMLInputFactory.newInstance();
 
     public DbXmlParsing() {
     }
@@ -98,6 +103,67 @@ public class DbXmlParsing {
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
         String generated = sqlGenerator.getSqlStatement("context-test.USERS.getAllUserData", m);
+        assertEquals(generated, expected);
+    }
+    
+    
+    @Test
+    public void notequalGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND permission != 'ro';";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("permission", "ro");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndPermissionNotEqual", m);
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void lessthanGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id < 1000;";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("id", "1000");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessThan", m);
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void lessequalthanGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id <= 1000;";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("id", "1000");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessEqualThan", m);
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void greaterthanGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id > 1000;";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("id", "1000");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterThan", m);
+        assertEquals(generated, expected);
+    }
+
+    @Test
+    public void greaterequalthanGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id >= 1000;";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("id", "1000");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterEqualThan", m);
         assertEquals(generated, expected);
     }
     

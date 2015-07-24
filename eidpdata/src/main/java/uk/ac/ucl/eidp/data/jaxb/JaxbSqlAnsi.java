@@ -17,7 +17,6 @@ package uk.ac.ucl.eidp.data.jaxb;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -104,13 +103,49 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         methodType.getFor().forEach((MethodForType m) -> {
             if (!stm.substring(stm.length() - 6).equals("WHERE ")) stm.append(" ").append(m.getType()).append(" ");
             stm.append(translateId(m.getField()));
+            boolean noValue = false;
+            boolean parenthesis = false;
             switch (m.getOperator()) {
-                case EQUAL : stm.append(Operator.EQUAL.getOperator());
+                case EQUAL: 
+                    stm.append(Operator.EQUAL.getOperator());
+                    break;
+                case NOTEQUAL: 
+                    stm.append(Operator.NOTEQUAL.getOperator());
+                    break;
+                case GT: 
+                    stm.append(Operator.GT.getOperator());
+                    break;
+                case GET: 
+                    stm.append(Operator.GET.getOperator());
+                    break;
+                case LT: 
+                    stm.append(Operator.LT.getOperator());
+                    break;
+                case LET: 
+                    stm.append(Operator.LET.getOperator());
+                    break;
+                case ISNULL: 
+                    stm.append(Operator.ISNULL.getOperator());
+                    noValue = true;
+                    break;
+                case ISNOTNULL: 
+                    stm.append(Operator.ISNOTNULL.getOperator());
+                    noValue = true;
+                    break;
+                case IN:
+                    stm.append(Operator.IN.getOperator());
+                    parenthesis = true;
+                    break;
+                    
             }
-            if (parametermap.containsKey(m.getField()) && isQuotation(m.getField())) {
-                stm.append("'").append(parametermap.get(m.getField())).append("'");
-            } else {
-                stm.append(parametermap.get(m.getField()));
+            if (!noValue) {
+                if (parenthesis) stm.append("(");
+                if (parametermap.containsKey(m.getField()) && isQuotation(m.getField())) {
+                    stm.append("'").append(parametermap.get(m.getField())).append("'");
+                } else {
+                    stm.append(parametermap.get(m.getField()));
+                }
+                if (parenthesis) stm.append(")");
             }
         });
         return stm.toString();
@@ -123,7 +158,15 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
 
     protected enum Operator {
         
-        EQUAL(" = ");
+        EQUAL(" = "),
+        NOTEQUAL(" != "),
+        GT(" > "),
+        GET(" >= "),
+        LT(" < "),
+        LET(" <= "),
+        ISNULL(" is null"),
+        ISNOTNULL(" is not null"),
+        IN(" in ");
         
         private final String operator;
         

@@ -42,7 +42,7 @@ public abstract class JaxbSqlStatement {
             case REMOVE:
                 return buildDelStatement();
         }
-        throw new UnsupportedOperationException("Not supported yet." + methodType.getId());
+        throw new UnsupportedOperationException("Method not found." + methodType.getId());
     }
     
     protected abstract String buildGetStatement();

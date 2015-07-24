@@ -188,7 +188,86 @@
 	  <operator>equal</operator>
 	</for>
       </method>
-      <!-- admin method -->
+      <method id="getCentersForUserAndPermissionNotEqual">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>permission</field>
+	  <operator>notequal</operator>
+	</for>
+      </method>
+      <method id="getCentersForUserAndIdLessThan">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>id</field>
+	  <operator>lt</operator>
+	</for>
+      </method>
+      <method id="getCentersForUserAndIdLessEqualThan">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>id</field>
+	  <operator>let</operator>
+	</for>
+      </method>
+      <method id="getCentersForUserAndIdGreaterThan">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>id</field>
+	  <operator>gt</operator>
+	</for>
+      </method>
+      <method id="getCentersForUserAndIdGreaterEqualThan">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>id</field>
+	  <operator>get</operator>
+	</for>
+      </method>
       <method id="getAllCenterRolesForAllLogins">
 	<role-name>admin</role-name>
 	<type>get</type>

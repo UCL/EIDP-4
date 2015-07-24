@@ -31,6 +31,7 @@ import javax.xml.stream.XMLStreamReader;
 import uk.ac.ucl.eidp.data.jaxb.DatasetType;
 import uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi;
 import uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement;
+import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
 
 /**
  *
@@ -52,9 +53,9 @@ public class JaxbSqlGenerator implements SqlGenerator {
         XMLStreamReader xsr = null;
         
         if (null == datasetType || !methodPath.split("\\.")[0].equals(datasetType.getId())) {
-            
+
             try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/" + methodPath.split("\\.")[0] + "/resources/db.xml")) {
-                
+
                 xsr = xif.createXMLStreamReader(is, "UTF-8");
                 while (xsr.hasNext()) {
                     int event = xsr.next();
@@ -64,25 +65,26 @@ public class JaxbSqlGenerator implements SqlGenerator {
                         break;
                     }
                 }
+
+                JAXBContext jc = JAXBContext.newInstance("uk.ac.ucl.eidp.data.jaxb", ObjectFactory.class.getClassLoader());
+                Unmarshaller unmarshaller = jc.createUnmarshaller();
+                JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
+                datasetType = jb.getValue();
+
             } catch (XMLStreamException | IOException ex) {
                 throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset", ex);
-            } 
+            } catch (JAXBException ex) {
+                throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
+            }
 
         }
 
-        try {
-            JAXBContext jc = JAXBContext.newInstance(DatasetType.class);
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
-            JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
-            datasetType = jb.getValue();
-        } catch (JAXBException ex) {
-            throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
-        }
-        
-        if (null != xsr) try {
-            xsr.close();
-        } catch (XMLStreamException ex) {
-            Logger.getLogger(JaxbSqlGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
+        if (null != xsr) {
+            try {
+                xsr.close();
+            } catch (XMLStreamException ex) {
+                Logger.getLogger(JaxbSqlGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
+            }
         }
         
         JaxbSqlStatement jaxbSqlStatement;
