@@ -15,9 +15,6 @@
  */
 package uk.ac.ucl.eidptest.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
@@ -34,7 +31,6 @@ import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.SqlGenerator;
 import uk.ac.ucl.eidp.data.SqlGeneratorFactory;
-import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
 import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
 
 /**
@@ -168,6 +164,18 @@ public class DbXmlParsing {
     }
     
     @Test
+    public void inGetStatement() {
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id in (1000,2000);";
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("id", "1000,2000");
+        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdIn", m);
+        assertEquals(generated, expected);
+    }
+    
+    @Test
     public void staxParse() throws XMLStreamException {  
 
         XMLStreamReader msr = mock(XMLStreamReader.class);
@@ -190,8 +198,7 @@ public class DbXmlParsing {
         Unmarshaller unmarshaller = jc.createUnmarshaller();
         JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
         DatasetType dataset = jb.getValue();
-
-        System.out.println(dataset.getTable().getName());
+        assertEquals(dataset.getTable().getName(),"UCLBRIT.T_ROLES");
         xsr.close();
 
     }

@@ -268,6 +268,22 @@
 	  <operator>get</operator>
 	</for>
       </method>
+      <method id="getCentersForUserAndIdIn">
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>center</field> <field>status</field>
+	</fields>
+	<for>
+	  <type>and</type>
+	  <field>login</field>
+	  <operator>equal</operator>
+	</for>
+        <for>
+	  <type>and</type>
+	  <field>id</field>
+	  <operator>in</operator>
+	</for>
+      </method>
       <method id="getAllCenterRolesForAllLogins">
 	<role-name>admin</role-name>
 	<type>get</type>
