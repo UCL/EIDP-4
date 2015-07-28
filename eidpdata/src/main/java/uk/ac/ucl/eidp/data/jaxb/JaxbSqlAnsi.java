@@ -48,6 +48,8 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             });
         }
         
+        stm.append(generateOffsetLimit());
+        
         return stm.append(";").toString();
     }
 
@@ -141,6 +143,23 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     protected String generateId() {
         String sequenceName = tableType.getName() + "_id_seq";
         return sequenceName;
+    }
+    
+    protected String generateOffsetLimit() {
+        if (null == methodType.getOffset() && null == methodType.getLimit()) return "";
+        
+        StringBuilder paging = new StringBuilder(" OFFSET ");
+        String offset = "0";
+        if (null != methodType.getOffset()) offset = methodType.getOffset().toString();
+        paging.append(offset).append(" ROWS");
+        
+        if (null != methodType.getLimit()) {
+            paging.append(" FETCH FIRST ");
+            paging.append(methodType.getLimit());
+            paging.append(" ROWS");
+        }
+        
+        return paging.toString();
     }
 
     protected enum Operator {

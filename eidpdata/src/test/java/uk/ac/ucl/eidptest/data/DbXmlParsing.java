@@ -124,6 +124,13 @@ public class DbXmlParsing {
     }
     
     @Test
+    public void offsetLimitStatement() {
+        String expected = "SELECT id, login, center, status, permission FROM UCLBRIT.T_CENTER_ROLES ORDER BY login ASC OFFSET 5 ROWS FETCH FIRST 10 ROWS;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getAllCenterRolesForAllLoginsOffsetLimit");
+        assertEquals(generated, expected);
+    }
+    
+    @Test
     public void staxParse() throws XMLStreamException {  
 
         XMLStreamReader msr = mock(XMLStreamReader.class);

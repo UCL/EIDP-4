@@ -296,6 +296,20 @@
 	  <sorting>ASC</sorting>
 	</order>
       </method>
+      <method id="getAllCenterRolesForAllLoginsOffsetLimit">
+	<role-name>admin</role-name>
+	<type>get</type>
+	<fields>
+	  <field>id</field> <field>login</field> <field>center</field>
+	  <field>status</field> <field>permission</field>
+	</fields>
+	<order>
+	  <field>login</field>
+	  <sorting>ASC</sorting>
+	</order>
+        <offset>5</offset>
+        <limit>10</limit>
+      </method>
       <!-- admin method -->
       <method id="setCenterRolesForID">
 	<role-name>admin</role-name>
