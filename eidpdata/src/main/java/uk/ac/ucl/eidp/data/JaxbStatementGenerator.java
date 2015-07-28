@@ -17,6 +17,8 @@ package uk.ac.ucl.eidp.data;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,43 +51,7 @@ public class JaxbStatementGenerator implements StatementGenerator {
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
             throw new IllegalArgumentException("methodpath is invalid");
         
-        DatasetType datasetType = null;
-        XMLStreamReader xsr = null;
-        
-        if (null == datasetType || !methodPath.split("\\.")[0].equals(datasetType.getId())) {
-
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/" + methodPath.split("\\.")[0] + "/resources/db.xml")) {
-
-                xsr = xif.createXMLStreamReader(is, "UTF-8");
-                while (xsr.hasNext()) {
-                    int event = xsr.next();
-                    if (XMLStreamConstants.START_ELEMENT == event
-                            && DATASET_TAG.equals(xsr.getLocalName())
-                            && methodPath.split("\\.")[1].equals(xsr.getAttributeValue(0))) {
-                        break;
-                    }
-                }
-
-                JAXBContext jc = JAXBContext.newInstance("uk.ac.ucl.eidp.data.jaxb", ObjectFactory.class.getClassLoader());
-                Unmarshaller unmarshaller = jc.createUnmarshaller();
-                JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
-                datasetType = jb.getValue();
-
-            } catch (XMLStreamException | IOException ex) {
-                throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset", ex);
-            } catch (JAXBException ex) {
-                throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
-            }
-
-        }
-
-        if (null != xsr) {
-            try {
-                xsr.close();
-            } catch (XMLStreamException ex) {
-                Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
-            }
-        }
+        DatasetType datasetType = getDatasetTypeObject(methodPath);
         
         JaxbSqlStatement jaxbSqlStatement;
         try {
@@ -105,7 +71,69 @@ public class JaxbStatementGenerator implements StatementGenerator {
     }
 
     @Override
-    public Map<String, String> translateParameters(Map<String, String> m) {
+    public Map<String, String> translateParameters(Map<String, String> m, String datasetPath) {
+        
+        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("datasetPath is invalid");
+        
+        Map<String, String> translatedMap = new HashMap<>();
+        DatasetType datasetType = getDatasetTypeObject(datasetPath);
+        
+        m.forEach((String k,String v) -> {
+            String translatedKey = datasetType.getTable().getField().stream()
+                .filter(t -> t.getId().equals(k))
+                .findFirst()
+                .get()
+                .getName();
+            translatedMap.put(translatedKey, v);
+        });
+        
+        return translatedMap;
+    }
+
+    @Override
+    public List<String> getMethodRoles(String methodPath) {
+        
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("methodpath is invalid");
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private DatasetType getDatasetTypeObject(String path) {
+        
+        DatasetType datasetType = null;
+        XMLStreamReader xsr = null;
+        
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/" + path.split("\\.")[0] + "/resources/db.xml")) {
+
+            xsr = xif.createXMLStreamReader(is, "UTF-8");
+            while (xsr.hasNext()) {
+                int event = xsr.next();
+                if (XMLStreamConstants.START_ELEMENT == event
+                        && DATASET_TAG.equals(xsr.getLocalName())
+                        && path.split("\\.")[1].equals(xsr.getAttributeValue(0))) {
+                    break;
+                }
+            }
+
+            JAXBContext jc = JAXBContext.newInstance("uk.ac.ucl.eidp.data.jaxb", ObjectFactory.class.getClassLoader());
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
+            datasetType = jb.getValue();
+
+        } catch (XMLStreamException | IOException ex) {
+            throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset", ex);
+        } catch (JAXBException ex) {
+            throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
+        }
+
+        try {
+            xsr.close();
+        } catch (XMLStreamException ex) {
+            Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
+        }
+        
+        return datasetType;
     }
 }

@@ -15,6 +15,7 @@
  */
 package uk.ac.ucl.eidp.data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,8 @@ public interface StatementGenerator {
     
     public void setSqlDialect(String sqlDialect);
     
-    public Map<String, String> translateParameters(Map<String, String> m);
+    public Map<String, String> translateParameters(Map<String, String> m, String datasetId);
+    
+    public List<String> getMethodRoles(String methodpath);
 
 }
