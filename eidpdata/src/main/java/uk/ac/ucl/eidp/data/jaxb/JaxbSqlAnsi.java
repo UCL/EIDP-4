@@ -59,12 +59,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         methodType.getFields().getField().forEach((String f) -> {
             if (!stm.substring(stm.length() - 4).equals("SET ")) stm.append(", ");
             stm.append(f);
-            stm.append(" = ");
-            if (parametermap.containsKey(f) && isQuotation(f)) {
-                stm.append("'").append(parametermap.get(f)).append("'");
-            } else {
-                stm.append(parametermap.get(f));
-            }
+            stm.append(" = ?");
         });
         
         if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
@@ -79,11 +74,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(tableType.getPrimaryKey());
         stm.append(") VALUES (");
         methodType.getFields().getField().forEach((String f) -> {
-            if (parametermap.containsKey(f) && isQuotation(f)) {
-                stm.append("'").append(parametermap.get(f)).append("'");
-            } else {
-                stm.append(parametermap.get(f));
-            }
+            stm.append("?");
             stm.append(", ");
         });
         stm.append("nextval('").append(generateId()).append("'))");
@@ -140,11 +131,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             }
             if (!noValue) {
                 if (parenthesis) stm.append("(");
-                if (parametermap.containsKey(m.getField()) && isQuotation(m.getField())) {
-                    stm.append("'").append(parametermap.get(m.getField())).append("'");
-                } else {
-                    stm.append(parametermap.get(m.getField()));
-                }
+                stm.append("?");
                 if (parenthesis) stm.append(")");
             }
         });

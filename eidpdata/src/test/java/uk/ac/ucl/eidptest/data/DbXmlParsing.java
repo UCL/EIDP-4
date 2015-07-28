@@ -41,137 +41,85 @@ public class DbXmlParsing {
     
     private final String datasettag = "dataset";
     private final String datasetid = "ROLES";
-    private final XMLInputFactory factory = XMLInputFactory.newInstance();
 
     public DbXmlParsing() {
     }
 
     @Test
     public void basicGetStatement() {
-        String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = 'usertest';";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "usertest");
-        String generated = sqlGenerator.getSqlStatement("context-test.ROLES.getRolesForLogin", m);
+        String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = ?;";
+        String generated = buildStatement("context-test.ROLES.getRolesForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void basicSetStatement() {
-        String expected = "UPDATE UCLBRIT.T_USERS SET password = 'testpassword', modify_timestamp = null WHERE id = 10;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES ('testpassword', null, nextval('UCLBRIT.T_USERS_id_seq'));";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("id", "10");
-        m.put("password", "testpassword");
-        String generated = sqlGenerator.getSqlStatement("context-test.USERS.setPassword", m);
+        String expected = "UPDATE UCLBRIT.T_USERS SET password = ?, modify_timestamp = ? WHERE id = ?;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES (?, ?, nextval('UCLBRIT.T_USERS_id_seq'));";
+        String generated = buildStatement("context-test.USERS.setPassword");
         assertEquals(generated, expected);
     }
     
     @Test
     public void basicDelStatement() {
-        String expected = "DELETE FROM UCLBRIT.T_ROLES WHERE login = 'testuser';";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        String generated = sqlGenerator.getSqlStatement("context-test.ROLES.removeRolesForLogin", m);
+        String expected = "DELETE FROM UCLBRIT.T_ROLES WHERE login = ?;";
+        String generated = buildStatement("context-test.ROLES.removeRolesForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void whereClause() {
-        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = 'testuser' AND center_id = 10000;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("center_id", "10000");
-        String generated = sqlGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin", m);
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?;";
+        String generated = buildStatement("context-test.USERS.getUserDataForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void sortingGetStatement() {
         String expected = "SELECT id, center_id, login, create_timestamp, modify_timestamp, forename, surname FROM UCLBRIT.T_USERS ORDER BY login ASC, create_timestamp DESC;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        String generated = sqlGenerator.getSqlStatement("context-test.USERS.getAllUserData", m);
+        String generated = buildStatement("context-test.USERS.getAllUserData");
         assertEquals(generated, expected);
     }
     
     
     @Test
     public void notequalGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND permission != 'ro';";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("permission", "ro");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndPermissionNotEqual", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND permission != ?;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndPermissionNotEqual");
         assertEquals(generated, expected);
     }
     
     @Test
     public void lessthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id < 1000;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("id", "1000");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessThan", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id < ?;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void lessequalthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id <= 1000;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("id", "1000");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessEqualThan", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id <= ?;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessEqualThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void greaterthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id > 1000;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("id", "1000");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterThan", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id > ?;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterThan");
         assertEquals(generated, expected);
     }
 
     @Test
     public void greaterequalthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id >= 1000;";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("id", "1000");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterEqualThan", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id >= ?;";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterEqualThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void inGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = 'testuser' AND id in (1000,2000);";
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
-        m.put("login", "testuser");
-        m.put("id", "1000,2000");
-        String generated = sqlGenerator.getSqlStatement("context-test.CENTER_ROLES.getCentersForUserAndIdIn", m);
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id in (?);";
+        String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdIn");
         assertEquals(generated, expected);
     }
     
@@ -217,6 +165,13 @@ public class DbXmlParsing {
             }
         }
         return xsr;
+    }
+    
+    private String buildStatement(String method) {
+        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
+        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> m = new HashMap<>();
+        return sqlGenerator.getSqlStatement(method, m);
     }
         
 }
