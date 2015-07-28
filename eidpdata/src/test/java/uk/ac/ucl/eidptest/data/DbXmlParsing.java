@@ -178,7 +178,7 @@ public class DbXmlParsing {
         SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
         SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
-        return sqlGenerator.getSqlStatement(method, m);
+        return sqlGenerator.getSqlStatement(method);
     }
         
 }

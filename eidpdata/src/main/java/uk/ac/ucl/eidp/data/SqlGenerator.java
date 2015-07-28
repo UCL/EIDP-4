@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public interface SqlGenerator {
     
-    public String getSqlStatement(String methodpath, Map<String, String> parametermap);
+    public String getSqlStatement(String methodpath);
     
     public void setSqlDialect(String sqlDialect);
 

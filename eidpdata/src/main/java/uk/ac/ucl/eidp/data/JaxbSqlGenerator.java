@@ -44,7 +44,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
     private String SQL_DIALECT = "";
     
     @Override
-    public String getSqlStatement(String methodPath, Map<String, String> parametermap) {
+    public String getSqlStatement(String methodPath) {
         
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
             throw new IllegalArgumentException("methodpath is invalid");
@@ -95,7 +95,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
             jaxbSqlStatement = new JaxbSqlAnsi();
         }
         
-        return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2], parametermap);
+        return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2]);
 
     }
 
