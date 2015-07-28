@@ -26,4 +26,23 @@ public class JaxbSqlPostgresql extends JaxbSqlAnsi {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    protected String generateOffsetLimit() {
+        if (null == methodType.getOffset() && null == methodType.getLimit()) return "";
+        
+        StringBuilder paging = new StringBuilder("");
+
+        if (null != methodType.getLimit()) {
+            paging.append(" LIMIT ");
+            paging.append(methodType.getLimit());
+        }
+        
+        if (null != methodType.getOffset()) {
+            paging.append(" OFFSET ");
+            paging.append(methodType.getOffset());
+        }
+        
+        return paging.toString();
+    }
+    
 }

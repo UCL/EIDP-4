@@ -26,5 +26,7 @@ public interface StatementGenerator {
     public String getSqlStatement(String methodpath);
     
     public void setSqlDialect(String sqlDialect);
+    
+    public Map<String, String> translateParameters(Map<String, String> m);
 
 }

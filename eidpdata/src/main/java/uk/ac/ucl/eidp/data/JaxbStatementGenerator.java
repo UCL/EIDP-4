@@ -103,4 +103,9 @@ public class JaxbStatementGenerator implements StatementGenerator {
     public void setSqlDialect(String SQL_DIALECT) {
         this.SQL_DIALECT = SQL_DIALECT;
     }
+
+    @Override
+    public Map<String, String> translateParameters(Map<String, String> m) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
