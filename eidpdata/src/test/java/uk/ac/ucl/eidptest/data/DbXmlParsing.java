@@ -29,8 +29,8 @@ import javax.xml.transform.stream.StreamSource;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
-import uk.ac.ucl.eidp.data.SqlGenerator;
-import uk.ac.ucl.eidp.data.SqlGeneratorFactory;
+import uk.ac.ucl.eidp.data.StatementGenerator;
+import uk.ac.ucl.eidp.data.StatementGeneratorFactory;
 import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
 
 /**
@@ -175,8 +175,8 @@ public class DbXmlParsing {
     }
     
     private String buildStatement(String method) {
-        SqlGeneratorFactory sqlGeneratorFactory = new SqlGeneratorFactory();
-        SqlGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
+        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> m = new HashMap<>();
         return sqlGenerator.getSqlStatement(method);
     }

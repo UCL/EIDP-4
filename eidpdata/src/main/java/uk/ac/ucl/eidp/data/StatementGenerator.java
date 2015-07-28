@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public interface SqlGenerator {
+public interface StatementGenerator {
     
     public String getSqlStatement(String methodpath);
     

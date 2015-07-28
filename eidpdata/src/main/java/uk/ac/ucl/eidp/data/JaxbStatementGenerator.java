@@ -37,7 +37,7 @@ import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class JaxbSqlGenerator implements SqlGenerator {
+public class JaxbStatementGenerator implements StatementGenerator {
 
     private final XMLInputFactory xif = XMLInputFactory.newFactory();
     private final String DATASET_TAG = "dataset";
@@ -83,7 +83,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
             try {
                 xsr.close();
             } catch (XMLStreamException ex) {
-                Logger.getLogger(JaxbSqlGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
+                Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
             }
         }
         
@@ -91,7 +91,7 @@ public class JaxbSqlGenerator implements SqlGenerator {
         try {
             jaxbSqlStatement = (JaxbSqlStatement) Class.forName(SQL_DIALECT).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(JaxbSqlGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
+            Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
             jaxbSqlStatement = new JaxbSqlAnsi();
         }
         

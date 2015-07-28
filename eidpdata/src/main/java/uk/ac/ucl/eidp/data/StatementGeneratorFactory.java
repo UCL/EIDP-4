@@ -25,21 +25,21 @@ import java.util.logging.Logger;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class SqlGeneratorFactory {
+public class StatementGeneratorFactory {
     
-    private final String SQLGENERATOR_PROP = "uk.ac.ucl.eidp.data.SqlGenerator";
-    private String SQLGENERATOR_CLASS = "uk.ac.ucl.eidp.data.JaxbSqlGenerator";
+    private final String SQLGENERATOR_PROP = "uk.ac.ucl.eidp.data.StatementGenerator";
+    private String SQLGENERATOR_CLASS = "uk.ac.ucl.eidp.data.JaxbStatementGenerator";
     private final String PROPERTIESFILE = "META-INF/eidp.properties";
     private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
     private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
 
-    public SqlGeneratorFactory() {
+    public StatementGeneratorFactory() {
         
         Properties p = new Properties();
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(PROPERTIESFILE)) {
             p.load(is);
         } catch (IOException ex) {
-            Logger.getLogger(SqlGeneratorFactory.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatementGeneratorFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (p.containsKey(SQLGENERATOR_PROP) && !SQLGENERATOR_CLASS.equals(p.getProperty(SQLGENERATOR_PROP))) {
             SQLGENERATOR_CLASS = p.getProperty(SQLGENERATOR_PROP);
@@ -49,14 +49,14 @@ public class SqlGeneratorFactory {
         
     }
     
-    public SqlGenerator newSqlGenerator() {
-        SqlGenerator sqlGenerator = null;
+    public StatementGenerator newSqlGenerator() {
+        StatementGenerator sqlGenerator = null;
         try {
-            sqlGenerator = (SqlGenerator) Class.forName(SQLGENERATOR_CLASS).newInstance();
+            sqlGenerator = (StatementGenerator) Class.forName(SQLGENERATOR_CLASS).newInstance();
             
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(SqlGeneratorFactory.class.getName()).log(Level.SEVERE, null, ex);
-            sqlGenerator = new JaxbSqlGenerator();
+            Logger.getLogger(StatementGeneratorFactory.class.getName()).log(Level.SEVERE, null, ex);
+            sqlGenerator = new JaxbStatementGenerator();
         }
         sqlGenerator.setSqlDialect(SQL_DIALECT);
         return sqlGenerator;
