@@ -51,7 +51,7 @@ public class StatementGeneratorFactory {
     }
     
     public StatementGenerator newSqlGenerator() {
-        StatementGenerator sqlGenerator = null;
+        StatementGenerator sqlGenerator;
         try {
             sqlGenerator = (StatementGenerator) Class.forName(SQLGENERATOR_CLASS).newInstance();
             

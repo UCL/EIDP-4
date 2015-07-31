@@ -109,7 +109,7 @@ public class JaxbStatementGenerator implements StatementGenerator {
         DatasetType datasetType = null;
         XMLStreamReader xsr = null;
         
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/" + path.split("\\.")[0] + "/resources/db.xml")) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + path.split("\\.")[0] + "/resources/db.xml")) {
 
             xsr = xif.createXMLStreamReader(is, "UTF-8");
             while (xsr.hasNext()) {
@@ -127,7 +127,7 @@ public class JaxbStatementGenerator implements StatementGenerator {
             datasetType = jb.getValue();
 
         } catch (XMLStreamException | IOException ex) {
-            throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset", ex);
+            throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset" , ex);
         } catch (JAXBException ex) {
             throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
         }
