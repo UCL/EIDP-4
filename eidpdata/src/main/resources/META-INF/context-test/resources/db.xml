@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <db>
+  <db xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='http://www.homepages.ucl.ac.uk/~rebmdgu/db.xsd'>
     <!-- User authentication and authorisation -->
     <dataset id="USERS">
       <table>
@@ -360,15 +361,6 @@
             <field>id</field>
             <operator>equal</operator>
         </for>
-      </method>
-    </dataset>
-    <dataset id="SAMPLES">
-      <database-id>Participant</database-id>
-      <method id="getSamplesForParticipantID">
-	<role-name>brit</role-name>
-      </method>
-      <method id="setSamplesForID">
-	<role-name>brit</role-name>
       </method>
     </dataset>
   </db>
