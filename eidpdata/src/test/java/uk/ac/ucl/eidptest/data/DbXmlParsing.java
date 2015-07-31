@@ -131,6 +131,22 @@ public class DbXmlParsing {
     }
     
     @Test
+    public void translateParameters() {
+        Map<String, String> expected = new HashMap<>();
+        expected.put("participantIdCol", "o784qhfcadbcadfbha");
+        expected.put("applicationCol", "test-context");
+        expected.put("centreCol", "10000");
+        Map<String, String> m = new HashMap<>();
+        m.put("participant_id", "o784qhfcadbcadfbha");
+        m.put("application", "test-context");
+        m.put("centre", "10000");
+        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
+        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        Map<String, String> generated = sqlGenerator.translateParameters(m, "context-test.PARTICIPANT_LIST");
+        assertEquals(generated, expected);
+    }
+    
+    @Test
     public void staxParse() throws XMLStreamException {  
 
         XMLStreamReader msr = mock(XMLStreamReader.class);
@@ -177,7 +193,6 @@ public class DbXmlParsing {
     private String buildStatement(String method) {
         StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
         StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
-        Map<String, String> m = new HashMap<>();
         return sqlGenerator.getSqlStatement(method);
     }
         

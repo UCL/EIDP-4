@@ -336,7 +336,15 @@
       </method>
     </dataset>
     <dataset id="PARTICIPANT_LIST">
-      <database-id>Participant</database-id>
+      <table>
+	<name>UCLBRIT.T_PARTICIPANT_LIST</name>
+	<field id="id"> <name>id</name> <type>Integer</type> <size>10</size> </field>
+	<field id="participant_id"> <name>participantIdCol</name> <type>String</type> <size>20</size> </field>
+	<field id="application"> <name>applicationCol</name> <type>String</type> <size>20</size> </field>
+	<field id="centre"> <name>centreCol</name> <type>Integer</type> <size>10</size> </field>
+	<primary-key>id</primary-key>
+	<primary-key-generation>SERIAL-SEQ</primary-key-generation>
+      </table>
       <method id="setParticipantForID">
 	<role-name>brit</role-name>
       </method>
