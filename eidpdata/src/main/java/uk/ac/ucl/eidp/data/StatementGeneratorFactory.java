@@ -15,6 +15,7 @@
  */
 package uk.ac.ucl.eidp.data;
 
+import uk.ac.ucl.eidp.data.jaxb.JaxbStatementGenerator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
 public class StatementGeneratorFactory {
     
     private final String SQLGENERATOR_PROP = "uk.ac.ucl.eidp.data.StatementGenerator";
-    private String SQLGENERATOR_CLASS = "uk.ac.ucl.eidp.data.JaxbStatementGenerator";
+    private String SQLGENERATOR_CLASS = "uk.ac.ucl.eidp.data.jaxb.JaxbStatementGenerator";
     private final String PROPERTIESFILE = "META-INF/eidp.properties";
     private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
     private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";

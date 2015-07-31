@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.ucl.eidp.data;
+package uk.ac.ucl.eidp.data.jaxb;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,11 +30,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import uk.ac.ucl.eidp.data.jaxb.DatasetType;
-import uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi;
-import uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement;
-import uk.ac.ucl.eidp.data.jaxb.MethodType;
-import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
+import uk.ac.ucl.eidp.data.StatementGenerator;
 
 /**
  *
