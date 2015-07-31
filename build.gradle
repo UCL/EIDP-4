@@ -15,7 +15,7 @@ project('eidpdata') {
     task runXJCTest(type:Exec) {
         workingDir 'src/test'
         executable 'xjc'
-        args '-d','java','-p','uk.ac.ucl.eidptest.data.jaxb','-b','resources/bindings.xml','resources/db.xsd'
+        args '-d','java','-p','uk.ac.ucl.eidptest.data.jaxb','-b','http://www.homepages.ucl.ac.uk/~rebmdgu/bindings.xml','http://www.homepages.ucl.ac.uk/~rebmdgu/db.xsd'
     }
     
     task cleanAfterXJCTest(type: Delete) {
@@ -41,7 +41,7 @@ project('eidpdata') {
     task runXJCMain(type:Exec) {
         workingDir 'src/main'
         executable 'xjc'
-        args '-d','java','-p','uk.ac.ucl.eidp.data.jaxb','-b','resources/META-INF/jaxb/bindings.xml','resources/META-INF/jaxb/db.xsd'
+        args '-d','java','-p','uk.ac.ucl.eidp.data.jaxb','-b','http://www.homepages.ucl.ac.uk/~rebmdgu/bindings.xml','http://www.homepages.ucl.ac.uk/~rebmdgu/db.xsd'
     }
 
 }
