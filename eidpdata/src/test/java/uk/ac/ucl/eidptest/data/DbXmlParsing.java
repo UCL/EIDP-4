@@ -15,7 +15,10 @@
  */
 package uk.ac.ucl.eidptest.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -143,6 +146,16 @@ public class DbXmlParsing {
         StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
         StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
         Map<String, String> generated = sqlGenerator.translateParameters(m, "context-test.PARTICIPANT_LIST");
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void getMethodRoles() {
+        String[] a = {"brit","admin","test"};
+        List<String> expected = new ArrayList<>(Arrays.asList(a));
+        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
+        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        List<String> generated = sqlGenerator.getMethodRoles("context-test.PARTICIPANT_LIST.setParticipantForID");
         assertEquals(generated, expected);
     }
     

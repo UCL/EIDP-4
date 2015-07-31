@@ -347,6 +347,19 @@
       </table>
       <method id="setParticipantForID">
 	<role-name>brit</role-name>
+        <role-name>admin</role-name>
+        <role-name>test</role-name>
+        <type>set</type>
+        <fields>
+            <field>participant_id</field> 
+            <field>application</field>
+            <field>centre</field>
+        </fields>
+        <for>
+            <type>and</type>
+            <field>id</field>
+            <operator>equal</operator>
+        </for>
       </method>
     </dataset>
     <dataset id="SAMPLES">

@@ -33,6 +33,7 @@ import javax.xml.stream.XMLStreamReader;
 import uk.ac.ucl.eidp.data.jaxb.DatasetType;
 import uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi;
 import uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement;
+import uk.ac.ucl.eidp.data.jaxb.MethodType;
 import uk.ac.ucl.eidp.data.jaxb.ObjectFactory;
 
 /**
@@ -95,9 +96,16 @@ public class JaxbStatementGenerator implements StatementGenerator {
     public List<String> getMethodRoles(String methodPath) {
         
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
-            throw new IllegalArgumentException("methodpath is invalid");
+            throw new IllegalArgumentException("methodPath is invalid");
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DatasetType datasetType = getDatasetTypeObject(methodPath);
+        String method = methodPath.split("\\.")[2];
+        MethodType methodType = datasetType.getMethod().stream().filter(
+                m -> (m.getId() == null ? method == null : m.getId().equals(method))
+        ).findFirst().get();
+        
+        return methodType.getRoleName();
+
     }
     
     private DatasetType getDatasetTypeObject(String path) {
