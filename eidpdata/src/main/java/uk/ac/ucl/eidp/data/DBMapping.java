@@ -39,6 +39,7 @@ public class DBMapping {
     private final Properties mappingProperties = new Properties();
     private final Map<String, Properties> databaseNodes = new HashMap<>();
     private final String NODETYPE_PROP = "uk.ac.ucl.eidp.data.NodeType";
+    private final String CUSTOM_STRATEGY = "uk.ac.ucl.eidp.data.DBMappingStrategy";
     
     @PostConstruct
     public void loadMapping() {
@@ -68,23 +69,40 @@ public class DBMapping {
             p = databaseNodes.get(databaseNodeId);
         }
         
+        DBMappingStrategy dbMappingStrategy = null;
         switch (NodeType.valueOf(p.getProperty(NODETYPE_PROP))) {
             case JDBC:
+                dbMappingStrategy = new JdbcStrategy();
                 break;
             case POOL:
+                dbMappingStrategy = new PoolStrategy();
                 break;
             case EIDP:
+                dbMappingStrategy = new EidpStrategy();
                 break;
+            case CUSTOM: {
+                try {
+                    Class<?> clazz = Class.forName(p.getProperty(CUSTOM_STRATEGY));
+                    dbMappingStrategy = (DBMappingStrategy) clazz.newInstance();
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                    throw new UnsupportedOperationException(CUSTOM_STRATEGY + " could not be loaded. ", ex);
+                }
+            }
+            break;
             default:
                 throw new AssertionError(NodeType.valueOf(p.getProperty(NODETYPE_PROP)).name());
         }
-        throw new UnsupportedOperationException("TODO");
+        
+        if (null == dbMappingStrategy) throw new NullPointerException(NODETYPE_PROP + " could not be initialised.");
+            
+        return dbMappingStrategy.processDbCall(methodPath, parameters);
     }
     
     private enum NodeType {
         JDBC,
         POOL,
-        EIDP
+        EIDP,
+        CUSTOM
     }
     
 }
