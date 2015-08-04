@@ -17,6 +17,7 @@ package uk.ac.ucl.eidp.data;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -26,6 +27,11 @@ public class EidpStrategy implements DBMappingStrategy {
 
     @Override
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void loadProperties(Properties p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

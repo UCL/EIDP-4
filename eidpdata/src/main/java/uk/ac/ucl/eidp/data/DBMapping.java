@@ -21,9 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
@@ -37,9 +36,9 @@ public class DBMapping {
     
     private final String MAPPING_PROPS = "META-INF/eidp/mapping.properties";
     private final Properties mappingProperties = new Properties();
-    private final Map<String, Properties> databaseNodes = new HashMap<>();
-    private final String NODETYPE_PROP = "uk.ac.ucl.eidp.data.NodeType";
-    private final String CUSTOM_STRATEGY = "uk.ac.ucl.eidp.data.DBMappingStrategy";
+    
+    @EJB
+    StrategyCache strategyCache;
     
     @PostConstruct
     public void loadMapping() {
@@ -56,53 +55,9 @@ public class DBMapping {
             throw new IllegalArgumentException("methodPath is invalid");
         String databaseNodeId = mappingProperties.getProperty(methodPath);
         
-        Properties p;
-        if (!databaseNodes.containsKey(databaseNodeId)) {
-            p = new Properties();
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + databaseNodeId + ".properties")) {
-            p.load(is);
-            } catch (IOException ex) {
-                Logger.getLogger(DBMapping.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            databaseNodes.put(databaseNodeId, p);
-        } else {
-            p = databaseNodes.get(databaseNodeId);
-        }
-        
-        DBMappingStrategy dbMappingStrategy = null;
-        switch (NodeType.valueOf(p.getProperty(NODETYPE_PROP))) {
-            case JDBC:
-                dbMappingStrategy = new JdbcStrategy();
-                break;
-            case POOL:
-                dbMappingStrategy = new PoolStrategy();
-                break;
-            case EIDP:
-                dbMappingStrategy = new EidpStrategy();
-                break;
-            case CUSTOM: {
-                try {
-                    Class<?> clazz = Class.forName(p.getProperty(CUSTOM_STRATEGY));
-                    dbMappingStrategy = (DBMappingStrategy) clazz.newInstance();
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                    throw new UnsupportedOperationException(CUSTOM_STRATEGY + " could not be loaded. ", ex);
-                }
-            }
-            break;
-            default:
-                throw new AssertionError(NodeType.valueOf(p.getProperty(NODETYPE_PROP)).name());
-        }
-        
-        if (null == dbMappingStrategy) throw new NullPointerException(NODETYPE_PROP + " could not be initialised.");
+        DBMappingStrategy dbMappingStrategy = strategyCache.getDbMappingStrategyForId(databaseNodeId);
             
         return dbMappingStrategy.processDbCall(methodPath, parameters);
-    }
-    
-    private enum NodeType {
-        JDBC,
-        POOL,
-        EIDP,
-        CUSTOM
     }
     
 }

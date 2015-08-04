@@ -15,24 +15,15 @@
  */
 package uk.ac.ucl.eidp.data;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class PoolStrategy implements DBMappingStrategy {
+public enum NodeType {
 
-    @Override
-    public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void loadProperties(Properties p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    JDBC,
+    POOL,
+    EIDP,
+    CUSTOM
     
 }

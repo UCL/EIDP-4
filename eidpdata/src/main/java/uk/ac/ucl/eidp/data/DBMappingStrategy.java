@@ -15,14 +15,18 @@
  */
 package uk.ac.ucl.eidp.data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public interface DBMappingStrategy {
+public interface DBMappingStrategy extends Serializable {
+    
+    public void loadProperties(Properties p);
     
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters);
     
