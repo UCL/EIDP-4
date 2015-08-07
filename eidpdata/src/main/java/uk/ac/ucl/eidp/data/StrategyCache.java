@@ -36,7 +36,7 @@ public class StrategyCache {
     private final Map<String, Properties> databaseNodes = new HashMap<>();
     private final String NODETYPE_PROP = "uk.ac.ucl.eidp.data.NodeType";
     private final String CUSTOM_STRATEGY = "uk.ac.ucl.eidp.data.DBMappingStrategy";
-    private Map<String, DBMappingStrategy> dBMappingCache;
+    private final Map<String, DBMappingStrategy> dBMappingCache = new HashMap<>();
 
     public DBMappingStrategy getDbMappingStrategyForId(String databaseNodeId) {
 
@@ -61,7 +61,7 @@ public class StrategyCache {
                     dbMappingStrategy = new JdbcStrategy();
                     break;
                 case POOL:
-                    dbMappingStrategy = new PoolStrategy();
+                    dbMappingStrategy = new PoolStrategy(p);
                     break;
                 case EIDP:
                     dbMappingStrategy = new EidpStrategy();

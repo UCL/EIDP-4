@@ -40,12 +40,12 @@ import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class DbXmlParsing {
+public class DbXmlParsingTest {
     
     private final String datasettag = "dataset";
     private final String datasetid = "ROLES";
 
-    public DbXmlParsing() {
+    public DbXmlParsingTest() {
     }
 
     @Test

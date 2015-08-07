@@ -17,7 +17,6 @@ package uk.ac.ucl.eidp.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,7 +37,7 @@ public class DBMapping {
     private final Properties mappingProperties = new Properties();
     
     @EJB
-    StrategyCache strategyCache;
+    private StrategyCache strategyCache;
     
     @PostConstruct
     public void loadMapping() {
