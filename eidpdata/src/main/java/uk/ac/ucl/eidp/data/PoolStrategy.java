@@ -17,6 +17,7 @@ package uk.ac.ucl.eidp.data;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,7 +39,7 @@ import javax.sql.DataSource;
 @LocalBean
 public class PoolStrategy implements DBMappingStrategy {
     
-    private final Properties properties;
+    private Properties properties;
     private final String DS_JNDI_NAME = "datasource-jndi-name";
     @Resource SessionContext ejbContext;
     private Connection connection;
@@ -66,12 +67,15 @@ public class PoolStrategy implements DBMappingStrategy {
 
     @Override
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Map<String, String>> l = new ArrayList<>();
+        return l;
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void loadProperties(Properties p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        properties = p;
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

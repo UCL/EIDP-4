@@ -15,11 +15,11 @@
  */
 package uk.ac.ucl.eidptest.data;
 
-import static org.testng.Assert.*;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import javax.ejb.EJB;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.testng.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
 import uk.ac.ucl.eidp.data.StrategyCache;
@@ -28,14 +28,21 @@ import uk.ac.ucl.eidp.data.StrategyCache;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class StrategyCacheTest {
+public class StrategyCacheTest extends Arquillian {
     
-    public StrategyCacheTest() {
+    @Deployment
+    public static JavaArchive createDeployment() {
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
+            .addClasses(StrategyCache.class, DBMappingStrategy.class);
+            System.out.println(jar.toString(true));
+        return jar;
     }
+    
+    @EJB
+    StrategyCache strategyCache;
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
     public void getDbMappingStrategyForId() {
-        StrategyCache strategyCache = new StrategyCache();
         DBMappingStrategy dbMappingStrategy = strategyCache.getDbMappingStrategyForId("gateway");
     }
 

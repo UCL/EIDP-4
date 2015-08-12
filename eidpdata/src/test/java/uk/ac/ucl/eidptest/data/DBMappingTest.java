@@ -15,26 +15,16 @@
  */
 package uk.ac.ucl.eidptest.data;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import javax.ejb.EJB;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
-import org.testng.TestException;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMapping;
-import uk.ac.ucl.eidp.data.PoolStrategy;
+import uk.ac.ucl.eidp.data.DBMappingStrategy;
 import uk.ac.ucl.eidp.data.StrategyCache;
 
 /**
@@ -46,7 +36,7 @@ public class DBMappingTest extends Arquillian {
     @Deployment
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(DBMapping.class, StrategyCache.class);
+            .addClasses(DBMapping.class, StrategyCache.class, DBMappingStrategy.class);
             System.out.println(jar.toString(true));
         return jar;
     }
