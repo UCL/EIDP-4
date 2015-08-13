@@ -31,7 +31,7 @@ import uk.ac.ucl.eidp.data.StrategyCache;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class DBMappingTest extends Arquillian {
+public class DBMappingIT extends Arquillian {
 
     @Deployment
     public static JavaArchive createDeployment() {

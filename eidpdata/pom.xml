@@ -12,6 +12,7 @@
   <properties>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <dependencyManagement>
@@ -132,32 +133,31 @@
               </execution>
             </executions>
           </plugin>
+<!--
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.18.1</version>
             <configuration>
-              <!-- Fork every test because it will launch a separate AS instance -->
               <forkMode>always</forkMode>
               <systemPropertyVariables>
                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                <!-- the maven dependency plugin will have already downloaded the server on /target -->
                 <jboss.home>${project.basedir}/target/wildfly-8.2.1.Final</jboss.home>
                 <module.path>${project.basedir}/target/wildfly-8.2.1.Final/modules</module.path>
               </systemPropertyVariables>
               <redirectTestOutputToFile>false</redirectTestOutputToFile>
             </configuration>
           </plugin>
+-->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>2.16</version>
             <configuration>
-              <argLine>${argLine} -Xmx1024m -Xms256m</argLine>
               <systemPropertyVariables>
                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                <jboss.home>${jboss.home}</jboss.home>
-                <module.path>${jboss.home}/modules</module.path>
+                <jboss.home>${project.basedir}/target/wildfly-8.2.1.Final</jboss.home>
+                <module.path>${project.basedir}/target/wildfly-8.2.1.Final/modules</module.path>
               </systemPropertyVariables>
             </configuration>
             <executions>
@@ -196,9 +196,31 @@
         </configuration>
       </plugin>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-surefire-plugin</artifactId>
-	     <version>2.18.1</version>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.18.1</version>
+      </plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-failsafe-plugin</artifactId>
+	<version>2.16</version>
+	<configuration>
+	  <reuseForks>false</reuseForks>
+	</configuration>
+	<executions>
+	  <execution>
+	    <id>integration-test</id>
+	    <goals>
+	      <goal>integration-test</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>verify</id>
+	    <goals>
+	      <goal>verify</goal>
+	    </goals>
+	  </execution>
+	</executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -232,32 +254,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.jvnet.jaxb2.maven2</groupId>
-        <artifactId>maven-jaxb2-plugin</artifactId>
-        <version>0.12.3</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <schemaIncludes>
-                <include>jaxb/db/*.xsd</include>
-              </schemaIncludes>
-              <episodeFile>${project.build.directory}/generated-sources/xjc/META-INF/jaxb-db.episode</episodeFile>
-            </configuration>
-            <id>jaxb-generate-db</id>
-          </execution>
-        </executions>
-        <configuration>
-          <catalog>src/main/resources/jaxb/catalog.xml</catalog>
-          <catalogResolver>org.jvnet.jaxb2.maven2.resolver.tools.ClasspathCatalogResolver</catalogResolver>
-          <forceRegenerate>true</forceRegenerate>
-          <generateDirectory>${project.build.directory}/generated-sources/xjc</generateDirectory>
-          <verbose>true</verbose>
-        </configuration>
       </plugin>
     </plugins>
   </build>

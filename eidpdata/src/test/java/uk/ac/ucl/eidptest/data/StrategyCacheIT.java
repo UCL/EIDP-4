@@ -28,7 +28,7 @@ import uk.ac.ucl.eidp.data.StrategyCache;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public class StrategyCacheTest extends Arquillian {
+public class StrategyCacheIT extends Arquillian {
     
     @Deployment
     public static JavaArchive createDeployment() {
