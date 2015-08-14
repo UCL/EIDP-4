@@ -89,94 +89,21 @@
     </profile>
 
     <profile>
-      <id>arquillian-wildfly-embedded</id>
+      <id>arquillian-tomee-embedded</id>
       <dependencies>
         <dependency>
-          <groupId>org.wildfly</groupId>
-          <artifactId>wildfly-arquillian-container-embedded</artifactId>
-          <version>8.2.1.Final</version>
-          <scope>test</scope>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>arquillian-tomee-embedded</artifactId>
+          <version>1.7.2</version>
         </dependency>
         <dependency>
-          <groupId>org.wildfly</groupId>
-          <artifactId>wildfly-embedded</artifactId>
-          <version>8.2.1.Final</version>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>tomee-embedded</artifactId>
+          <version>1.7.2</version>
         </dependency>
       </dependencies>
-      
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.10</version>
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>process-test-classes</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.wildfly</groupId>
-                      <artifactId>wildfly-dist</artifactId>
-                      <version>8.2.1.Final</version>
-                      <type>zip</type>
-                      <overWrite>true</overWrite>
-                      <outputDirectory>target</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-<!--
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.18.1</version>
-            <configuration>
-              <forkMode>always</forkMode>
-              <systemPropertyVariables>
-                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                <jboss.home>${project.basedir}/target/wildfly-8.2.1.Final</jboss.home>
-                <module.path>${project.basedir}/target/wildfly-8.2.1.Final/modules</module.path>
-              </systemPropertyVariables>
-              <redirectTestOutputToFile>false</redirectTestOutputToFile>
-            </configuration>
-          </plugin>
--->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.18.1</version>
-            <configuration>
-              <systemPropertyVariables>
-                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                <jboss.home>${project.basedir}/target/wildfly-8.2.1.Final</jboss.home>
-                <module.path>${project.basedir}/target/wildfly-8.2.1.Final/modules</module.path>
-              </systemPropertyVariables>
-            </configuration>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>verify</id>
-                <goals>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
+
   </profiles>
   
   <build>
