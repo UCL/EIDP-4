@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "uclbioresource/oracle70-uek3"
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+  end
+
+  config.vm.define "glassfish4" do |glassfish4|
+    glassfish4.vm.hostname = "glassfish4.brit.ucl.ac.uk"
+    glassfish4.vm.network "forwarded_port", guest: 4848, host: 64848
+  end
+end

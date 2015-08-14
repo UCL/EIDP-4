@@ -12,7 +12,6 @@
 hs_err_pid*
 
 # use Ivy instead of Maven
-eidpdata/target/
-eidpdata/build/
+target/
 .nb-gradle/private/
-/build/
+.vagrant/

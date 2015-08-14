@@ -1,0 +1,49 @@
+---
+- hosts: all
+  user: vagrant
+  sudo: True
+
+- hosts: glassfish4
+  sudo: True
+  vars:
+    jvm_home: /opt/jdk1.8.0_51
+    jdk_webdir: 8u51-b16
+    jdk_file: server-jre-8u51-linux-x64.tar.gz
+    jvm_cookie: "Cookie:oraclelicense=accept-securebackup-cookie"
+    as_file: glassfish-4.1.zip
+  tasks:
+
+  - name: Download Java
+    command: wget --no-check-certificate --no-cookies --header {{jvm_cookie}} http://download.oracle.com/otn-pub/java/jdk/{{jdk_webdir}}/{{jdk_file}} -O /tmp/{{jdk_file}} creates=/tmp/{{jdk_file}}
+
+  - name: Extract jdk
+    command: tar xfz /tmp/{{jdk_file}} --owner=root chdir=/opt creates={{jvm_home}}
+
+  - name: Set java link
+    command: update-alternatives --install /usr/bin/java java {{jvm_home}}/bin/java 1
+
+  - name: Set jar link
+    command: update-alternatives --install /usr/bin/jar jar {{jvm_home}}/bin/jar 1
+
+  - name: Download Glassfish 4 (Java EE7) from glassfish.java.net
+    command: wget --no-cookies http://download.java.net/glassfish/4.1/release/{{as_file}} -O /tmp/{{as_file}} creates=/tmp/{{as_file}}
+
+  - name: Install unzip
+    yum: name=unzip state=present
+
+  - name: Extract Glassfish files
+    command: unzip /tmp/{{as_file}} chdir=/opt
+
+  - name: Create glassfish group
+    group: name=glassfish state=present system=yes
+
+  - name: Create glassfish user
+    user: name=glassfish comment="Glassfish AS user" createhome=no home=/opt/glassfish4 group=glassfish system=yes
+
+  - name: Change ownership of Glassfish directory
+    file: path=/opt/glassfish4 owner=glassfish group=glassfish recurse=yes
+
+  - name: Start Glassfish
+    command: /opt/glassfish4/bin/asadmin start-domain
+    async: 45
+    poll: 5
