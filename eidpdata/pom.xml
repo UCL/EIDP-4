@@ -131,6 +131,7 @@
                   <executable>vagrant</executable>
                   <arguments>
                     <argument>up</argument>
+		    <argument>glassfish4</argument>
                   </arguments>
                 </configuration>
               </execution>
@@ -144,6 +145,7 @@
                   <executable>vagrant</executable>
                   <arguments>
                     <argument>destroy</argument>
+		    <argument>--force</argument>
                   </arguments>
                 </configuration>
               </execution>

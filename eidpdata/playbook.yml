@@ -47,3 +47,32 @@
     command: /opt/glassfish4/bin/asadmin start-domain
     async: 45
     poll: 5
+
+  - name: Create password files
+    file: path={{item}} state=touch
+    with_items:
+    - prepass.txt
+    - postpass.txt
+
+  - name: Set passwords in prepass.txt file
+    lineinfile: dest=prepass.txt line={{item}}
+    with_items:
+    - "AS_ADMIN_PASSWORD="
+    - "AS_ADMIN_NEWPASSWORD=admin123"
+
+  - name: Set password in postpass.txt file
+    lineinfile: dest=postpass.txt line="AS_ADMIN_PASSWORD=admin123"
+
+  - name: Set admin password in Glassfish
+    command: /opt/glassfish4/bin/asadmin --passwordfile /home/vagrant/prepass.txt --user admin change-admin-password
+
+  - name: Enable remote admin in Glassfish
+    command: /opt/glassfish4/bin/asadmin --passwordfile /home/vagrant/postpass.txt {{item}}
+    with_items:
+    - "enable-secure-admin"
+    - "set server-config.network-config.network-listeners.network-listener.admin-listener.protocol=admin-listener"
+
+  - name: Restart Glassfish
+    command: /opt/glassfish4/bin/asadmin restart-domain
+    async: 45
+    poll: 5

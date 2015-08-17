@@ -6,12 +6,11 @@
   <container qualifier="glassfish4-remote">
     <configuration>
       <property name="adminUser">admin</property>
-      <property name="adminPassword">changeit</property>
+      <property name="adminPassword">admin123</property>
       <property name="adminHttps">false</property>
       <property name="adminHost">localhost</property>
       <property name="adminPort">64848</property>
-      <property name="serverHttps">false</property>
-      <property name="target">ejb-instance</property>
+      <property name="target">server</property>
     </configuration>
   </container>
 
