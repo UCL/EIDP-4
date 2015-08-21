@@ -12,6 +12,23 @@
       <property name="adminPort">64848</property>
       <property name="target">server</property>
     </configuration>
+    <protocol type="Servlet 3.0">
+      <property name="host">localhost</property>
+      <property name="port">58080</property>
+    </protocol>
+  </container>
+
+  <container qualifier="wildfly9-remote">
+    <configuration>
+      <property name="managementAddress">127.0.0.1</property>
+      <property name="managementPort">59990</property>
+      <property name="username">adminUser</property>
+      <property name="password">adminPassword</property>
+    </configuration>
+    <protocol type="Servlet 3.0">
+      <property name="host">localhost</property>
+      <property name="port">58080</property>
+    </protocol>
   </container>
 
 </arquillian>

@@ -3,14 +3,25 @@
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "uclbioresource/oracle70-uek3"
-
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
-  end
-
   config.vm.define "glassfish4" do |glassfish4|
+    glassfish4.vm.box = "uclbioresource/oracle70-uek3-glassfish4"
     glassfish4.vm.hostname = "glassfish4.brit.ucl.ac.uk"
     glassfish4.vm.network "forwarded_port", guest: 4848, host: 64848
+    glassfish4.vm.network "forwarded_port", guest: 8080, host: 58080
+    glassfish4.vm.provision "shell", inline: "sudo /opt/glassfish4/bin/asadmin start-domain"
   end
+
+  config.vm.define "wildfly9" do |wildfly9|
+    wildfly9.vm.box = "uclbioresource/oracle70-uek3-wildfly9"
+    wildfly9.vm.hostname = "wildfly9.brit.ucl.ac.uk"
+    wildfly9.vm.network "forwarded_port", guest: 9990, host: 59990
+    wildfly9.vm.network "forwarded_port", guest: 8080, host: 58080
+    wildfly9.vm.provision "shell", inline: "sudo service wildfly start"
+  end
+
+  config.vm.define "tomee" do |tomee|
+    tomee.vm.hostname = "tomee.brit.ucl.ac.uk"
+    tomee.vm.network "forwarded_port", guest: 8080, host: 58080
+  end
+
 end
