@@ -19,9 +19,4 @@ Vagrant.configure(2) do |config|
     wildfly9.vm.provision "shell", inline: "sudo service wildfly start"
   end
 
-  config.vm.define "tomee" do |tomee|
-    tomee.vm.hostname = "tomee.brit.ucl.ac.uk"
-    tomee.vm.network "forwarded_port", guest: 8080, host: 58080
-  end
-
 end
