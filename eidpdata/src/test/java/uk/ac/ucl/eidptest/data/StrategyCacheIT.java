@@ -22,6 +22,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
+import uk.ac.ucl.eidp.data.EidpStrategy;
+import uk.ac.ucl.eidp.data.JdbcStrategy;
+import uk.ac.ucl.eidp.data.NodeQualifier;
 import uk.ac.ucl.eidp.data.NodeType;
 import uk.ac.ucl.eidp.data.PoolStrategy;
 import uk.ac.ucl.eidp.data.StrategyResolver;
@@ -35,9 +38,10 @@ public class StrategyCacheIT extends Arquillian {
     @Deployment
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(StrategyResolver.class, DBMappingStrategy.class, NodeType.class, PoolStrategy.class)
-            .addAsResource("META-INF/eidp/gateway.properties");
-            System.out.println(jar.toString(true));
+            .addClasses(StrategyResolver.class, DBMappingStrategy.class, NodeQualifier.class,
+                    PoolStrategy.class, JdbcStrategy.class, EidpStrategy.class, NodeType.class)
+            .addAsResource("META-INF/eidp/gateway.properties")
+            .addAsResource("META-INF/beans.xml");
         return jar;
     }
     

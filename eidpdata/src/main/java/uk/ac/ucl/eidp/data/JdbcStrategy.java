@@ -18,11 +18,14 @@ package uk.ac.ucl.eidp.data;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
+@Stateless
+@NodeQualifier(NodeType.JDBC)
 public class JdbcStrategy implements DBMappingStrategy {
 
     @Override

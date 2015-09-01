@@ -15,27 +15,24 @@
  */
 package uk.ac.ucl.eidp.data;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import javax.ejb.Stateless;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-@Stateless
-@NodeQualifier(NodeType.EIDP)
-public class EidpStrategy implements DBMappingStrategy {
-
-    @Override
-    public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setProperties(Properties p) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+@Qualifier
+@Retention(RUNTIME)
+@Target( {TYPE, METHOD, FIELD, PARAMETER} )
+public @interface NodeQualifier {
+    
+    NodeType value();
     
 }

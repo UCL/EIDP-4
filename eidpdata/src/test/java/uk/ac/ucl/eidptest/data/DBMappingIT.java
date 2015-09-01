@@ -25,6 +25,9 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMapping;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
+import uk.ac.ucl.eidp.data.EidpStrategy;
+import uk.ac.ucl.eidp.data.JdbcStrategy;
+import uk.ac.ucl.eidp.data.NodeQualifier;
 import uk.ac.ucl.eidp.data.NodeType;
 import uk.ac.ucl.eidp.data.PoolStrategy;
 import uk.ac.ucl.eidp.data.StrategyResolver;
@@ -38,11 +41,11 @@ public class DBMappingIT extends Arquillian {
     @Deployment
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(DBMapping.class, StrategyResolver.class, DBMappingStrategy.class, PoolStrategy.class, NodeType.class)
+            .addClasses(DBMapping.class, StrategyResolver.class, DBMappingStrategy.class, NodeQualifier.class,
+                    PoolStrategy.class, JdbcStrategy.class, EidpStrategy.class, NodeType.class)
             .addAsResource("META-INF/eidp/mapping.properties")
             .addAsResource("META-INF/eidp/gateway.properties")
             .addAsResource("META-INF/beans.xml");
-            System.out.println(jar.toString(true));
         return jar;
     }
     

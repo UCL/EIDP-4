@@ -21,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
@@ -33,24 +31,17 @@ import javax.sql.DataSource;
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
 @Stateless
-@LocalBean
+@NodeQualifier(NodeType.POOL)
 public class PoolStrategy implements DBMappingStrategy {
     
     private Properties properties;
     private final String DS_JNDI_NAME = "datasource-jndi-name";
-    @Resource SessionContext ejbContext;
     private Connection connection;
-
-    protected PoolStrategy() {
-        throw new IllegalStateException();
-    }
     
-    public PoolStrategy(Properties properties) {
-        this.properties = properties;
-    }
+    @Resource 
+    private SessionContext ejbContext;
     
-    @PostConstruct
-    public void initialise() {
+    private void initialiseConnection() {
         if (!properties.containsKey(DS_JNDI_NAME)) throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
         String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
         DataSource source = (DataSource) ejbContext.lookup(datasourceJndiName);
@@ -71,7 +62,6 @@ public class PoolStrategy implements DBMappingStrategy {
     @Override
     public void setProperties(Properties p) {
         properties = p;
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

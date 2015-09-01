@@ -22,9 +22,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -33,22 +32,24 @@ import javax.naming.NamingException;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-@Named
-@RequestScoped
+@Stateless
 public class StrategyResolver {
 
     private final Map<String, Properties> databaseNodes = new HashMap<>();
     private final String NODETYPE_PROP = "uk.ac.ucl.eidp.data.NodeType";
     private final String CUSTOM_STRATEGY_JNDI = "uk.ac.ucl.eidp.data.DBMappingStrategy";
 
-    @EJB(beanName = "PoolStrategy")
-    DBMappingStrategy poolStrategy;
+    @Inject
+    @NodeQualifier(NodeType.POOL)
+    private DBMappingStrategy poolStrategy;
     
-    @EJB(beanName = "JdbcStrategy")
-    DBMappingStrategy jdbcStrategy;
+    @Inject
+    @NodeQualifier(NodeType.JDBC)
+    private DBMappingStrategy jdbcStrategy;
     
-    @EJB(beanName = "EidpStrategy")
-    DBMappingStrategy eidpStrategy;
+    @Inject
+    @NodeQualifier(NodeType.EIDP)
+    private DBMappingStrategy eidpStrategy;
 
     public DBMappingStrategy getDbMappingStrategyForId(String databaseNodeId) {
 
@@ -78,7 +79,7 @@ public class StrategyResolver {
             case CUSTOM: {
                 try {
                     Context ctx = new InitialContext();
-                    dbMappingStrategy = (DBMappingStrategy) ctx.lookup(CUSTOM_STRATEGY_JNDI);
+                    dbMappingStrategy = (DBMappingStrategy) ctx.lookup(p.getProperty(CUSTOM_STRATEGY_JNDI));
                 } catch (NamingException ex) {
                     throw new UnsupportedOperationException(CUSTOM_STRATEGY_JNDI + " could not be loaded. ", ex);
                 }
