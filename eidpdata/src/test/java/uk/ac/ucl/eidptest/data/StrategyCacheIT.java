@@ -22,7 +22,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
-import uk.ac.ucl.eidp.data.StrategyCache;
+import uk.ac.ucl.eidp.data.NodeType;
+import uk.ac.ucl.eidp.data.PoolStrategy;
+import uk.ac.ucl.eidp.data.StrategyResolver;
 
 /**
  *
@@ -33,17 +35,18 @@ public class StrategyCacheIT extends Arquillian {
     @Deployment
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(StrategyCache.class, DBMappingStrategy.class);
+            .addClasses(StrategyResolver.class, DBMappingStrategy.class, NodeType.class, PoolStrategy.class)
+            .addAsResource("META-INF/eidp/gateway.properties");
             System.out.println(jar.toString(true));
         return jar;
     }
     
     @EJB
-    StrategyCache strategyCache;
+    StrategyResolver strategyResolver;
 
     @Test
     public void getDbMappingStrategyForId() {
-        DBMappingStrategy dbMappingStrategy = strategyCache.getDbMappingStrategyForId("gateway");
+        DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId("gateway");
     }
 
 }

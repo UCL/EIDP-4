@@ -21,14 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 /**
@@ -48,7 +45,6 @@ public class PoolStrategy implements DBMappingStrategy {
         throw new IllegalStateException();
     }
     
-    @Inject
     public PoolStrategy(Properties properties) {
         this.properties = properties;
     }
@@ -73,7 +69,7 @@ public class PoolStrategy implements DBMappingStrategy {
     }
 
     @Override
-    public void loadProperties(Properties p) {
+    public void setProperties(Properties p) {
         properties = p;
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

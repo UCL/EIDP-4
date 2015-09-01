@@ -31,7 +31,7 @@ public class JdbcStrategy implements DBMappingStrategy {
     }
 
     @Override
-    public void loadProperties(Properties p) {
+    public void setProperties(Properties p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

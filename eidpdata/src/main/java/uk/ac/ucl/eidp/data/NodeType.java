@@ -24,6 +24,7 @@ public enum NodeType {
     JDBC,
     POOL,
     EIDP,
-    CUSTOM
+    CUSTOM,
+    EMPTY
     
 }

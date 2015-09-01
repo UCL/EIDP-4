@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.inject.Inject;
 
 /**
  *
@@ -36,8 +36,8 @@ public class DBMapping {
     private final String MAPPING_PROPS = "META-INF/eidp/mapping.properties";
     private final Properties mappingProperties = new Properties();
     
-    @EJB
-    private StrategyCache strategyCache;
+    @Inject
+    private StrategyResolver strategyResolver;
     
     @PostConstruct
     public void loadMapping() {
@@ -54,7 +54,7 @@ public class DBMapping {
             throw new IllegalArgumentException("methodPath is invalid");
         String databaseNodeId = mappingProperties.getProperty(methodPath);
         
-        DBMappingStrategy dbMappingStrategy = strategyCache.getDbMappingStrategyForId(databaseNodeId);
+        DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
             
         return dbMappingStrategy.processDbCall(methodPath, parameters);
     }

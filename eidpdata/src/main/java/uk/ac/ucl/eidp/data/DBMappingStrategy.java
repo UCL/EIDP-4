@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 public interface DBMappingStrategy extends Serializable {
     
-    public void loadProperties(Properties p);
+    public void setProperties(Properties p);
     
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters);
     
