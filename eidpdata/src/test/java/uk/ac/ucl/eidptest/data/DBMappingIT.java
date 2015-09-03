@@ -18,6 +18,7 @@ package uk.ac.ucl.eidptest.data;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -30,6 +31,8 @@ import uk.ac.ucl.eidp.data.JdbcStrategy;
 import uk.ac.ucl.eidp.data.NodeQualifier;
 import uk.ac.ucl.eidp.data.NodeType;
 import uk.ac.ucl.eidp.data.PoolStrategy;
+import uk.ac.ucl.eidp.data.StatementGenerator;
+import uk.ac.ucl.eidp.data.StatementGeneratorProducer;
 import uk.ac.ucl.eidp.data.StrategyResolver;
 
 /**
@@ -42,15 +45,22 @@ public class DBMappingIT extends Arquillian {
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
             .addClasses(DBMapping.class, StrategyResolver.class, DBMappingStrategy.class, NodeQualifier.class,
-                    PoolStrategy.class, JdbcStrategy.class, EidpStrategy.class, NodeType.class)
+                    PoolStrategy.class, JdbcStrategy.class, EidpStrategy.class, NodeType.class, 
+                    StatementGenerator.class, StatementGeneratorProducer.class)
+            .addPackage("uk.ac.ucl.eidp.data.jaxb")
             .addAsResource("META-INF/eidp/mapping.properties")
             .addAsResource("META-INF/eidp/gateway.properties")
+            .addAsResource("META-INF/eidp.properties")
+            .addAsResource("META-INF/eidp/context-test/resources/db.xml")
             .addAsResource("META-INF/beans.xml");
         return jar;
     }
     
     @EJB
     DBMapping dbMapping;
+    
+    @Inject
+    StatementGenerator statementGenerator;
 
     /**
      * Test of loadMapping method, of class DBMapping.

@@ -24,6 +24,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 /**
@@ -41,6 +42,9 @@ public class PoolStrategy implements DBMappingStrategy {
     @Resource 
     private SessionContext ejbContext;
     
+    @Inject
+    private StatementGenerator statementGenerator;
+    
     private void initialiseConnection() {
         if (!properties.containsKey(DS_JNDI_NAME)) throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
         String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
@@ -54,6 +58,7 @@ public class PoolStrategy implements DBMappingStrategy {
 
     @Override
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
+        String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         List<Map<String, String>> l = new ArrayList<>();
         return l;
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

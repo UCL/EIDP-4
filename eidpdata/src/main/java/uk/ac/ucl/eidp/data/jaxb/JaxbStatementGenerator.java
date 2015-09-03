@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.inject.Alternative;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -36,6 +37,7 @@ import uk.ac.ucl.eidp.data.StatementGenerator;
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
+@Alternative
 public class JaxbStatementGenerator implements StatementGenerator {
 
     private final XMLInputFactory xif = XMLInputFactory.newFactory();
