@@ -26,6 +26,8 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.sql.DataSource;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
+import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
 
 /**
  *
@@ -43,6 +45,7 @@ public class PoolStrategy implements DBMappingStrategy {
     private SessionContext ejbContext;
     
     @Inject
+    @StatementProducer
     private StatementGenerator statementGenerator;
     
     private void initialiseConnection() {

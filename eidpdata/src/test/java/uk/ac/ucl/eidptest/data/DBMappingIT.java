@@ -31,9 +31,10 @@ import uk.ac.ucl.eidp.data.JdbcStrategy;
 import uk.ac.ucl.eidp.data.NodeQualifier;
 import uk.ac.ucl.eidp.data.NodeType;
 import uk.ac.ucl.eidp.data.PoolStrategy;
-import uk.ac.ucl.eidp.data.StatementGenerator;
 import uk.ac.ucl.eidp.data.StatementGeneratorProducer;
 import uk.ac.ucl.eidp.data.StrategyResolver;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
+import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
 
 /**
  *
@@ -60,6 +61,7 @@ public class DBMappingIT extends Arquillian {
     DBMapping dbMapping;
     
     @Inject
+    @StatementProducer
     StatementGenerator statementGenerator;
 
     /**

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Alternative;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -31,20 +30,17 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import uk.ac.ucl.eidp.data.StatementGenerator;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-@Alternative
-public class JaxbStatementGenerator implements StatementGenerator {
+public class StatementGenerator {
 
     private final XMLInputFactory xif = XMLInputFactory.newFactory();
     private final String DATASET_TAG = "dataset";
     private String SQL_DIALECT = "";
     
-    @Override
     public String getSqlStatement(String methodPath) {
         
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
@@ -56,7 +52,7 @@ public class JaxbStatementGenerator implements StatementGenerator {
         try {
             jaxbSqlStatement = (JaxbSqlStatement) Class.forName(SQL_DIALECT).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
+            Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
             jaxbSqlStatement = new JaxbSqlAnsi();
         }
         
@@ -64,12 +60,10 @@ public class JaxbStatementGenerator implements StatementGenerator {
 
     }
 
-    @Override
     public void setSqlDialect(String SQL_DIALECT) {
         this.SQL_DIALECT = SQL_DIALECT;
     }
 
-    @Override
     public Map<String, String> translateParameters(Map<String, String> m, String datasetPath) {
         
         if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
@@ -90,7 +84,6 @@ public class JaxbStatementGenerator implements StatementGenerator {
         return translatedMap;
     }
 
-    @Override
     public List<String> getMethodRoles(String methodPath) {
         
         if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
@@ -137,7 +130,7 @@ public class JaxbStatementGenerator implements StatementGenerator {
         try {
             xsr.close();
         } catch (XMLStreamException ex) {
-            Logger.getLogger(JaxbStatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
+            Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
         }
         
         return datasetType;

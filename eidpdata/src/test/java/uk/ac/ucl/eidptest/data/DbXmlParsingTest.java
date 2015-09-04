@@ -32,8 +32,7 @@ import javax.xml.transform.stream.StreamSource;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
-import uk.ac.ucl.eidp.data.StatementGenerator;
-import uk.ac.ucl.eidp.data.StatementGeneratorFactory;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
 import uk.ac.ucl.eidptest.data.jaxb.DatasetType;
 
 /**
@@ -143,8 +142,8 @@ public class DbXmlParsingTest {
         m.put("participant_id", "o784qhfcadbcadfbha");
         m.put("application", "test-context");
         m.put("centre", "10000");
-        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
-        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        StatementGenerator sqlGenerator = new StatementGenerator();
+        sqlGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi");
         Map<String, String> generated = sqlGenerator.translateParameters(m, "context-test.PARTICIPANT_LIST");
         assertEquals(generated, expected);
     }
@@ -153,8 +152,8 @@ public class DbXmlParsingTest {
     public void getMethodRoles() {
         String[] a = {"brit","admin","test"};
         List<String> expected = new ArrayList<>(Arrays.asList(a));
-        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
-        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        StatementGenerator sqlGenerator = new StatementGenerator();
+        sqlGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi");
         List<String> generated = sqlGenerator.getMethodRoles("context-test.PARTICIPANT_LIST.setParticipantForID");
         assertEquals(generated, expected);
     }
@@ -204,8 +203,8 @@ public class DbXmlParsingTest {
     }
     
     private String buildStatement(String method) {
-        StatementGeneratorFactory sqlGeneratorFactory = new StatementGeneratorFactory();
-        StatementGenerator sqlGenerator = sqlGeneratorFactory.newSqlGenerator();
+        StatementGenerator sqlGenerator = new StatementGenerator();
+        sqlGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi");
         return sqlGenerator.getSqlStatement(method);
     }
         

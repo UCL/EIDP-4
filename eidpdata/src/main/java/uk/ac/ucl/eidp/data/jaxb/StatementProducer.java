@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.ucl.eidp.data;
+package uk.ac.ucl.eidp.data.jaxb;
 
-import java.util.List;
-import java.util.Map;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-public interface StatementGenerator {
+@Qualifier
+@Retention(RUNTIME)
+@Target({METHOD, FIELD, PARAMETER, TYPE})
+public @interface StatementProducer {
     
-    public String getSqlStatement(String methodpath);
-    
-    public void setSqlDialect(String sqlDialect);
-    
-    public Map<String, String> translateParameters(Map<String, String> m, String datasetId);
-    
-    public List<String> getMethodRoles(String methodpath);
-
 }

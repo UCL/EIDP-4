@@ -20,9 +20,11 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.New;
+import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Produces;
-import uk.ac.ucl.eidp.data.jaxb.JaxbStatementGenerator;
+import javax.inject.Inject;
+import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
 
 /**
  *
@@ -36,13 +38,14 @@ public class StatementGeneratorProducer {
     private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
     private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
     
-    private void init() {
+    @Inject
+    public StatementGeneratorProducer() {
         
         Properties p = new Properties();
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(PROPERTIESFILE)) {
             p.load(is);
         } catch (IOException ex) {
-            Logger.getLogger(StatementGeneratorFactory.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(StatementGeneratorProducer.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (p.containsKey(SQLGENERATOR_PROP) && !SQLGENERATOR_CLASS.equals(p.getProperty(SQLGENERATOR_PROP))) {
             SQLGENERATOR_CLASS = p.getProperty(SQLGENERATOR_PROP);
@@ -53,17 +56,10 @@ public class StatementGeneratorProducer {
     }
     
     @Produces
-    public StatementGenerator newSqlGenerator(@New StatementGeneratorProducer producer) {
-        producer.init();
-        StatementGenerator sqlGenerator;
-        try {
-            sqlGenerator = (StatementGenerator) Class.forName(producer.SQLGENERATOR_CLASS).newInstance();
-            
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(StatementGeneratorProducer.class.getName()).log(Level.SEVERE, null, ex);
-            sqlGenerator = new JaxbStatementGenerator();
-        }
-        sqlGenerator.setSqlDialect(producer.SQL_DIALECT);
+    @StatementProducer
+    public StatementGenerator newSqlGenerator() {
+        StatementGenerator sqlGenerator = new StatementGenerator();
+        sqlGenerator.setSqlDialect(SQL_DIALECT);
         return sqlGenerator;
     }
     
