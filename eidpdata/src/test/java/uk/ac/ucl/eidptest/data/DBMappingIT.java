@@ -15,14 +15,20 @@
  */
 package uk.ac.ucl.eidptest.data;
 
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMapping;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
@@ -63,13 +69,36 @@ public class DBMappingIT extends Arquillian {
     @Inject
     @StatementProducer
     StatementGenerator statementGenerator;
+      
+    private Connection connection;
 
-    /**
-     * Test of loadMapping method, of class DBMapping.
-     */
     @Test
-    public void testDbAction() {
-        List<Map<String, String>> dbActionR = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", null);
+    public void testStatementGenerator() throws Exception {
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?;";
+        String generated = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
+        assertEquals(generated, expected);
+    }
+    
+    @Test
+    public void testDbAction() throws Exception {
+        Context ejbContext = new InitialContext();
+        DataSource source = (DataSource) ejbContext.lookup("jdbc/gateway");
+        try {
+            connection = source.getConnection();
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
+        }
+        String sqlStatement = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
+        PreparedStatement ps = connection.prepareStatement(sqlStatement.replace(";", ""));
+        ps.setString(1, "testuser");
+        ps.setInt(2, 1000);
+        ResultSet rs = ps.executeQuery();
+        int expected = 1;
+        int generated = rs.getRow();
+        rs.close();
+        ps.close();
+        assertEquals(generated, expected);
+//        List<Map<String, String>> dbActionR = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", null);
     }
 
     

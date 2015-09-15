@@ -51,6 +51,7 @@ public class PoolStrategy implements DBMappingStrategy {
     private void initialiseConnection() {
         if (!properties.containsKey(DS_JNDI_NAME)) throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
         String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
+        System.out.println("JNDIIIIIIIIIIIIIIIIIIIIIIIII" + datasourceJndiName);
         DataSource source = (DataSource) ejbContext.lookup(datasourceJndiName);
         try {
             connection = source.getConnection();
@@ -61,6 +62,8 @@ public class PoolStrategy implements DBMappingStrategy {
 
     @Override
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
+        if (null == connection) initialiseConnection();
+        
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         List<Map<String, String>> l = new ArrayList<>();
         return l;

@@ -3,12 +3,28 @@
 
 Vagrant.configure(2) do |config|
 
+$glassfish_provision = <<GLASSFISH
+echo 'create schema UCLBRIT authorization EIDP;' > test.sql
+echo 'create table UCLBRIT.T_USERS (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 10, INCREMENT BY 1), ' >> test.sql
+echo 'login VARCHAR(50) NOT NULL, password VARCHAR(100) NOT NULL, login_err_number INTEGER, ' >> test.sql
+echo 'login_err_timestamp VARCHAR(80) NOT NULL, create_timestamp VARCHAR(80), ' >> test.sql
+echo 'modify_timestamp VARCHAR(80), center_id INTEGER NOT NULL);' >> test.sql
+echo 'insert into UCLBRIT.T_USERS (login, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp, center_id) ' >> test.sql
+echo "values ('testuser', 'password', 1, '1234567890', '0987654321', '0123456789', 1000);" >> test.sql
+echo 'ij.database=jdbc:derby://localhost:1527/gateway;create=true;user=EIDP;password=EIDP' > test.properties
+sudo /opt/glassfish4/bin/asadmin start-domain
+sudo /opt/glassfish4/bin/asadmin start-database --dbhome=/opt/glassfish4/javadb
+sudo /opt/glassfish4/bin/asadmin --passwordfile postpass.txt --user admin create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=1527:password=EIDP:user=EIDP:serverName=localhost:databaseName=gateway:connectionAttributes=\\;create\\\\=true GatewayPool
+sudo /opt/glassfish4/bin/asadmin --passwordfile postpass.txt --user admin create-jdbc-resource --connectionpoolid GatewayPool jdbc/gateway
+sudo /opt/glassfish4/javadb/bin/ij -p test.properties test.sql
+GLASSFISH
+
   config.vm.define "glassfish4" do |glassfish4|
     glassfish4.vm.box = "uclbioresource/oracle70-uek3-glassfish4"
     glassfish4.vm.hostname = "glassfish4.brit.ucl.ac.uk"
     glassfish4.vm.network "forwarded_port", guest: 4848, host: 64848
     glassfish4.vm.network "forwarded_port", guest: 8080, host: 58080
-    glassfish4.vm.provision "shell", inline: "sudo /opt/glassfish4/bin/asadmin start-domain"
+    glassfish4.vm.provision "shell", inline: $glassfish_provision
   end
 
   config.vm.define "wildfly9" do |wildfly9|
