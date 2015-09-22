@@ -19,6 +19,15 @@ sudo /opt/glassfish4/bin/asadmin --passwordfile postpass.txt --user admin create
 sudo /opt/glassfish4/javadb/bin/ij -p test.properties test.sql
 GLASSFISH
 
+$wildfly_provision = <<WILDFLY
+sudo service wildfly start
+sudo /opt/wildfly-9.0.1.Final/bin/jboss-cli.sh --connect "/subsystem=datasources/data-source=GatewayPool:add(driver-name=h2,user-name=EIDP,password=EIDP,connection-url=jdbc:h2:tcp://localhost/~/gateway,jndi-name=java:/jdbc/gateway,enabled=true,connectable=true,allow-multiple-users=true,validate-on-match=true)"
+sudo java -cp /opt/wildfly-9.0.1.Final/modules/system/layers/base/com/h2database/h2/main/h2-1.3.173.jar org.h2.tools.Server -tcp &
+sudo java -cp /opt/wildfly-9.0.1.Final/modules/system/layers/base/com/h2database/h2/main/h2-1.3.173.jar org.h2.tools.Shell -url jdbc:h2:tcp://localhost/~/gateway -user EIDP -password EIDP -sql "create schema UCLBRIT authorization EIDP;"
+sudo java -cp /opt/wildfly-9.0.1.Final/modules/system/layers/base/com/h2database/h2/main/h2-1.3.173.jar org.h2.tools.Shell -url jdbc:h2:tcp://localhost/~/gateway -user EIDP -password EIDP -sql "create table UCLBRIT.T_USERS (id INTEGER NOT NULL AUTO_INCREMENT, login VARCHAR(50) NOT NULL, password VARCHAR(100) NOT NULL, login_err_number INTEGER, login_err_timestamp VARCHAR(80) NOT NULL, create_timestamp VARCHAR(80), modify_timestamp VARCHAR(80), center_id INTEGER NOT NULL);"
+sudo java -cp /opt/wildfly-9.0.1.Final/modules/system/layers/base/com/h2database/h2/main/h2-1.3.173.jar org.h2.tools.Shell -url jdbc:h2:tcp://localhost/~/gateway -user EIDP -password EIDP -sql "insert into UCLBRIT.T_USERS (login, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp, center_id) values ('testuser', 'password', 1, '1234567890', '0987654321', '0123456789', 1000);"
+WILDFLY
+
   config.vm.define "glassfish4" do |glassfish4|
     glassfish4.vm.box = "uclbioresource/oracle70-uek3-glassfish4"
     glassfish4.vm.hostname = "glassfish4.brit.ucl.ac.uk"
@@ -32,7 +41,7 @@ GLASSFISH
     wildfly9.vm.hostname = "wildfly9.brit.ucl.ac.uk"
     wildfly9.vm.network "forwarded_port", guest: 9990, host: 59990
     wildfly9.vm.network "forwarded_port", guest: 8080, host: 58080
-    wildfly9.vm.provision "shell", inline: "sudo service wildfly start"
+    wildfly9.vm.provision "shell", inline: $wildfly_provision
   end
 
 end

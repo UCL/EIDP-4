@@ -89,10 +89,11 @@ public class DBMappingIT extends Arquillian {
             throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
         }
         String sqlStatement = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
-        PreparedStatement ps = connection.prepareStatement(sqlStatement.replace(";", ""));
+        PreparedStatement ps = connection.prepareStatement(sqlStatement.replace(";", ""), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ps.setString(1, "testuser");
         ps.setInt(2, 1000);
         ResultSet rs = ps.executeQuery();
+        rs.last();
         int expected = 1;
         int generated = rs.getRow();
         rs.close();
