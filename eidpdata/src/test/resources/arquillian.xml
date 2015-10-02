@@ -9,18 +9,19 @@
     </configuration>
   </container>
 
-  <container qualifier="tomee172-embedded">
+  <container qualifier="openejb-embedded">
     <configuration>
       <property name="properties">
-        jdbc/gateway=new://Resource?type=javax.sql.DataSource
-        jdbc/gateway.UserName=EIDP
-        jdbc/gateway.Password=EIDP
-        jdbc/gateway.JdbcUrl=jdbc:hsqldb:hsql://localhost:9001/gateway
+        GatewayDS=new://Resource?type=javax.sql.DataSource
+        GatewayDS.UserName=EIDP
+        GatewayDS.Password=EIDP
+        GatewayDS.JdbcUrl=jdbc:hsqldb:hsql://localhost:9001/gateway
         openejb.classloader.forced-load=org.apache.openejb.arquillian.tests
         openejb.ear.use-as-webcontext-base=true
         openejb.descriptors.output = true
         openejb.validation.output.level = verbose
         java.naming.factory.initial=org.apache.openejb.client.LocalInitialContextFactory
+        datasource-jndi=java:openejb/Resource/GatewayDS
       </property>
     </configuration>
   </container>

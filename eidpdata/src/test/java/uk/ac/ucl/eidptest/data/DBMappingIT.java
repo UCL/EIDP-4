@@ -81,8 +81,12 @@ public class DBMappingIT extends Arquillian {
     
     @Test
     public void testDbAction() throws Exception {
+        String datasourceJndi = "jdbc/gateway";
+        if (System.getProperties().containsKey("datasource-jndi")) {
+            datasourceJndi = System.getProperty("datasource-jndi");
+        }
         Context ejbContext = new InitialContext();
-        DataSource source = (DataSource) ejbContext.lookup("jdbc/gateway");
+        DataSource source = (DataSource) ejbContext.lookup(datasourceJndi);
         try {
             connection = source.getConnection();
         } catch (SQLException ex) {

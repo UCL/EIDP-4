@@ -164,6 +164,77 @@
 	       <version>4.7.2</version>
 	     </dependency>
       </dependencies>
+      <build>
+        <testResources>
+          <testResource>
+            <directory>src/test/resources</directory>
+	         <filtering>true</filtering>
+          </testResource>
+          <testResource>
+            <directory>src/test/resources/openejb</directory>
+          </testResource>
+        </testResources>
+        <plugins>
+          <plugin>
+            <groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
+            <artifactId>inmemdb-maven-plugin</artifactId>
+            <version>1.4.3</version>
+            <configuration>
+              <monitorKey>inmemdb</monitorKey>
+              <monitorPort>11527</monitorPort>
+            </configuration>
+            <executions>
+              <execution>
+                <id>run-hsqldb</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <daemon>true</daemon>
+                  <type>hsqldb</type>
+                  <database>gateway</database>
+			         <port>9001</port>
+                  <attributes>
+                    <CREATE>true</CREATE>
+                  </attributes>
+                  <sources>
+                    <script>
+                      <sourceFile>eidpdata/src/test/resources/sql/test-data-hsqldb.sql</sourceFile>
+                    </script>                               
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stop-hsqldb</id>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+                <phase>post-integration-test</phase>
+              </execution>
+            </executions>  
+          </plugin>                                
+          <plugin>
+	         <groupId>org.apache.maven.plugins</groupId>
+	         <artifactId>maven-failsafe-plugin</artifactId>
+	         <version>2.16</version>
+	         <configuration>
+	           <systemPropertyVariables>
+	             <arquillian.launch>openejb-embedded</arquillian.launch>
+	           </systemPropertyVariables>
+	         </configuration>
+	         <executions>
+	           <execution>
+	             <id>integration-test</id>
+	             <goals>
+	               <goal>integration-test</goal>
+	               <goal>verify</goal>
+	             </goals>
+	           </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>
@@ -236,7 +307,7 @@
 	         <version>2.16</version>
 	         <configuration>
 	           <systemPropertyVariables>
-	             <arquillian.launch>tomee172-embedded</arquillian.launch>
+	             <arquillian.launch>openejb-embedded</arquillian.launch>
 	           </systemPropertyVariables>
 	         </configuration>
 	         <executions>
