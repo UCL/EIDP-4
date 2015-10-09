@@ -50,7 +50,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         
         stm.append(generateOffsetLimit());
         
-        return stm.append(";").toString();
+        return stm.toString();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             stm.append(", ");
         });
         stm.append("nextval('").append(generateId()).append("'))");
-        return stm.append(";").toString();
+        return stm.toString();
     }
     
     @Override
@@ -88,7 +88,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         StringBuilder stm = new StringBuilder("DELETE FROM ");
         stm.append(tableType.getName());
         if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
-        return stm.append(";").toString();
+        return stm.toString();
     }
     
     protected String generateWhereClause() {

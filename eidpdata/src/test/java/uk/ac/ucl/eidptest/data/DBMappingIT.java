@@ -74,7 +74,7 @@ public class DBMappingIT extends Arquillian {
 
     @Test
     public void testStatementGenerator() throws Exception {
-        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?;";
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?";
         String generated = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
         assertEquals(generated, expected);
     }
@@ -93,7 +93,7 @@ public class DBMappingIT extends Arquillian {
             throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
         }
         String sqlStatement = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
-        PreparedStatement ps = connection.prepareStatement(sqlStatement.replace(";", ""), ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        PreparedStatement ps = connection.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ps.setString(1, "testuser");
         ps.setInt(2, 1000);
         ResultSet rs = ps.executeQuery();
