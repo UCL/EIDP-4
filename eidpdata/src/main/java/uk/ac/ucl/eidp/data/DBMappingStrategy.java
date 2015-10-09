@@ -32,4 +32,6 @@ public interface DBMappingStrategy extends Serializable {
     
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters);
     
+    public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters);
+    
 }

@@ -37,5 +37,10 @@ public class JdbcStrategy implements DBMappingStrategy {
     public void setProperties(Properties p) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

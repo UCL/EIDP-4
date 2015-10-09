@@ -16,12 +16,18 @@
 package uk.ac.ucl.eidp.data;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -51,7 +57,6 @@ public class PoolStrategy implements DBMappingStrategy {
     private void initialiseConnection() {
         if (!properties.containsKey(DS_JNDI_NAME)) throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
         String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
-        System.out.println("JNDIIIIIIIIIIIIIIIIIIIIIIIII" + datasourceJndiName);
         DataSource source = (DataSource) ejbContext.lookup(datasourceJndiName);
         try {
             connection = source.getConnection();
@@ -66,6 +71,13 @@ public class PoolStrategy implements DBMappingStrategy {
         
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         List<Map<String, String>> l = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet executeQuery = ps.executeQuery();
+            
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Could not execute PreparedStatement " + sqlStatement, ex);
+        }
         return l;
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -73,6 +85,11 @@ public class PoolStrategy implements DBMappingStrategy {
     @Override
     public void setProperties(Properties p) {
         properties = p;
+    }
+
+    @Override
+    public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
