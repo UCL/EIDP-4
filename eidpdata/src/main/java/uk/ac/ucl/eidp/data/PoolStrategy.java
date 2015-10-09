@@ -45,6 +45,8 @@ public class PoolStrategy implements DBMappingStrategy {
     
     private Properties properties;
     private final String DS_JNDI_NAME = "datasource-jndi-name";
+    private final String RS_SCROLL_TYPE = "resultset-scroll-type";
+    private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
     private Connection connection;
     
     @Resource 
@@ -72,7 +74,11 @@ public class PoolStrategy implements DBMappingStrategy {
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         List<Map<String, String>> l = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
+            int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
+            if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
+            if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
+            PreparedStatement ps = connection.prepareStatement(sqlStatement, scroll_type, concurrency_mode);
             ResultSet executeQuery = ps.executeQuery();
             
         } catch (SQLException ex) {
