@@ -133,22 +133,6 @@ public class DbXmlParsingTest {
     }
     
     @Test
-    public void translateParameters() {
-        Map<String, String> expected = new HashMap<>();
-        expected.put("participantIdCol", "o784qhfcadbcadfbha");
-        expected.put("applicationCol", "test-context");
-        expected.put("centreCol", "10000");
-        Map<String, String> m = new HashMap<>();
-        m.put("participant_id", "o784qhfcadbcadfbha");
-        m.put("application", "test-context");
-        m.put("centre", "10000");
-        StatementGenerator sqlGenerator = new StatementGenerator();
-        sqlGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi");
-        Map<String, String> generated = sqlGenerator.translateParameters(m, "context-test.PARTICIPANT_LIST");
-        assertEquals(generated, expected);
-    }
-    
-    @Test
     public void getMethodRoles() {
         String[] a = {"brit","admin","test"};
         List<String> expected = new ArrayList<>(Arrays.asList(a));

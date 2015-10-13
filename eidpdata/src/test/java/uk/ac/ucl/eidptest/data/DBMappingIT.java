@@ -19,7 +19,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -29,6 +34,7 @@ import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import static org.testng.Assert.assertEquals;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMapping;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
@@ -71,7 +77,7 @@ public class DBMappingIT extends Arquillian {
     StatementGenerator statementGenerator;
       
     private Connection connection;
-
+    
     @Test
     public void testStatementGenerator() throws Exception {
         String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?";
@@ -80,13 +86,13 @@ public class DBMappingIT extends Arquillian {
     }
     
     @Test
-    public void testDbAction() throws Exception {
+    public void testDatabaseConnection() throws Exception {
         String datasourceJndi = "jdbc/gateway";
-        if (System.getProperties().containsKey("datasource-jndi")) {
-            datasourceJndi = System.getProperty("datasource-jndi");
+        if (System.getProperties().containsKey("datasource-jndi-name")) {
+            datasourceJndi = System.getProperty("datasource-jndi-name");
         }
-        Context ejbContext = new InitialContext();
-        DataSource source = (DataSource) ejbContext.lookup(datasourceJndi);
+        Context context = new InitialContext();
+        DataSource source = (DataSource) context.lookup(datasourceJndi);
         try {
             connection = source.getConnection();
         } catch (SQLException ex) {
@@ -102,9 +108,14 @@ public class DBMappingIT extends Arquillian {
         int generated = rs.getRow();
         rs.close();
         ps.close();
-        assertEquals(generated, expected);
-//        List<Map<String, String>> dbActionR = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", null);
+        assertEquals(generated, expected);       
     }
 
-    
+    @Test
+    public void testDbaAction() {
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser");
+        m.put("center_id", "1000");
+        List<Map<String, String>> dbActionR = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", m);
+    }
 }

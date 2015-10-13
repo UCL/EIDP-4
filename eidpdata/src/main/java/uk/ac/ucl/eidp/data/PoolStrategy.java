@@ -16,21 +16,19 @@
 package uk.ac.ucl.eidp.data;
 
 import java.sql.Connection;
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.ejb.EJBException;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
 import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
@@ -49,20 +47,21 @@ public class PoolStrategy implements DBMappingStrategy {
     private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
     private Connection connection;
     
-    @Resource 
-    private SessionContext ejbContext;
-    
     @Inject
     @StatementProducer
     private StatementGenerator statementGenerator;
     
     private void initialiseConnection() {
-        if (!properties.containsKey(DS_JNDI_NAME)) throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
+        if (!properties.containsKey(DS_JNDI_NAME)) {
+            throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
+        }
         String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
-        DataSource source = (DataSource) ejbContext.lookup(datasourceJndiName);
+        DataSource source;
         try {
+            Context context = new InitialContext();
+            source = (DataSource) context.lookup(datasourceJndiName);
             connection = source.getConnection();
-        } catch (SQLException ex) {
+        } catch (SQLException | NamingException ex) {
             throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
         }
     }
@@ -72,6 +71,7 @@ public class PoolStrategy implements DBMappingStrategy {
         if (null == connection) initialiseConnection();
         
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
+        Map<Integer, String> p = statementGenerator.translateParameters(parameters, methodPath);
         List<Map<String, String>> l = new ArrayList<>();
         try {
             int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
@@ -79,7 +79,14 @@ public class PoolStrategy implements DBMappingStrategy {
             if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
             if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
             PreparedStatement ps = connection.prepareStatement(sqlStatement, scroll_type, concurrency_mode);
+            ParameterMetaData parameterMetaData = ps.getParameterMetaData();
+            for (int i = 1; i <= parameterMetaData.getParameterCount(); i++) {
+                int parameterType = parameterMetaData.getParameterType(i);
+                // Convert to the spefic object type
+                ps.setObject(i, p.get(i), parameterType);
+            }
             ResultSet executeQuery = ps.executeQuery();
+            
             
         } catch (SQLException ex) {
             throw new IllegalStateException("Could not execute PreparedStatement " + sqlStatement, ex);

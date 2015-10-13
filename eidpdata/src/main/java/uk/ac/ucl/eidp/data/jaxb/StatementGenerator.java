@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,24 +65,38 @@ public class StatementGenerator {
         this.SQL_DIALECT = SQL_DIALECT;
     }
 
-    public Map<String, String> translateParameters(Map<String, String> m, String datasetPath) {
+    public Map<Integer, String> translateParameters(Map<String, String> m, String methodPath) {
         
-        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
-            throw new IllegalArgumentException("datasetPath is invalid");
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("methodPath is invalid");
         
-        Map<String, String> translatedMap = new HashMap<>();
-        DatasetType datasetType = getDatasetTypeObject(datasetPath);
-        
-        m.forEach((String k,String v) -> {
-            String translatedKey = datasetType.getTable().getField().stream()
-                .filter(t -> t.getId().equals(k))
-                .findFirst()
-                .get()
-                .getName();
-            translatedMap.put(translatedKey, v);
-        });
+        Map<Integer, String> translatedMap = new HashMap<>();
+        DatasetType datasetType = getDatasetTypeObject(methodPath);
+        String method = methodPath.split("\\.")[2];
+        MethodType methodType = getMethodType(datasetType, method);
+
+        ListIterator<String> listIterator = methodType.getFor().listIterator();
+        while (listIterator.hasNext()) {
+            int i = listIterator.nextIndex();
+            String k = listIterator.next();
+            if (m.containsKey(k)) {
+                translatedMap.put(i, k);
+            } else {
+                translatedMap.put(i, null);
+            }
+        }
         
         return translatedMap;
+    }
+    
+    public TableFieldType getTableField(String fieldId, String datasetPath) {
+        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("datasetPath is invalid");
+        DatasetType datasetType = getDatasetTypeObject(datasetPath);
+        return datasetType.getTable().getField().stream()
+                .filter(t -> t.getId().equals(fieldId))
+                .findFirst()
+                .get();
     }
 
     public List<String> getMethodRoles(String methodPath) {
@@ -91,10 +106,7 @@ public class StatementGenerator {
         
         DatasetType datasetType = getDatasetTypeObject(methodPath);
         String method = methodPath.split("\\.")[2];
-        MethodType methodType = datasetType.getMethod().stream().filter(
-                m -> (m.getId() == null ? method == null : m.getId().equals(method))
-        ).findFirst().get();
-        
+        MethodType methodType = getMethodType(datasetType, method);
         return methodType.getRoleName();
 
     }
@@ -134,5 +146,11 @@ public class StatementGenerator {
         }
         
         return datasetType;
+    }
+    
+    private MethodType getMethodType(DatasetType datasetType, String method) {
+        return datasetType.getMethod().stream().filter(
+                m -> (m.getId() == null ? method == null : m.getId().equals(method))
+        ).findFirst().get();
     }
 }
