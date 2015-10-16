@@ -49,28 +49,28 @@ public class DbXmlParsingTest {
 
     @Test
     public void basicGetStatement() {
-        String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = ?";
+        String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = :login";
         String generated = buildStatement("context-test.ROLES.getRolesForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void basicSetStatement() {
-        String expected = "UPDATE UCLBRIT.T_USERS SET password = ?, modify_timestamp = ? WHERE id = ?;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES (?, ?, nextval('UCLBRIT.T_USERS_id_seq'))";
+        String expected = "UPDATE UCLBRIT.T_USERS SET password = :password, modify_timestamp = :modify_timestamp WHERE id = :id;INSERT INTO UCLBRIT.T_USERS (password, modify_timestamp, id) VALUES (:password, :modify_timestamp, nextval('UCLBRIT.T_USERS_id_seq'))";
         String generated = buildStatement("context-test.USERS.setPassword");
         assertEquals(generated, expected);
     }
     
     @Test
     public void basicDelStatement() {
-        String expected = "DELETE FROM UCLBRIT.T_ROLES WHERE login = ?";
+        String expected = "DELETE FROM UCLBRIT.T_ROLES WHERE login = :login";
         String generated = buildStatement("context-test.ROLES.removeRolesForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void whereClause() {
-        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?";
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = :login AND center_id = :center_id";
         String generated = buildStatement("context-test.USERS.getUserDataForLogin");
         assertEquals(generated, expected);
     }
@@ -85,42 +85,42 @@ public class DbXmlParsingTest {
     
     @Test
     public void notequalGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND permission != ?";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND permission != :permission";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndPermissionNotEqual");
         assertEquals(generated, expected);
     }
     
     @Test
     public void lessthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id < ?";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND id < :id";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void lessequalthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id <= ?";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND id <= :id";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdLessEqualThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void greaterthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id > ?";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND id > :id";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterThan");
         assertEquals(generated, expected);
     }
 
     @Test
     public void greaterequalthanGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id >= ?";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND id >= :id";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdGreaterEqualThan");
         assertEquals(generated, expected);
     }
     
     @Test
     public void inGetStatement() {
-        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = ? AND id in (?)";
+        String expected = "SELECT id, center, status FROM UCLBRIT.T_CENTER_ROLES WHERE login = :login AND id in (:id)";
         String generated = buildStatement("context-test.CENTER_ROLES.getCentersForUserAndIdIn");
         assertEquals(generated, expected);
     }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -65,28 +66,26 @@ public class StatementGenerator {
         this.SQL_DIALECT = SQL_DIALECT;
     }
 
-    public Map<Integer, String> translateParameters(Map<String, String> m, String methodPath) {
+    public Map<String, Parameter> getParameterSettings(Set<String> keyset, String datasetPath) {
         
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
-            throw new IllegalArgumentException("methodPath is invalid");
+        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("datasetPath is invalid");
         
-        Map<Integer, String> translatedMap = new HashMap<>();
-        DatasetType datasetType = getDatasetTypeObject(methodPath);
-        String method = methodPath.split("\\.")[2];
-        MethodType methodType = getMethodType(datasetType, method);
+        Map<String, Parameter> m = new HashMap<>();
+        DatasetType datasetType = getDatasetTypeObject(datasetPath);
 
-        ListIterator<String> listIterator = methodType.getFor().listIterator();
-        while (listIterator.hasNext()) {
-            int i = listIterator.nextIndex();
-            String k = listIterator.next();
-            if (m.containsKey(k)) {
-                translatedMap.put(i, k);
-            } else {
-                translatedMap.put(i, null);
-            }
-        }
-        
-        return translatedMap;
+        keyset.forEach((String k) -> {
+            TableFieldType field = datasetType.getTable().getField().stream()
+                    .filter(t -> t.getId().equals(k))
+                    .findFirst()
+                    .get();
+            Parameter p = new Parameter();
+            p.setType(field.getType().value());
+            p.setSize(field.getSize());
+            m.put(k, p);
+        });
+                     
+        return m;
     }
     
     public TableFieldType getTableField(String fieldId, String datasetPath) {
@@ -152,5 +151,37 @@ public class StatementGenerator {
         return datasetType.getMethod().stream().filter(
                 m -> (m.getId() == null ? method == null : m.getId().equals(method))
         ).findFirst().get();
+    }
+    
+    public class Parameter {
+        
+        private String type;
+        private Integer size;
+//        private String format;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public Integer getSize() {
+            return size;
+        }
+
+        public void setSize(Integer size) {
+            this.size = size;
+        }
+        
+//        public String getFormat() {
+//            return format;
+//        }
+//        
+//        public void setFormat(String format) {
+//            this.format = format;
+//        }
+
     }
 }

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.naming.Context;
@@ -31,6 +33,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator.Parameter;
 import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
 
 /**
@@ -71,20 +74,29 @@ public class PoolStrategy implements DBMappingStrategy {
         if (null == connection) initialiseConnection();
         
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
-        Map<Integer, String> p = statementGenerator.translateParameters(parameters, methodPath);
+        
+        Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')"); 
+        Matcher matcher = findParametersPattern.matcher(sqlStatement); 
+        List<String> fields = new ArrayList<>();
+        while (matcher.find()) { 
+            fields.add(matcher.group().substring(1)); 
+        }
+        String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");       
+        
+        Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), methodPath);
         List<Map<String, String>> l = new ArrayList<>();
         try {
             int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
             int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
             if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
             if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
-            PreparedStatement ps = connection.prepareStatement(sqlStatement, scroll_type, concurrency_mode);
-            ParameterMetaData parameterMetaData = ps.getParameterMetaData();
-            for (int i = 1; i <= parameterMetaData.getParameterCount(); i++) {
-                int parameterType = parameterMetaData.getParameterType(i);
-                // Convert to the spefic object type
-                ps.setObject(i, p.get(i), parameterType);
-            }
+            PreparedStatement ps = connection.prepareStatement(jdbcStatement, scroll_type, concurrency_mode);
+            fields.forEach((String f) -> {
+                String value = parameters.get(f);
+                String type = p.get(f).getType();
+                Integer size = p.get(f).getSize();
+//                if (!validateSize(value, size)) throw new RuntimeException();
+            });
             ResultSet executeQuery = ps.executeQuery();
             
             
@@ -105,4 +117,7 @@ public class PoolStrategy implements DBMappingStrategy {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    private boolean validateSize(String value, Integer size) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

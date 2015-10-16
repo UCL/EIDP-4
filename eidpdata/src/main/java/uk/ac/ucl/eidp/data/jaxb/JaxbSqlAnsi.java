@@ -60,8 +60,9 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         
         methodType.getFields().getField().forEach((String f) -> {
             if (!stm.substring(stm.length() - 4).equals("SET ")) stm.append(", ");
+            stm.append(translateId(f));
+            stm.append(" = :");
             stm.append(f);
-            stm.append(" = ?");
         });
         
         if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
@@ -70,13 +71,14 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append("INSERT INTO ");
         stm.append(tableType.getName()).append(" (");
         methodType.getFields().getField().forEach((String f) -> {
-            stm.append(f);
+            stm.append(translateId(f));
             stm.append(", ");
         });
         stm.append(tableType.getPrimaryKey());
         stm.append(") VALUES (");
         methodType.getFields().getField().forEach((String f) -> {
-            stm.append("?");
+            stm.append(":");
+            stm.append(f);
             stm.append(", ");
         });
         stm.append("nextval('").append(generateId()).append("'))");
@@ -133,7 +135,8 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             }
             if (!noValue) {
                 if (parenthesis) stm.append("(");
-                stm.append("?");
+                stm.append(":");
+                stm.append(m.getField());
                 if (parenthesis) stm.append(")");
             }
         });
