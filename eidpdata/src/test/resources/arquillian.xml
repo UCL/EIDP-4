@@ -16,6 +16,7 @@
         GatewayDS.UserName=EIDP
         GatewayDS.Password=EIDP
         GatewayDS.JdbcUrl=jdbc:hsqldb:hsql://localhost:9001/gateway
+        GatewayDS.jtaManaged=false
         openejb.classloader.forced-load=org.apache.openejb.arquillian.tests
         openejb.ear.use-as-webcontext-base=true
         openejb.descriptors.output = true
