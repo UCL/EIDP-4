@@ -15,6 +15,7 @@
  */
 package uk.ac.ucl.eidptest.data;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,9 +23,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
+import java.util.Properties;
 import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -34,7 +34,6 @@ import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import static org.testng.Assert.assertEquals;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import uk.ac.ucl.eidp.data.DBMapping;
 import uk.ac.ucl.eidp.data.DBMappingStrategy;
@@ -80,17 +79,19 @@ public class DBMappingIT extends Arquillian {
     
     @Test
     public void testStatementGenerator() throws Exception {
-        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = ? AND center_id = ?";
+        String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = :login AND center_id = :center_id";
         String generated = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
         assertEquals(generated, expected);
     }
     
     @Test
     public void testDatabaseConnection() throws Exception {
-        String datasourceJndi = "jdbc/gateway";
-        if (System.getProperties().containsKey("datasource-jndi-name")) {
-            datasourceJndi = System.getProperty("datasource-jndi-name");
-        }
+        Properties p = new Properties();
+        InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/gateway.properties");
+        p.load(is);
+
+        String datasourceJndi = p.getProperty("datasource-jndi-name");
+
         Context context = new InitialContext();
         DataSource source = (DataSource) context.lookup(datasourceJndi);
         try {
@@ -99,15 +100,17 @@ public class DBMappingIT extends Arquillian {
             throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
         }
         String sqlStatement = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
-        PreparedStatement ps = connection.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ps.setString(1, "testuser");
-        ps.setInt(2, 1000);
-        ResultSet rs = ps.executeQuery();
-        rs.last();
-        int expected = 1;
-        int generated = rs.getRow();
-        rs.close();
-        ps.close();
+        int expected;
+        int generated;
+        try (PreparedStatement ps = connection.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            ps.setString(1, "testuser");
+            ps.setInt(2, 1000);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.last();
+                expected = 1;
+                generated = rs.getRow();
+            }
+        }
         assertEquals(generated, expected);       
     }
 
@@ -116,6 +119,10 @@ public class DBMappingIT extends Arquillian {
         Map<String, String> m = new HashMap<>();
         m.put("login", "testuser");
         m.put("center_id", "1000");
-        List<Map<String, String>> dbActionR = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", m);
+        List<Map<String, String>> l = dbMapping.dbAction("context-test.USERS.getUserDataForLogin", m);
+        String expected = "password=password, login_err_number=1, create_timestamp=0987654321, login_err_timestamp=1234567890, modify_timestamp=0123456789, id=10, ";
+        String generated = "";
+        generated = l.get(0).entrySet().stream().map((entry) -> entry.getKey() + "=" + entry.getValue() + ", ").reduce(generated, String::concat);
+        assertEquals(generated, expected); 
     }
 }

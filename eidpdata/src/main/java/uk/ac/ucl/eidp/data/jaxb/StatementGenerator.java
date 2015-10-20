@@ -17,9 +17,9 @@ package uk.ac.ucl.eidp.data.jaxb;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -110,6 +110,16 @@ public class StatementGenerator {
 
     }
     
+    public List<String> getMethodFields(String methodPath) {
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+            throw new IllegalArgumentException("methodPath is invalid");
+        
+        DatasetType datasetType = getDatasetTypeObject(methodPath);
+        String method = methodPath.split("\\.")[2];
+        MethodType methodType = getMethodType(datasetType, method);
+        return methodType.getFields().getField();
+    }
+    
     private DatasetType getDatasetTypeObject(String path) {
         
         DatasetType datasetType = null;
@@ -154,7 +164,7 @@ public class StatementGenerator {
     }
     
     public class Parameter {
-        
+           
         private String type;
         private Integer size;
 //        private String format;
@@ -182,6 +192,22 @@ public class StatementGenerator {
 //        public void setFormat(String format) {
 //            this.format = format;
 //        }
+        
+        public Integer getSqlType() {
+            TableFieldTypeType fieldType = TableFieldTypeType.fromValue(type);
+            switch (fieldType) {
+                case STRING : 
+                    if (getSize() > 254) return Types.LONGVARCHAR;
+                    return Types.VARCHAR;
+                case INTEGER :
+                    return Types.INTEGER;
+                case FLOAT :
+                    return Types.FLOAT;
+                case DATE :
+                    return Types.DATE;
+                default : return null;
+            }
+        }
 
     }
 }

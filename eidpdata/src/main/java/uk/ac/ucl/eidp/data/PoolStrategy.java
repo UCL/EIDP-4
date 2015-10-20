@@ -16,11 +16,11 @@
 package uk.ac.ucl.eidp.data;
 
 import java.sql.Connection;
-import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -83,7 +83,8 @@ public class PoolStrategy implements DBMappingStrategy {
         }
         String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");       
         
-        Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), methodPath);
+        String datasetPath = methodPath.substring(0, methodPath.lastIndexOf("."));
+        Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
         List<Map<String, String>> l = new ArrayList<>();
         try {
             int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
@@ -91,20 +92,50 @@ public class PoolStrategy implements DBMappingStrategy {
             if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
             if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
             PreparedStatement ps = connection.prepareStatement(jdbcStatement, scroll_type, concurrency_mode);
-            fields.forEach((String f) -> {
+            int idx = 1;
+            for (String f : fields) {
                 String value = parameters.get(f);
                 String type = p.get(f).getType();
                 Integer size = p.get(f).getSize();
-//                if (!validateSize(value, size)) throw new RuntimeException();
-            });
-            ResultSet executeQuery = ps.executeQuery();
+                if (value.length() > size) throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
+                try {
+                    ps.setObject(idx, value, p.get(f).getSqlType());
+                } catch (SQLException ex) {
+                    ps.clearParameters();
+                    ps.close();
+                    throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
+                }
+                idx++;
+            }
+            boolean rsbool = ps.execute();
             
+            if (!rsbool) {
+                int updateCount = ps.getUpdateCount();
+                Map<String, String> m = new HashMap<>();
+                m.put("updateCount", String.valueOf(updateCount));
+                l.add(m);
+                return l;
+            }
+            
+            List<String> methodFields = statementGenerator.getMethodFields(methodPath);
+            ResultSet resultSet = ps.getResultSet();
+            
+            idx = 0;
+            while (resultSet.next()) {
+                Map<String, String> m = new HashMap<>();
+                for (String k : methodFields) {
+                    String v = resultSet.getString(k);
+                    m.put(k, v);
+                }              
+                l.add(m);
+                idx++;
+            }
             
         } catch (SQLException ex) {
             throw new IllegalStateException("Could not execute PreparedStatement " + sqlStatement, ex);
         }
         return l;
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
@@ -117,7 +148,4 @@ public class PoolStrategy implements DBMappingStrategy {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    private boolean validateSize(String value, Integer size) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

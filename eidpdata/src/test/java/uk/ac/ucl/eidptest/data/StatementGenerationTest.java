@@ -36,4 +36,12 @@ public class StatementGenerationTest {
         String generated = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
         assertEquals(generated, expected);
     }
+    
+    @Test
+    public void datasetPath() {
+        String methodPath = "context-test.USERS.getUserDataForLogin";
+        String generated = methodPath.substring(0,methodPath.lastIndexOf("."));
+        String expected = "context-test.USERS";
+        assertEquals(generated, expected);
+    }
 }

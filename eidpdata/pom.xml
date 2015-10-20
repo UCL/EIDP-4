@@ -56,6 +56,9 @@
   <profiles>
     <profile>
       <id>arquillian-glassfish-embedded</id>
+      <properties>
+        <datasource-jndi-name>jdbc/gateway</datasource-jndi-name>
+      </properties>
       <dependencies>
 	     <dependency>
 	       <groupId>org.jboss.arquillian.container</groupId>
@@ -78,6 +81,12 @@
 	     </dependency>
       </dependencies>
       <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
@@ -152,6 +161,9 @@
 
     <profile>
       <id>arquillian-openejb-embedded</id>
+      <properties>
+        <datasource-jndi-name>java:openejb/Resource/GatewayDS</datasource-jndi-name>
+      </properties>
       <dependencies>
 	     <dependency>
 	       <groupId>org.apache.openejb</groupId>
@@ -165,13 +177,16 @@
 	     </dependency>
       </dependencies>
       <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
 	         <filtering>true</filtering>
-          </testResource>
-          <testResource>
-            <directory>src/test/resources/openejb</directory>
           </testResource>
         </testResources>
         <plugins>
@@ -239,6 +254,9 @@
 
     <profile>
       <id>arquillian-tomee-embedded</id>
+      <properties>
+        <datasource-jndi-name>java:openejb/Resource/GatewayDS</datasource-jndi-name>
+      </properties>
       <dependencies>
 	     <dependency>
 	       <groupId>org.apache.openejb</groupId>
@@ -252,13 +270,16 @@
 	     </dependency>
       </dependencies>
       <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+          </resource>
+        </resources>
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
 	         <filtering>true</filtering>
-          </testResource>
-          <testResource>
-            <directory>src/test/resources/openejb</directory>
           </testResource>
         </testResources>
         <plugins>

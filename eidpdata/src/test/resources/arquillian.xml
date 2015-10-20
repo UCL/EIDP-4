@@ -21,7 +21,6 @@
         openejb.descriptors.output = true
         openejb.validation.output.level = verbose
         java.naming.factory.initial=org.apache.openejb.client.LocalInitialContextFactory
-        datasource-jndi-name=java:openejb/Resource/GatewayDS
       </property>
     </configuration>
   </container>
