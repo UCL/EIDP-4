@@ -29,7 +29,7 @@ public class StatementGenerationTest {
     }
     
     @Test
-    public void translateStatement() {
+    public void translateGetStatement() {
         String expected = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = ?";       
         String sqlStatement = "SELECT id, role FROM UCLBRIT.T_ROLES WHERE login = :login";
         Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
@@ -37,6 +37,15 @@ public class StatementGenerationTest {
         assertEquals(generated, expected);
     }
     
+    @Test
+    public void translateSetStatement() {
+        String expected = "UPDATE UCLBRIT.T_USERS SET login_err_number = ?, login_err_timestamp = ? WHERE login = ?;INSERT INTO UCLBRIT.T_USERS (login_err_number, login_err_timestamp, id) VALUES (?, ?, nextval('UCLBRIT.T_USERS_id_seq'))";       
+        String sqlStatement = "UPDATE UCLBRIT.T_USERS SET login_err_number = :login_err_number, login_err_timestamp = :login_err_timestamp WHERE login = :login;INSERT INTO UCLBRIT.T_USERS (login_err_number, login_err_timestamp, id) VALUES (:login_err_number, :login_err_timestamp, nextval('UCLBRIT.T_USERS_id_seq'))";
+        Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
+        String generated = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
+        assertEquals(generated, expected);
+    }
+      
     @Test
     public void datasetPath() {
         String methodPath = "context-test.USERS.getUserDataForLogin";

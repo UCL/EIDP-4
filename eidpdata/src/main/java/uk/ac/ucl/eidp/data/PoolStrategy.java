@@ -49,6 +49,7 @@ public class PoolStrategy implements DBMappingStrategy {
     private final String RS_SCROLL_TYPE = "resultset-scroll-type";
     private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
     private Connection connection;
+    private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
     
     @Inject
     @StatementProducer
@@ -75,12 +76,7 @@ public class PoolStrategy implements DBMappingStrategy {
         
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         
-        Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')"); 
-        Matcher matcher = findParametersPattern.matcher(sqlStatement); 
-        List<String> fields = new ArrayList<>();
-        while (matcher.find()) { 
-            fields.add(matcher.group().substring(1)); 
-        }
+        List<String> fields = getJdbcFields(sqlStatement.split(";")[0]);
         String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");       
         
         String datasetPath = methodPath.substring(0, methodPath.lastIndexOf("."));
@@ -91,26 +87,18 @@ public class PoolStrategy implements DBMappingStrategy {
             int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
             if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
             if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
-            PreparedStatement ps = connection.prepareStatement(jdbcStatement, scroll_type, concurrency_mode);
-            int idx = 1;
-            for (String f : fields) {
-                String value = parameters.get(f);
-                String type = p.get(f).getType();
-                Integer size = p.get(f).getSize();
-                if (value.length() > size) throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
-                try {
-                    ps.setObject(idx, value, p.get(f).getSqlType());
-                } catch (SQLException ex) {
-                    ps.clearParameters();
-                    ps.close();
-                    throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
-                }
-                idx++;
-            }
+            PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
+            setValues(ps, fields, parameters, p);
             boolean rsbool = ps.execute();
             
             if (!rsbool) {
                 int updateCount = ps.getUpdateCount();
+                if (updateCount == 0) {
+                    ps = connection.prepareStatement(jdbcStatement.split(";")[1], scroll_type, concurrency_mode);
+                    fields = getJdbcFields(sqlStatement.split(";")[1]);
+                    setValues(ps, fields, parameters, p);
+                    updateCount = ps.executeUpdate();
+                }
                 Map<String, String> m = new HashMap<>();
                 m.put("updateCount", String.valueOf(updateCount));
                 l.add(m);
@@ -120,7 +108,6 @@ public class PoolStrategy implements DBMappingStrategy {
             List<String> methodFields = statementGenerator.getMethodFields(methodPath);
             ResultSet resultSet = ps.getResultSet();
             
-            idx = 0;
             while (resultSet.next()) {
                 Map<String, String> m = new HashMap<>();
                 for (String k : methodFields) {
@@ -128,7 +115,6 @@ public class PoolStrategy implements DBMappingStrategy {
                     m.put(k, v);
                 }              
                 l.add(m);
-                idx++;
             }
             
         } catch (SQLException ex) {
@@ -136,6 +122,35 @@ public class PoolStrategy implements DBMappingStrategy {
         }
         return l;
 
+    }
+    
+    private List<String> getJdbcFields(String sqlStatement) {
+        Matcher matcher = findParametersPattern.matcher(sqlStatement); 
+        List<String> fields = new ArrayList<>();
+        while (matcher.find()) { 
+            fields.add(matcher.group().substring(1)); 
+        }
+        return fields;
+    }
+    
+    private void setValues(PreparedStatement ps, List<String> fields, Map<String, String> parameters, Map<String, Parameter> p) throws SQLException {
+       
+        int idx = 1;
+        for (String f : fields) {
+            String value = parameters.get(f);
+            Integer size = p.get(f).getSize();
+            if (value.length() > size) {
+                throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
+            }
+            try {
+                ps.setObject(idx, value, p.get(f).getSqlType());
+            } catch (SQLException ex) {
+                ps.clearParameters();
+                ps.close();
+                throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
+            }
+            idx++;
+        }
     }
 
     @Override
