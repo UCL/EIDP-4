@@ -138,4 +138,21 @@ public class DBMappingIT extends Arquillian {
         generated = l.get(0).entrySet().stream().map((entry) -> entry.getKey() + "=" + entry.getValue()).reduce(generated, String::concat);
         assertEquals(generated, expected);
     }
+    
+    @Test
+    public void testDbaSetInsertAction() {
+        Map<String, String> m = new HashMap<>();
+        m.put("login", "testuser2");
+        m.put("password", "password2");
+        m.put("create_timestamp", "1445350688");
+        m.put("modify_timestamp", "1445350688");
+        m.put("center_id", "1000");
+        m.put("surname", "Surname");
+        m.put("forename", "Forename");
+        List<Map<String, String>> l = dbMapping.dbAction("context-test.USERS.setNewUserDataForID", m);
+        String expected = "updateCount=1";
+        String generated = "";
+        generated = l.get(0).entrySet().stream().map((entry) -> entry.getKey() + "=" + entry.getValue()).reduce(generated, String::concat);
+        assertEquals(generated, expected);
+    }
 }

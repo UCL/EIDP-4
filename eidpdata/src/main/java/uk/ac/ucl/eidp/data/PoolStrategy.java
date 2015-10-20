@@ -118,7 +118,7 @@ public class PoolStrategy implements DBMappingStrategy {
             }
             
         } catch (SQLException ex) {
-            throw new IllegalStateException("Could not execute PreparedStatement " + sqlStatement, ex);
+            throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
         }
         return l;
 

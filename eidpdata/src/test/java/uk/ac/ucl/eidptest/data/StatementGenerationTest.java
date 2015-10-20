@@ -53,4 +53,9 @@ public class StatementGenerationTest {
         String expected = "context-test.USERS";
         assertEquals(generated, expected);
     }
+    
+    @Test
+    public void splitStatements() {
+        
+    }
 }
