@@ -81,7 +81,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
             stm.append(f);
             stm.append(", ");
         });
-        stm.append("nextval('").append(generateId()).append("'))");
+        stm.append(generateId()).append(")");
         return stm.toString();
     }
     
@@ -144,7 +144,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     }
     
     protected String generateId() {
-        String sequenceName = tableType.getName() + "_id_seq";
+        String sequenceName = "nextval('" + tableType.getName() + "_id_seq')";
         return sequenceName;
     }
     

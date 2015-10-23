@@ -142,6 +142,7 @@ public class DBMappingIT extends Arquillian {
     @Test
     public void testDbaSetInsertAction() {
         Map<String, String> m = new HashMap<>();
+        m.put("id", "0");
         m.put("login", "testuser2");
         m.put("password", "password2");
         m.put("create_timestamp", "1445350688");
