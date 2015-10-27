@@ -80,6 +80,7 @@ public class DBMappingIT extends Arquillian {
     @Test
     public void testStatementGenerator() throws Exception {
         String expected = "SELECT id, password, login_err_number, login_err_timestamp, create_timestamp, modify_timestamp FROM UCLBRIT.T_USERS WHERE login = :login AND center_id = :center_id";
+        statementGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlHsqldb");
         String generated = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
         assertEquals(generated, expected);
     }
@@ -99,6 +100,7 @@ public class DBMappingIT extends Arquillian {
         } catch (SQLException ex) {
             throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
         }
+        statementGenerator.setSqlDialect("uk.ac.ucl.eidp.data.jaxb.JaxbSqlHsqldb");
         String sqlStatement = statementGenerator.getSqlStatement("context-test.USERS.getUserDataForLogin");
         int expected;
         int generated;

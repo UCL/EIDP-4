@@ -48,6 +48,8 @@ public class PoolStrategy implements DBMappingStrategy {
     private final String DS_JNDI_NAME = "datasource-jndi-name";
     private final String RS_SCROLL_TYPE = "resultset-scroll-type";
     private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
+    private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
+    private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
     private Connection connection;
     private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
     
@@ -56,6 +58,10 @@ public class PoolStrategy implements DBMappingStrategy {
     private StatementGenerator statementGenerator;
     
     private void initialiseConnection() {
+        if (properties.containsKey(SQL_DIALECT_PROP))
+            SQL_DIALECT = properties.getProperty(SQL_DIALECT_PROP);
+
+        statementGenerator.setSqlDialect(SQL_DIALECT);
         if (!properties.containsKey(DS_JNDI_NAME)) {
             throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
         }

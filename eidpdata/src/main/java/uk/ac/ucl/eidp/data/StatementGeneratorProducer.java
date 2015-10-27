@@ -34,8 +34,6 @@ public class StatementGeneratorProducer {
     private final String SQLGENERATOR_PROP = "uk.ac.ucl.eidp.data.StatementGenerator";
     private String SQLGENERATOR_CLASS = "uk.ac.ucl.eidp.data.jaxb.JaxbStatementGenerator";
     private final String PROPERTIESFILE = "META-INF/eidp.properties";
-    private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
-    private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
     
     @Inject
     public StatementGeneratorProducer() {
@@ -49,8 +47,6 @@ public class StatementGeneratorProducer {
         if (p.containsKey(SQLGENERATOR_PROP) && !SQLGENERATOR_CLASS.equals(p.getProperty(SQLGENERATOR_PROP))) {
             SQLGENERATOR_CLASS = p.getProperty(SQLGENERATOR_PROP);
         }
-        if (p.containsKey(SQL_DIALECT_PROP))
-            SQL_DIALECT = p.getProperty(SQL_DIALECT_PROP);
         
     }
     
@@ -58,7 +54,6 @@ public class StatementGeneratorProducer {
     @StatementProducer
     public StatementGenerator newSqlGenerator() {
         StatementGenerator sqlGenerator = new StatementGenerator();
-        sqlGenerator.setSqlDialect(SQL_DIALECT);
         return sqlGenerator;
     }
     
