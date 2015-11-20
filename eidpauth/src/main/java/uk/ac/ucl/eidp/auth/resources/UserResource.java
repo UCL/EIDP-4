@@ -15,6 +15,7 @@
  */
 package uk.ac.ucl.eidp.auth.resources;
 
+import uk.ac.ucl.eidp.auth.UserController;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;

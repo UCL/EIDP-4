@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.ucl.eidp.auth.resources;
+package uk.ac.ucl.eidp.auth;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;

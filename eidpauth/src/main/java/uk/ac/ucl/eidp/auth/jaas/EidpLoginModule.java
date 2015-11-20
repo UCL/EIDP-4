@@ -32,7 +32,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import uk.ac.ucl.eidp.auth.model.UserE;
-import uk.ac.ucl.eidp.auth.resources.UserController;
+import uk.ac.ucl.eidp.auth.UserController;
 
 /**
  *
