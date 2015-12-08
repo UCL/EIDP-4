@@ -30,7 +30,7 @@ import uk.ac.ucl.eidp.auth.model.UserE;
 @LocalBean
 public class UserController {
     
-    @PersistenceContext(unitName = "EidpAuthServicePU")
+    @PersistenceContext(unitName = "eidpauthPU")
     private EntityManager em;
 
     public UserE findUser(final String login, final String password) {
