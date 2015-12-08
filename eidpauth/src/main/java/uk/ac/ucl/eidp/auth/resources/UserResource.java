@@ -31,7 +31,6 @@ import uk.ac.ucl.eidp.auth.model.UserE;
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
 @Path("auth")
-@RequestScoped
 public class UserResource {
     
     @Context
