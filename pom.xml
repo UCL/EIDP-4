@@ -16,5 +16,6 @@
   <modules>
     <module>eidpdata</module>
     <module>eidpauth</module>
+    <module>eidpcore</module>
   </modules>
 </project>
