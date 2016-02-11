@@ -22,7 +22,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import uk.ac.ucl.eidp.auth.Credentials;
+import uk.ac.ucl.eidp.auth.AuthLogin;
 
 /**
  *
@@ -31,7 +31,7 @@ import uk.ac.ucl.eidp.auth.Credentials;
 public class EidpCallbackHandler implements CallbackHandler {
     
     @Inject
-    private Credentials credentials;
+    private AuthLogin credentials;
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {

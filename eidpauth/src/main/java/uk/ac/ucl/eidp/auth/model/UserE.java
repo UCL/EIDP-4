@@ -41,6 +41,7 @@ public class UserE implements Serializable {
     
     private String login;
     private String password;
+    private String token;
     
     @OneToMany
     private Set<RoleE> roles;    
@@ -63,6 +64,14 @@ public class UserE implements Serializable {
         this.roles = roles;
     }    
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -87,5 +96,5 @@ public class UserE implements Serializable {
     public String toString() {
         return "uk.ac.ucl.eidp.auth.model.UserE[ id=" + id + " ]";
     }
-    
+
 }

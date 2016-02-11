@@ -15,16 +15,38 @@
  */
 package uk.ac.ucl.eidp.auth;
 
-import javax.ejb.Local;
-import uk.ac.ucl.eidp.auth.model.UserE;
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
-@Local
-public interface UserControllerLocal {
+@XmlRootElement
+public class AuthLogin implements Serializable {
+    
+    private String login;
+    private String password;
+    
+    public AuthLogin(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 
-    public UserE findUser(final String login, final String password);
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
     
 }

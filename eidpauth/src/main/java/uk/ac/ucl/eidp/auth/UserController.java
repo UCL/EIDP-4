@@ -26,17 +26,20 @@ import uk.ac.ucl.eidp.auth.model.UserE;
  * @author David Guzman <d.guzman at ucl.ac.uk>
  */
 @Stateless
-public class UserController implements UserControllerLocal {
+public class UserController {
 
     @PersistenceContext(unitName = "eidpauthPU")
     private EntityManager em;
     
-    @Override
     public UserE findUser(final String login, final String password) {
         TypedQuery<UserE> typedQuery = em.createNamedQuery(UserE.FIND_BY_LOGIN_PASSWORD, UserE.class);
         typedQuery.setParameter("login", login);
         typedQuery.setParameter("password", password);
         return typedQuery.getSingleResult();
+    }
+    
+    public void save(UserE user) {
+        
     }
 
     // Add business logic below. (Right-click in editor and choose
