@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import uk.ac.ucl.eidp.auth.model.RoleE;
 import uk.ac.ucl.eidp.auth.model.UserE;
 
 /**
@@ -44,7 +45,13 @@ public class AuthService implements AuthServiceLocal {
 
     @Override
     public boolean isAuthorised(String authId, String authToken, Set<String> rolesAllowed) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        UserE user = userController.findByUsernameAndAuthToken(authId, authToken);
+        if (user != null) {
+            // TODO : Check it might not work
+            return rolesAllowed.containsAll(user.getRoles());
+        } else {
+            return false;
+        }
     }
 
     

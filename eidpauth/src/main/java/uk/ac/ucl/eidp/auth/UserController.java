@@ -42,6 +42,8 @@ public class UserController {
         
     }
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    public UserE findByUsernameAndAuthToken(String authId, String authToken) {
+        //TODO
+        return null;
+    }
 }
