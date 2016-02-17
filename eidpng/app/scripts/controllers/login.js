@@ -8,16 +8,20 @@
  * Controller of the eidpngApp
  */
 angular.module('login',['http-auth-interceptor'])
-  .controller('LoginCtrl', function ($scope, $http, authService) {
-    $scope.login = function(user) {
-      $http.post('http://localhost/api/auth/',user).success(function() {
-        authService.loginConfirmed();
-      });
-    };
+    .controller('LoginCtrl', function ($scope, $http, authService) {
 
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+        $scope.status = 401;
+
+        $scope.login = function(data) {
+
+            
+            $http.post('http://localhost/api/auth', data, {}).then(function(response) {
+                $scope.status = response.status;
+                authService.loginConfirmed();
+            }).catch(function(){
+                $scope.status = 401;
+            });
+            
+        };
+
+    });
