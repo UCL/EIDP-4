@@ -13,7 +13,6 @@ angular.module('login',['http-auth-interceptor'])
         $scope.status = 401;
 
         $scope.login = function(data) {
-
             
             $http.post('http://localhost/api/auth', data, {}).then(function(response) {
                 $scope.status = response.status;
