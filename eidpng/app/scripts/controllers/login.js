@@ -1,5 +1,16 @@
 'use strict';
 
+function LoginCtrlFx($scope, authFactory) {
+    $scope.login = function(user) {
+        authFactory.login(user).success(function(data) {
+            authFactory.setAuthData(data);
+            // Redirect etc.
+        }).error(function() {
+            // Error handling
+        });
+    };
+}
+
 /**
  * @ngdoc function
  * @name eidpngApp.controller:LoginCtrl
@@ -7,20 +18,5 @@
  * # LoginCtrl
  * Controller of the eidpngApp
  */
-angular.module('login',['http-auth-interceptor'])
-    .controller('LoginCtrl', function ($scope, $http, authService) {
+angular.module('login',[]).controller('LoginCtrl', ['$scope','authFactory', LoginCtrlFx]);
 
-        $scope.status = 401;
-
-        $scope.login = function(data) {
-            
-            $http.post('http://localhost/api/auth', data, {}).then(function(response) {
-                $scope.status = response.status;
-                authService.loginConfirmed();
-            }).catch(function(){
-                $scope.status = 401;
-            });
-            
-        };
-
-    });
