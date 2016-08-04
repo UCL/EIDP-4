@@ -20,7 +20,8 @@ EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                444
 # EIDP
 ## Platform for development and integration of clinical databases for Java EE
 
-![alt tag](https://travis-ci.org/UCL/EIDP-4.svg?branch=master)
+[![Build Status](https://travis-ci.org/UCL/EIDP-4.svg?branch=master)](https://travis-ci.org/UCL/EIDP-4)
+[![Sputnik](https://sputnik.ci/conf/badge)](https://sputnik.ci/app#/builds/UCL/EIDP-4)
 
 ## Components
 
