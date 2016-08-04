@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>uk.ac.ucl.eidp</groupId>
+
   <artifactId>EIDP-4</artifactId>
+  <groupId>uk.ac.ucl.eidp</groupId>
   <packaging>pom</packaging>
   <version>4.0</version>
   <inceptionYear>2015</inceptionYear>
@@ -13,6 +14,13 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <repositories>
+    <repository>
+      <id>jcenter</id>
+      <name>JCenter repo</name>
+      <url>http://jcenter.bintray.com</url>
+    </repository>
+  </repositories>
   <modules>
     <module>eidpdata</module>
     <module>eidpauth</module>
