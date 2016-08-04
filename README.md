@@ -1,5 +1,24 @@
-# EIDP 4
-EIDP Version 4
+```
+EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPPPPPPPPP        444444444  
+E::::::::::::::::::::EI::::::::ID::::::::::::DDD   P::::::::::::::::P      4::::::::4  
+E::::::::::::::::::::EI::::::::ID:::::::::::::::DD P::::::PPPPPP:::::P    4:::::::::4  
+EE::::::EEEEEEEEE::::EII::::::IIDDD:::::DDDDD:::::DPP:::::P     P:::::P  4::::44::::4  
+  E:::::E       EEEEEE  I::::I    D:::::D    D:::::D P::::P     P:::::P 4::::4 4::::4  
+  E:::::E               I::::I    D:::::D     D:::::DP::::P     P:::::P4::::4  4::::4  
+  E::::::EEEEEEEEEE     I::::I    D:::::D     D:::::DP::::PPPPPP:::::P4::::4   4::::4  
+  E:::::::::::::::E     I::::I    D:::::D     D:::::DP:::::::::::::PP4::::444444::::444
+  E:::::::::::::::E     I::::I    D:::::D     D:::::DP::::PPPPPPPPP  4::::::::::::::::4
+  E::::::EEEEEEEEEE     I::::I    D:::::D     D:::::DP::::P          4444444444:::::444
+  E:::::E               I::::I    D:::::D     D:::::DP::::P                    4::::4  
+  E:::::E       EEEEEE  I::::I    D:::::D    D:::::D P::::P                    4::::4  
+EE::::::EEEEEEEE:::::EII::::::IIDDD:::::DDDDD:::::DPP::::::PP                  4::::4  
+E::::::::::::::::::::EI::::::::ID:::::::::::::::DD P::::::::P                44::::::44
+E::::::::::::::::::::EI::::::::ID::::::::::::DDD   P::::::::P                4::::::::4
+EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                4444444444
+```
+
+# EIDP
+## Platform for development and integration of clinical databases for Java EE
 
 ![alt tag](https://travis-ci.org/UCL/EIDP-4.svg?branch=master)
 
