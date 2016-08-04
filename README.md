@@ -24,9 +24,9 @@ EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                444
 
 ## Components
 
-* **eidpauth**: EJB module for authentication and authorisation
-* **eidpdata**: EJB module for data access
-* **eidpweb**:  WAR module for serving data to client apps
+* **eidpauth**: [![Dependency Status](https://www.versioneye.com/user/projects/57a350c54735990011566a66/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57a350c54735990011566a66) EJB module for authentication and authorisation
+* **eidpdata**: [![Dependency Status](https://www.versioneye.com/user/projects/57a35202928dc9000d323b82/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57a35202928dc9000d323b82) EJB module for data access
+* **eidpweb**:  [![Dependency Status](https://www.versioneye.com/user/projects/57a350c64735990011566a70/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57a350c64735990011566a70) WAR module for serving data to client apps
 * **eidpng**:   Angular 2 client app
 
 ```bash
