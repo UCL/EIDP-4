@@ -25,11 +25,11 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-	     <groupId>org.jboss.arquillian</groupId>
-	     <artifactId>arquillian-bom</artifactId>
-	     <version>1.1.11.Final</version>
-	     <scope>import</scope>
-	     <type>pom</type>
+	<groupId>org.jboss.arquillian</groupId>
+	<artifactId>arquillian-bom</artifactId>
+	<version>1.1.11.Final</version>
+	<scope>import</scope>
+	<type>pom</type>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -67,25 +67,25 @@
         <datasource-jndi-name>jdbc/gateway</datasource-jndi-name>
       </properties>
       <dependencies>
-	     <dependency>
-	       <groupId>org.jboss.arquillian.container</groupId>
-	       <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-	       <version>1.0.0.CR4</version>
-	       <scope>test</scope>
-	     </dependency>
-	     <dependency>
-	       <groupId>org.glassfish.main.extras</groupId>
-	       <artifactId>glassfish-embedded-all</artifactId>
-	       <version>4.1</version>
-	       <scope>provided</scope>
-	     </dependency>
-	     <dependency>
-	       <groupId>org.hsqldb</groupId>
-	       <artifactId>hsqldb</artifactId>
-	       <version>2.3.3</version>
+	<dependency>
+	  <groupId>org.jboss.arquillian.container</groupId>
+	  <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
+	  <version>1.0.0.CR4</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.glassfish.main.extras</groupId>
+	  <artifactId>glassfish-embedded-all</artifactId>
+	  <version>4.1</version>
+	  <scope>provided</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.hsqldb</groupId>
+	  <artifactId>hsqldb</artifactId>
+	  <version>2.3.3</version>
           <type>jar</type>
-	       <scope>test</scope>
-	     </dependency>
+	  <scope>test</scope>
+	</dependency>
       </dependencies>
       <build>
         <resources>
@@ -97,7 +97,7 @@
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
-	         <filtering>true</filtering>
+	    <filtering>true</filtering>
           </testResource>
           <testResource>
             <directory>src/test/resources/glassfish</directory>
@@ -123,7 +123,7 @@
                   <daemon>true</daemon>
                   <type>hsqldb</type>
                   <database>gateway</database>
-			         <port>9001</port>
+		  <port>9001</port>
                   <attributes>
                     <CREATE>true</CREATE>
                   </attributes>
@@ -144,22 +144,22 @@
             </executions>  
           </plugin>                                
           <plugin>
-	         <groupId>org.apache.maven.plugins</groupId>
-	         <artifactId>maven-failsafe-plugin</artifactId>
-	         <version>2.16</version>
-	         <configuration>
-	           <systemPropertyVariables>
-	             <arquillian.launch>glassfish31-embedded</arquillian.launch>
-	           </systemPropertyVariables>
-	         </configuration>
-	         <executions>
-	           <execution>
-	             <id>integration-test</id>
-	             <goals>
-	               <goal>integration-test</goal>
-	               <goal>verify</goal>
-	             </goals>
-	           </execution>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-failsafe-plugin</artifactId>
+	    <version>2.16</version>
+	    <configuration>
+	      <systemPropertyVariables>
+	        <arquillian.launch>glassfish31-embedded</arquillian.launch>
+	      </systemPropertyVariables>
+	    </configuration>
+	    <executions>
+	      <execution>
+	        <id>integration-test</id>
+	        <goals>
+	          <goal>integration-test</goal>
+	          <goal>verify</goal>
+	        </goals>
+	      </execution>
             </executions>
           </plugin>
         </plugins>
@@ -172,16 +172,22 @@
         <datasource-jndi-name>java:openejb/Resource/GatewayDS</datasource-jndi-name>
       </properties>
       <dependencies>
-	     <dependency>
-	       <groupId>org.apache.openejb</groupId>
-	       <artifactId>arquillian-openejb-embedded-4</artifactId>
-	       <version>4.7.2</version>
-	     </dependency>
-	     <dependency>
-	       <groupId>org.apache.openejb</groupId>
-	       <artifactId>openejb-core</artifactId>
-	       <version>4.7.2</version>
-	     </dependency>
+	<dependency>
+	  <groupId>org.apache.openejb</groupId>
+	  <artifactId>arquillian-openejb-embedded-4</artifactId>
+	  <version>4.7.4</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.openejb</groupId>
+	  <artifactId>openejb-core</artifactId>
+	  <version>4.7.4</version>
+	</dependency>
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.12</version>
+	  <scope>test</scope>
+	</dependency>
       </dependencies>
       <build>
         <resources>
@@ -193,7 +199,7 @@
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
-	         <filtering>true</filtering>
+	    <filtering>true</filtering>
           </testResource>
         </testResources>
         <plugins>
@@ -216,7 +222,7 @@
                   <daemon>true</daemon>
                   <type>hsqldb</type>
                   <database>gateway</database>
-			         <port>9001</port>
+		  <port>9001</port>
                   <attributes>
                     <CREATE>true</CREATE>
                   </attributes>
@@ -237,22 +243,22 @@
             </executions>  
           </plugin>                                
           <plugin>
-	         <groupId>org.apache.maven.plugins</groupId>
-	         <artifactId>maven-failsafe-plugin</artifactId>
-	         <version>2.16</version>
-	         <configuration>
-	           <systemPropertyVariables>
-	             <arquillian.launch>openejb-embedded</arquillian.launch>
-	           </systemPropertyVariables>
-	         </configuration>
-	         <executions>
-	           <execution>
-	             <id>integration-test</id>
-	             <goals>
-	               <goal>integration-test</goal>
-	               <goal>verify</goal>
-	             </goals>
-	           </execution>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-failsafe-plugin</artifactId>
+	    <version>2.16</version>
+	    <configuration>
+	      <systemPropertyVariables>
+	        <arquillian.launch>openejb-embedded</arquillian.launch>
+	      </systemPropertyVariables>
+	    </configuration>
+	    <executions>
+	      <execution>
+	        <id>integration-test</id>
+	        <goals>
+	          <goal>integration-test</goal>
+	          <goal>verify</goal>
+	        </goals>
+	      </execution>
             </executions>
           </plugin>
         </plugins>
@@ -265,16 +271,16 @@
         <datasource-jndi-name>java:openejb/Resource/GatewayDS</datasource-jndi-name>
       </properties>
       <dependencies>
-	     <dependency>
-	       <groupId>org.apache.openejb</groupId>
-	       <artifactId>arquillian-tomee-embedded</artifactId>
-	       <version>1.7.2</version>
-	     </dependency>
-	     <dependency>
-	       <groupId>org.apache.openejb</groupId>
-	       <artifactId>tomee-embedded</artifactId>
-	       <version>1.7.2</version>
-	     </dependency>
+	<dependency>
+	  <groupId>org.apache.openejb</groupId>
+	  <artifactId>arquillian-tomee-embedded</artifactId>
+	  <version>1.7.2</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.openejb</groupId>
+	  <artifactId>tomee-embedded</artifactId>
+	  <version>1.7.2</version>
+	</dependency>
       </dependencies>
       <build>
         <resources>
@@ -286,7 +292,7 @@
         <testResources>
           <testResource>
             <directory>src/test/resources</directory>
-	         <filtering>true</filtering>
+	    <filtering>true</filtering>
           </testResource>
         </testResources>
         <plugins>
@@ -309,7 +315,7 @@
                   <daemon>true</daemon>
                   <type>hsqldb</type>
                   <database>gateway</database>
-			         <port>9001</port>
+		  <port>9001</port>
                   <attributes>
                     <CREATE>true</CREATE>
                   </attributes>
@@ -330,22 +336,22 @@
             </executions>  
           </plugin>                                
           <plugin>
-	         <groupId>org.apache.maven.plugins</groupId>
-	         <artifactId>maven-failsafe-plugin</artifactId>
-	         <version>2.16</version>
-	         <configuration>
-	           <systemPropertyVariables>
-	             <arquillian.launch>openejb-embedded</arquillian.launch>
-	           </systemPropertyVariables>
-	         </configuration>
-	         <executions>
-	           <execution>
-	             <id>integration-test</id>
-	             <goals>
-	               <goal>integration-test</goal>
-	               <goal>verify</goal>
-	             </goals>
-	           </execution>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-failsafe-plugin</artifactId>
+	    <version>2.16</version>
+	    <configuration>
+	      <systemPropertyVariables>
+	        <arquillian.launch>openejb-embedded</arquillian.launch>
+	      </systemPropertyVariables>
+	    </configuration>
+	    <executions>
+	      <execution>
+	        <id>integration-test</id>
+	        <goals>
+	          <goal>integration-test</goal>
+	          <goal>verify</goal>
+	        </goals>
+	      </execution>
             </executions>
           </plugin>
         </plugins>
@@ -355,152 +361,152 @@
     <profile>
       <id>arquillian-glassfish-remote</id>
       <dependencies>
-	     <dependency>
-	       <groupId>org.jboss.arquillian.container</groupId>
-	       <artifactId>arquillian-glassfish-remote-3.1</artifactId>
-	       <version>1.0.0.CR4</version>
-	       <scope>test</scope>
-	     </dependency>
+	<dependency>
+	  <groupId>org.jboss.arquillian.container</groupId>
+	  <artifactId>arquillian-glassfish-remote-3.1</artifactId>
+	  <version>1.0.0.CR4</version>
+	  <scope>test</scope>
+	</dependency>
       </dependencies>
       <build>
-	     <plugins>
-	       <plugin>
-	         <groupId>org.codehaus.mojo</groupId>
-	         <artifactId>exec-maven-plugin</artifactId>
-	         <version>1.4.0</version>
-	         <executions>
-	           <execution>
-		          <id>setup-and-start-vagrant-vm</id>
-		          <phase>pre-integration-test</phase>
-		          <goals>
-		            <goal>exec</goal>
-		          </goals>
-		          <configuration>
-		            <executable>vagrant</executable>
-		            <arguments>
-		              <argument>up</argument>
-		              <argument>glassfish4</argument>
-		            </arguments>
-		          </configuration>
-	           </execution>
-	           <execution>
-		          <id>destroy-vagrant-vm</id>
-		          <phase>post-integration-test</phase>
-		          <goals>
-		            <goal>exec</goal>
-		          </goals>
-		          <configuration>
-		            <executable>vagrant</executable>
-		            <arguments>
-		              <argument>destroy</argument>
-		              <argument>--force</argument>
-		              <argument>glassfish4</argument>
-		            </arguments>
-		          </configuration>
-	           </execution>
-	         </executions>
-	       </plugin>
-	       <plugin>
-	         <groupId>org.apache.maven.plugins</groupId>
-	         <artifactId>maven-failsafe-plugin</artifactId>
-	         <version>2.16</version>
-	         <configuration>
-	           <systemPropertyVariables>
-		          <arquillian.launch>glassfish4-remote</arquillian.launch>
-	           </systemPropertyVariables>
-	         </configuration>
-	         <executions>
-	           <execution>
-		          <id>integration-test</id>
-		          <goals>
-		            <goal>integration-test</goal>
-		          </goals>
-	           </execution>
-	           <execution>
-		          <id>verify</id>
-		          <goals>
-		            <goal>verify</goal>
-		          </goals>
-	           </execution>
-	         </executions>
-	       </plugin>
-	     </plugins>
+	<plugins>
+	  <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>exec-maven-plugin</artifactId>
+	    <version>1.4.0</version>
+	    <executions>
+	      <execution>
+		<id>setup-and-start-vagrant-vm</id>
+		<phase>pre-integration-test</phase>
+		<goals>
+		  <goal>exec</goal>
+		</goals>
+		<configuration>
+		  <executable>vagrant</executable>
+		  <arguments>
+		    <argument>up</argument>
+		    <argument>glassfish4</argument>
+		  </arguments>
+		</configuration>
+	      </execution>
+	      <execution>
+		<id>destroy-vagrant-vm</id>
+		<phase>post-integration-test</phase>
+		<goals>
+		  <goal>exec</goal>
+		</goals>
+		<configuration>
+		  <executable>vagrant</executable>
+		  <arguments>
+		    <argument>destroy</argument>
+		    <argument>--force</argument>
+		    <argument>glassfish4</argument>
+		  </arguments>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-failsafe-plugin</artifactId>
+	    <version>2.16</version>
+	    <configuration>
+	      <systemPropertyVariables>
+		<arquillian.launch>glassfish4-remote</arquillian.launch>
+	      </systemPropertyVariables>
+	    </configuration>
+	    <executions>
+	      <execution>
+		<id>integration-test</id>
+		<goals>
+		  <goal>integration-test</goal>
+		</goals>
+	      </execution>
+	      <execution>
+		<id>verify</id>
+		<goals>
+		  <goal>verify</goal>
+		</goals>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
       </build>
     </profile>
 
     <profile>
       <id>arquillian-wildfly-remote</id>
       <dependencies>
-	     <dependency>
-	       <groupId>org.wildfly.arquillian</groupId>
-	       <artifactId>wildfly-arquillian-container-remote</artifactId>
-	       <version>1.0.1.Final</version>
-	       <scope>test</scope>
-	     </dependency>
+	<dependency>
+	  <groupId>org.wildfly.arquillian</groupId>
+	  <artifactId>wildfly-arquillian-container-remote</artifactId>
+	  <version>1.0.1.Final</version>
+	  <scope>test</scope>
+	</dependency>
       </dependencies>
       <build>
-	     <plugins>
-	       <plugin>
-	         <groupId>org.codehaus.mojo</groupId>
-	         <artifactId>exec-maven-plugin</artifactId>
-	         <version>1.4.0</version>
-	         <executions>
-	           <execution>
-		          <id>setup-and-start-vagrant-vm</id>
-		          <phase>pre-integration-test</phase>
-		          <goals>
-		            <goal>exec</goal>
-		          </goals>
-		          <configuration>
-		            <executable>vagrant</executable>
-		            <arguments>
-		              <argument>up</argument>
-		              <argument>wildfly9</argument>
-		            </arguments>
-		          </configuration>
-	           </execution>
-	           <execution>
-		          <id>destroy-vagrant-vm</id>
-		          <phase>post-integration-test</phase>
-		          <goals>
-		            <goal>exec</goal>
-		          </goals>
-		          <configuration>
-		            <executable>vagrant</executable>
-		            <arguments>
-		              <argument>destroy</argument>
-		              <argument>--force</argument>
-		              <argument>wildfly9</argument>
-		            </arguments>
-		          </configuration>
-	           </execution>
-	         </executions>
-	       </plugin>
-	       <plugin>
-	         <groupId>org.apache.maven.plugins</groupId>
-	         <artifactId>maven-failsafe-plugin</artifactId>
-	         <version>2.16</version>
-	         <configuration>
-	           <systemPropertyVariables>
-		          <arquillian.launch>wildfly9-remote</arquillian.launch>
-	           </systemPropertyVariables>
-	         </configuration>
-	         <executions>
-	           <execution>
-		          <id>integration-test</id>
-		          <goals>
-		            <goal>integration-test</goal>
-		          </goals>
-	           </execution>
-	           <execution>
-		          <id>verify</id>
-		          <goals>
-		            <goal>verify</goal>
-		          </goals>
-	           </execution>
-	         </executions>
-	       </plugin>
-	     </plugins>
+	<plugins>
+	  <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>exec-maven-plugin</artifactId>
+	    <version>1.4.0</version>
+	    <executions>
+	      <execution>
+		<id>setup-and-start-vagrant-vm</id>
+		<phase>pre-integration-test</phase>
+		<goals>
+		  <goal>exec</goal>
+		</goals>
+		<configuration>
+		  <executable>vagrant</executable>
+		  <arguments>
+		    <argument>up</argument>
+		    <argument>wildfly9</argument>
+		  </arguments>
+		</configuration>
+	      </execution>
+	      <execution>
+		<id>destroy-vagrant-vm</id>
+		<phase>post-integration-test</phase>
+		<goals>
+		  <goal>exec</goal>
+		</goals>
+		<configuration>
+		  <executable>vagrant</executable>
+		  <arguments>
+		    <argument>destroy</argument>
+		    <argument>--force</argument>
+		    <argument>wildfly9</argument>
+		  </arguments>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-failsafe-plugin</artifactId>
+	    <version>2.16</version>
+	    <configuration>
+	      <systemPropertyVariables>
+		<arquillian.launch>wildfly9-remote</arquillian.launch>
+	      </systemPropertyVariables>
+	    </configuration>
+	    <executions>
+	      <execution>
+		<id>integration-test</id>
+		<goals>
+		  <goal>integration-test</goal>
+		</goals>
+	      </execution>
+	      <execution>
+		<id>verify</id>
+		<goals>
+		  <goal>verify</goal>
+		</goals>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
       </build>
     </profile>
 
@@ -509,77 +515,77 @@
   <build>
     <plugins>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-compiler-plugin</artifactId>
-	     <version>3.3</version>
-	     <configuration>
-	       <source>1.8</source>
-	       <target>1.8</target>
-	       <compilerArguments>
-	         <endorseddirs>${endorsed.dir}</endorseddirs>
-	       </compilerArguments>
-	       <showDeprecation>true</showDeprecation>
-	     </configuration>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<version>3.3</version>
+	<configuration>
+	  <source>1.8</source>
+	  <target>1.8</target>
+	  <compilerArguments>
+	    <endorseddirs>${endorsed.dir}</endorseddirs>
+	  </compilerArguments>
+	  <showDeprecation>true</showDeprecation>
+	</configuration>
       </plugin>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-surefire-plugin</artifactId>
-	     <version>2.18.1</version>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.18.1</version>
       </plugin>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-failsafe-plugin</artifactId>
-	     <version>2.18.1</version>
-	     <configuration>
-	       <reuseForks>false</reuseForks>
-	     </configuration>
-	     <executions>
-	       <execution>
-	         <id>integration-test</id>
-	         <goals>
-	           <goal>integration-test</goal>
-	         </goals>
-	       </execution>
-	       <execution>
-	         <id>verify</id>
-	         <goals>
-	           <goal>verify</goal>
-	         </goals>
-	       </execution>
-	     </executions>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-failsafe-plugin</artifactId>
+	<version>2.18.1</version>
+	<configuration>
+	  <reuseForks>false</reuseForks>
+	</configuration>
+	<executions>
+	  <execution>
+	    <id>integration-test</id>
+	    <goals>
+	      <goal>integration-test</goal>
+	    </goals>
+	  </execution>
+	  <execution>
+	    <id>verify</id>
+	    <goals>
+	      <goal>verify</goal>
+	    </goals>
+	  </execution>
+	</executions>
       </plugin>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-ejb-plugin</artifactId>
-	     <version>2.5.1</version>
-	     <configuration>
-	       <ejbVersion>3.2</ejbVersion>
-	     </configuration>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-ejb-plugin</artifactId>
+	<version>2.5.1</version>
+	<configuration>
+	  <ejbVersion>3.2</ejbVersion>
+	</configuration>
       </plugin>
       <plugin>
-	     <groupId>org.apache.maven.plugins</groupId>
-	     <artifactId>maven-dependency-plugin</artifactId>
-	     <version>2.8</version>
-	     <executions>
-	       <execution>
-	         <phase>validate</phase>
-	         <goals>
-	           <goal>copy</goal>
-	         </goals>
-	         <configuration>
-	           <outputDirectory>${endorsed.dir}</outputDirectory>
-	           <silent>true</silent>
-	           <artifactItems>
-		          <artifactItem>
-		            <groupId>javax</groupId>
-		            <artifactId>javaee-endorsed-api</artifactId>
-		            <version>7.0</version>
-		            <type>jar</type>
-		          </artifactItem>
-	           </artifactItems>
-	         </configuration>
-	       </execution>
-	     </executions>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<version>2.8</version>
+	<executions>
+	  <execution>
+	    <phase>validate</phase>
+	    <goals>
+	      <goal>copy</goal>
+	    </goals>
+	    <configuration>
+	      <outputDirectory>${endorsed.dir}</outputDirectory>
+	      <silent>true</silent>
+	      <artifactItems>
+		<artifactItem>
+		  <groupId>javax</groupId>
+		  <artifactId>javaee-endorsed-api</artifactId>
+		  <version>7.0</version>
+		  <type>jar</type>
+		</artifactItem>
+	      </artifactItems>
+	    </configuration>
+	  </execution>
+	</executions>
       </plugin>
     </plugins>
   </build>
