@@ -6,4 +6,5 @@ script:
   - mvn verify -P arquillian-openejb-embedded
   - mvn verify -P arquillian-tomee-embedded
 after_success:
+  - bash <(curl -s https://codecov.io/bash)
   - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
