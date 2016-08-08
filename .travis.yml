@@ -1,10 +1,14 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 script:
-  - mvn verify -P arquillian-glassfish-embedded
-  - mvn verify -P arquillian-openejb-embedded
-  - mvn verify -P arquillian-tomee-embedded
+- mvn verify -P arquillian-glassfish-embedded
+- mvn verify -P arquillian-openejb-embedded
+- mvn verify -P arquillian-tomee-embedded
+- mvn test jacoco:report
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
+- mvn coveralls:report
+- python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
+env:
+  global:
+    secure: GhY9tXUNxT01rAaHUpkGNShAcHmVvZ3iZYjjf7+JdBVl9KNxDi+AnbQB1SmBhSFGWqTUSIfeBIPPTy/eIzWrT7I1/caHD1a/u9EnamMDAEwaQX2A/EI2Zd8V4ZUEm/2dl8XIaVeDZi3xpo/XJqNJBrJ8tyujbse52+zmPo2X+3Y=

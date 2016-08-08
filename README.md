@@ -21,6 +21,7 @@ EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                444
 ## Platform for development and integration of clinical databases for Java EE
 
 [![Build Status](https://travis-ci.org/UCL/EIDP-4.svg?branch=master)](https://travis-ci.org/UCL/EIDP-4)
+[![Coverage Status](https://coveralls.io/repos/github/UCL/EIDP-4/badge.svg?branch=master)](https://coveralls.io/github/UCL/EIDP-4?branch=master)
 [![Sputnik](https://sputnik.ci/conf/badge)](https://sputnik.ci/app#/builds/UCL/EIDP-4)
 
 ## Components
