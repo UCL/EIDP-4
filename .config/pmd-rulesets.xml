@@ -8,7 +8,7 @@
   <rule ref="rulesets/java/basic.xml/BooleanInstantiation"/>  
   <rule ref="rulesets/java/basic.xml/CollapsibleIfStatements"/>  
   <rule ref="rulesets/java/basic.xml/DoubleCheckedLocking"/>
-  <rule ref="rulesets/java/basic/xml/DontCallThreadRun"/>
+  <rule ref="rulesets/java/basic.xml/DontCallThreadRun"/>
   <rule ref="rulesets/java/basic.xml/EmptyCatchBlock"/>  
   <rule ref="rulesets/java/basic.xml/EmptyFinallyBlock"/>  
   <rule ref="rulesets/java/basic.xml/EmptyIfStmt"/>  
