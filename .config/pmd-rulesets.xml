@@ -2,86 +2,85 @@
 
 <ruleset name="PMD-Rules">
   <description>
-    Rulesets to use in pmd. For a detailed description of pmd rulesets: http://pmd.sourceforge.net/rules/index.html
+    Rulesets to use in pmd. For a detailed description of pmd rulesets: https://pmd.github.io/pmd-5.4.1/pmd-java/rules/index.html
   </description>
 
-  <rule ref="rulesets/basic.xml/BooleanInstantiation"/>  
-  <rule ref="rulesets/basic.xml/CollapsibleIfStatements"/>  
-  <rule ref="rulesets/basic.xml/DoubleCheckedLocking"/>
-  <rule ref="rulesets/basic/xml/DontCallThreadRun"/>
-  <rule ref="rulesets/basic.xml/EmptyCatchBlock"/>  
-  <rule ref="rulesets/basic.xml/EmptyFinallyBlock"/>  
-  <rule ref="rulesets/basic.xml/EmptyIfStmt"/>  
-  <rule ref="rulesets/basic.xml/EmptyStatementNotInLoop"/>  
-  <rule ref="rulesets/basic.xml/EmptyStaticInitializer"/>  
-  <rule ref="rulesets/basic.xml/EmptySwitchStatements"/>  
-  <rule ref="rulesets/basic.xml/EmptySynchronizedBlock"/>  
-  <rule ref="rulesets/basic.xml/EmptyTryBlock"/>  
-  <rule ref="rulesets/basic.xml/EmptyWhileStmt"/>  
-  <rule ref="rulesets/basic.xml/ForLoopShouldBeWhileLoop"/>  
-  <rule ref="rulesets/basic.xml/JumbledIncrementer"/>  
-  <rule ref="rulesets/basic.xml/OverrideBothEqualsAndHashcode"/>  
-  <rule ref="rulesets/basic.xml/ReturnFromFinallyBlock"/>  
-  <rule ref="rulesets/basic.xml/UnconditionalIfStatement"/>  
-  <rule ref="rulesets/basic.xml/UnnecessaryConversionTemporary"/>  
-  <rule ref="rulesets/basic.xml/UnnecessaryFinalModifier"/>  
-  <rule ref="rulesets/basic.xml/UnnecessaryReturn"/>  
-  <rule ref="rulesets/basic.xml/UselessOverridingMethod"/>
+  <rule ref="rulesets/java/basic.xml/AvoidBranchingStatementAsLastInLoop"/>  
+  <rule ref="rulesets/java/basic.xml/AvoidMultipleUnaryOperators"/>  
+  <rule ref="rulesets/java/basic.xml/BigIntegerInstantiation"/>
+  <rule ref="rulesets/java/basic.xml/BooleanInstantiation"/>
+  <rule ref="rulesets/java/basic.xml/BrokenNullCheck"/>  
+  <rule ref="rulesets/java/basic.xml/CheckResultSet"/>  
+  <rule ref="rulesets/java/basic.xml/CheckSkipResult"/>  
+  <rule ref="rulesets/java/basic.xml/ClassCastExceptionWithToArray"/>  
+  <rule ref="rulesets/java/basic.xml/CollapsibleIfStatements"/>  
+  <rule ref="rulesets/java/basic.xml/DoubleCheckedLocking"/>  
+  <rule ref="rulesets/java/basic.xml/ExtendsObject"/>  
+  <rule ref="rulesets/java/basic.xml/ForLoopShouldBeWhileLoop"/>  
+  <rule ref="rulesets/java/basic.xml/JumbledIncrementer"/>  
+  <rule ref="rulesets/java/basic.xml/OverrideBothEqualsAndHashcode"/>  
+  <rule ref="rulesets/java/basic.xml/ReturnFromFinallyBlock"/>  
+  <rule ref="rulesets/java/basic.xml/SimplifiedTernary"/>  
+  <rule ref="rulesets/java/basic.xml/UnconditionalIfStatement"/>
   
-  <rule ref="rulesets/clone.xml/CloneMethodMustImplementCloneable"/>  
-  <rule ref="rulesets/clone.xml/CloneThrowsCloneNotSupportedException"/>  
-  <rule ref="rulesets/clone.xml/ProperCloneImplementation"/>
+  <rule ref="rulesets/java/clone.xml/CloneMethodMustImplementCloneable"/>  
+  <rule ref="rulesets/java/clone.xml/CloneThrowsCloneNotSupportedException"/>  
+  <rule ref="rulesets/java/clone.xml/ProperCloneImplementation"/>
   
-  <rule ref="rulesets/codesize.xml/CyclomaticComplexity"/>  
-  <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>  
-  <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>  
-  <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>  
-  <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>  
-  <rule ref="rulesets/codesize.xml/TooManyFields"/>
+  <rule ref="rulesets/java/codesize.xml/ExcessiveClassLength"/>  
+  <rule ref="rulesets/java/codesize.xml/ExcessiveMethodLength"/>  
+  <rule ref="rulesets/java/codesize.xml/ExcessiveParameterList"/>  
+  <rule ref="rulesets/java/codesize.xml/ExcessivePublicCount"/>  
+  <rule ref="rulesets/java/codesize.xml/TooManyFields"/>
   
-  <rule ref="rulesets/controversial.xml/UnnecessaryConstructor"/>  
-  <rule ref="rulesets/controversial.xml/NullAssignment"/>
+  <rule ref="rulesets/java/controversial.xml/DontImportSun"/>
+  <rule ref="rulesets/java/controversial.xml/NullAssignment"/>
+  <rule ref="rulesets/java/controversial.xml/UnnecessaryConstructor"/>  
+  <rule ref="rulesets/java/controversial.xml/UnnecessaryParentheses"/>
   
-  <rule ref="rulesets/coupling.xml/CouplingBetweenObjects"/>  
-  <rule ref="rulesets/coupling.xml/ExcessiveImports"/>  
-  <rule ref="rulesets/coupling.xml/LooseCoupling"/>
+  <rule ref="rulesets/java/coupling.xml/CouplingBetweenObjects"/>  
+  <rule ref="rulesets/java/coupling.xml/ExcessiveImports"/>  
+  <rule ref="rulesets/java/coupling.xml/LooseCoupling"/>
   
-  <rule ref="rulesets/finalizers.xml/EmptyFinalizer"/>  
-  <rule ref="rulesets/finalizers.xml/FinalizeOnlyCallsSuperFinalize"/>  
-  <rule ref="rulesets/finalizers.xml/FinalizeOverloaded"/>  
-  <rule ref="rulesets/finalizers.xml/FinalizeDoesNotCallSuperFinalize"/>  
-  <rule ref="rulesets/finalizers.xml/FinalizeShouldBeProtected"/>  
-  <rule ref="rulesets/finalizers.xml/AvoidCallingFinalize"/>
+  <rule ref="rulesets/java/finalizers.xml/AvoidCallingFinalize"/>
+  <rule ref="rulesets/java/finalizers.xml/EmptyFinalizer"/>  
+  <rule ref="rulesets/java/finalizers.xml/FinalizeDoesNotCallSuperFinalize"/> 
+  <rule ref="rulesets/java/finalizers.xml/FinalizeOnlyCallsSuperFinalize"/>  
+  <rule ref="rulesets/java/finalizers.xml/FinalizeOverloaded"/>
+  <rule ref="rulesets/java/finalizers.xml/FinalizeShouldBeProtected"/>
 
-  <rule ref="rulesets/imports.xml/DuplicateImports"/>  
-  <rule ref="rulesets/imports.xml/DontImportJavaLang"/>
-  <rule ref="rulesets/imports.xml/UnusedImports"/>  
-  <rule ref="rulesets/imports.xml/ImportFromSamePackage"/>
+  <rule ref="rulesets/java/imports.xml/DontImportJavaLang"/>
+  <rule ref="rulesets/java/imports.xml/DuplicateImports"/> 
+  <rule ref="rulesets/java/imports.xml/ImportFromSamePackage"/>
+  <rule ref="rulesets/java/imports.xml/UnusedImports"/>
   
-  <rule ref="rulesets/strictexception.xml/DoNotThrowExceptionInFinally"/>
+  <rule ref="rulesets/java/strictexception.xml/AvoidCatchingNPE"/>
+  <rule ref="rulesets/java/strictexception.xml/AvoidCatchingThrowable"/>
   
-  <rule ref="rulesets/strings.xml/AvoidStringBufferField"/>
-  <rule ref="rulesets/strings.xml/StringToString">
+  <rule ref="rulesets/java/strings.xml/AvoidDuplicateLiterals"/>
+  <rule ref="rulesets/java/strings.xml/StringInstantiation"/>
+  <rule ref="rulesets/java/strings.xml/StringToString">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/strings.xml/StringInstantiation"/>
 
-  <rule ref="rulesets/sunsecure.xml/MethodReturnsInternalArray"/>
-  <rule ref="rulesets/sunsecure.xml/ArrayIsStoredDirectly"/>
+  <rule ref="rulesets/java/sunsecure.xml/ArrayIsStoredDirectly"/>
+  <rule ref="rulesets/java/sunsecure.xml/MethodReturnsInternalArray"/>
 
-  <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+  <rule ref="rulesets/java/unusedcode.xml/UnusedFormalParameter">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/unusedcode.xml/UnusedPrivateField">
+  <rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod">
+  <rule ref="rulesets/java/unusedcode.xml/UnusedModifier"/>
+  <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField">
     <priority>1</priority>
   </rule>
-  <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter">
+  <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateMethod">
     <priority>1</priority>
   </rule>
-  <rule name="DontImportWild" message="Please no wild card imports" class="net.sourceforge.pmd.rules.XPathRule">
+  
+  <rule name="DontImportWild" message="Please no wild card imports" class="net.sourceforge.pmd.lang.rule.XPathRule" language="java">
     <description>We don't take kindly to imports such as java.net.* round these parts</description>
     <priority>1</priority>
     <properties>
