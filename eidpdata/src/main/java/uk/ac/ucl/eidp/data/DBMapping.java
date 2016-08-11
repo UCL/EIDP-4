@@ -50,8 +50,9 @@ public class DBMapping {
 
     public List<Map<String, String>> dbAction(String methodPath, Map<String, String> parameters) {
         
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("methodPath is invalid");
+        }
         String databaseNodeId = mappingProperties.getProperty(methodPath);
         
         DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);

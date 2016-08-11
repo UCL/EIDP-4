@@ -36,12 +36,16 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(String.join(", ", queryFields));
         stm.append(" FROM ").append(tableType.getName());
         
-        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+        if (!methodType.getFor().isEmpty()) {
+            stm.append(generateWhereClause());
+        }
              
         if (!methodType.getOrder().isEmpty()) {
             stm.append(" ORDER BY ");
             methodType.getOrder().forEach((MethodOrderType o) -> {
-                if (!stm.substring(stm.length() - 9).equals("ORDER BY ")) stm.append(", ");
+                if (!stm.substring(stm.length() - 9).equals("ORDER BY ")) {
+                    stm.append(", ");
+                }
                 stm.append(translateId(o.getField()));
                 stm.append(" ");
                 stm.append(o.getSorting().value());
@@ -59,13 +63,17 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         stm.append(tableType.getName()).append(" SET ");
         
         methodType.getFields().getField().forEach((String f) -> {
-            if (!stm.substring(stm.length() - 4).equals("SET ")) stm.append(", ");
+            if (!stm.substring(stm.length() - 4).equals("SET ")) {
+                stm.append(", ");
+            }
             stm.append(translateId(f));
             stm.append(" = :");
             stm.append(f);
         });
         
-        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+        if (!methodType.getFor().isEmpty()) {
+            stm.append(generateWhereClause());
+        }
       
         stm.append(";");
         stm.append("INSERT INTO ");
@@ -89,14 +97,18 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     protected String buildDelStatement() {
         StringBuilder stm = new StringBuilder("DELETE FROM ");
         stm.append(tableType.getName());
-        if (!methodType.getFor().isEmpty()) stm.append(generateWhereClause());
+        if (!methodType.getFor().isEmpty()) {
+            stm.append(generateWhereClause());
+        }
         return stm.toString();
     }
     
     protected String generateWhereClause() {
         StringBuilder stm = new StringBuilder(" WHERE ");
         methodType.getFor().forEach((MethodForType m) -> {
-            if (!stm.substring(stm.length() - 6).equals("WHERE ")) stm.append(" ").append(m.getType()).append(" ");
+            if (!stm.substring(stm.length() - 6).equals("WHERE ")) {
+                stm.append(" ").append(m.getType()).append(" ");
+            }
             stm.append(translateId(m.getField()));
             boolean noValue = false;
             boolean parenthesis = false;
@@ -134,10 +146,14 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
                     
             }
             if (!noValue) {
-                if (parenthesis) stm.append("(");
+                if (parenthesis) {
+                    stm.append("(");
+                }
                 stm.append(":");
                 stm.append(m.getField());
-                if (parenthesis) stm.append(")");
+                if (parenthesis) {
+                    stm.append(")");
+                }
             }
         });
         return stm.toString();
@@ -149,11 +165,15 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     }
     
     protected String generateOffsetLimit() {
-        if (null == methodType.getOffset() && null == methodType.getLimit()) return "";
+        if (null == methodType.getOffset() && null == methodType.getLimit()) {
+            return "";
+        }
         
         StringBuilder paging = new StringBuilder(" OFFSET ");
         String offset = "0";
-        if (null != methodType.getOffset()) offset = methodType.getOffset().toString();
+        if (null != methodType.getOffset()) { 
+            offset = methodType.getOffset().toString();
+        }
         paging.append(offset).append(" ROWS");
         
         if (null != methodType.getLimit()) {

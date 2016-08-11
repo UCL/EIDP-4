@@ -45,9 +45,9 @@ public class StatementGenerator {
     
     public String getSqlStatement(String methodPath) {
         
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("methodpath is invalid");
-        
+        }
         DatasetType datasetType = getDatasetTypeObject(methodPath);
         
         JaxbSqlStatement jaxbSqlStatement;
@@ -68,9 +68,9 @@ public class StatementGenerator {
 
     public Map<String, Parameter> getParameterSettings(Set<String> keyset, String datasetPath) {
         
-        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
+        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("datasetPath is invalid");
-        
+        }
         Map<String, Parameter> m = new HashMap<>();
         DatasetType datasetType = getDatasetTypeObject(datasetPath);
 
@@ -89,8 +89,9 @@ public class StatementGenerator {
     }
     
     public TableFieldType getTableField(String fieldId, String datasetPath) {
-        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) 
+        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("datasetPath is invalid");
+        }
         DatasetType datasetType = getDatasetTypeObject(datasetPath);
         return datasetType.getTable().getField().stream()
                 .filter(t -> t.getId().equals(fieldId))
@@ -99,21 +100,19 @@ public class StatementGenerator {
     }
 
     public List<String> getMethodRoles(String methodPath) {
-        
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("methodPath is invalid");
-        
+        }
         DatasetType datasetType = getDatasetTypeObject(methodPath);
         String method = methodPath.split("\\.")[2];
         MethodType methodType = getMethodType(datasetType, method);
         return methodType.getRoleName();
-
     }
     
     public List<String> getMethodFields(String methodPath) {
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) 
+        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
             throw new IllegalArgumentException("methodPath is invalid");
-        
+        }
         DatasetType datasetType = getDatasetTypeObject(methodPath);
         String method = methodPath.split("\\.")[2];
         MethodType methodType = getMethodType(datasetType, method);
@@ -197,7 +196,9 @@ public class StatementGenerator {
             TableFieldTypeType fieldType = TableFieldTypeType.fromValue(type);
             switch (fieldType) {
                 case STRING : 
-                    if (getSize() > 254) return Types.LONGVARCHAR;
+                    if (getSize() > 254) {
+                        return Types.LONGVARCHAR;
+                    }
                     return Types.VARCHAR;
                 case INTEGER :
                     return Types.INTEGER;

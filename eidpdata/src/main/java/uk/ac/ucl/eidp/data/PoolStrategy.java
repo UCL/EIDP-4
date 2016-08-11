@@ -58,8 +58,9 @@ public class PoolStrategy implements DBMappingStrategy {
     private StatementGenerator statementGenerator;
     
     private void initialiseConnection() {
-        if (properties.containsKey(SQL_DIALECT_PROP))
+        if (properties.containsKey(SQL_DIALECT_PROP)) {
             SQL_DIALECT = properties.getProperty(SQL_DIALECT_PROP);
+        }
 
         statementGenerator.setSqlDialect(SQL_DIALECT);
         if (!properties.containsKey(DS_JNDI_NAME)) {
@@ -78,7 +79,9 @@ public class PoolStrategy implements DBMappingStrategy {
 
     @Override
     public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
-        if (null == connection) initialiseConnection();
+        if (null == connection) {
+            initialiseConnection();
+        }
         
         String sqlStatement = statementGenerator.getSqlStatement(methodPath);
         
@@ -91,8 +94,12 @@ public class PoolStrategy implements DBMappingStrategy {
         try {
             int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
             int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
-            if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
-            if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
+            if (properties.containsKey(RS_SCROLL_TYPE)) {
+                scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
+            }
+            if (properties.containsKey(RS_SCROLL_TYPE)) {
+                concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
+            }
             PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
             setValues(ps, fields, parameters, p);
             boolean rsbool = ps.execute();

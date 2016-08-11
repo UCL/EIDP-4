@@ -23,7 +23,9 @@ public class JaxbSqlPostgresql extends JaxbSqlAnsi {
     
     @Override
     protected String generateOffsetLimit() {
-        if (null == methodType.getOffset() && null == methodType.getLimit()) return "";
+        if (null == methodType.getOffset() && null == methodType.getLimit()) {
+            return "";
+        }
         
         StringBuilder paging = new StringBuilder("");
 
