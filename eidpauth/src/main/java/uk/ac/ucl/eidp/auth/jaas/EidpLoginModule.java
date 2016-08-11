@@ -16,6 +16,8 @@
 package uk.ac.ucl.eidp.auth.jaas;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Map;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
@@ -48,7 +50,9 @@ public class EidpLoginModule implements LoginModule {
     
     private UserController userService;
 
-    private BeanManager beanManager;    
+    private BeanManager beanManager;
+    
+    private static final Logger logger = Logger.getLogger(EidpLoginModule.class.getName());
     
     private void setUserService() {
         if (userService == null) {
@@ -59,7 +63,7 @@ public class EidpLoginModule implements LoginModule {
                 CreationalContext cc = beanManager.createCreationalContext(bean);
                 userService = (UserController) beanManager.getReference(bean, UserController.class, cc);
             } catch (NamingException e) {
-                throw new RuntimeException(e);
+                logger.log(Level.SEVERE, "Cannot call UserController bean", e);
             }
         }
     }
@@ -92,7 +96,8 @@ public class EidpLoginModule implements LoginModule {
 
             return true;
         } catch (IOException | UnsupportedCallbackException | LoginException e) {
-            throw new LoginException(e.getMessage());
+            logger.log(Level.SEVERE, "login() method failed", e);
+            return false;
         }
     }
 
