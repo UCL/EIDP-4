@@ -39,176 +39,177 @@ import javax.xml.stream.XMLStreamReader;
  */
 public class StatementGenerator {
 
-    private final XMLInputFactory xif = XMLInputFactory.newFactory();
-    private final String DATASET_TAG = "dataset";
-    private String SQL_DIALECT = "";
-    
-    public String getSqlStatement(String methodPath) {
-        
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("methodpath is invalid");
-        }
-        DatasetType datasetType = getDatasetTypeObject(methodPath);
-        
-        JaxbSqlStatement jaxbSqlStatement;
-        try {
-            jaxbSqlStatement = (JaxbSqlStatement) Class.forName(SQL_DIALECT).newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
-            jaxbSqlStatement = new JaxbSqlAnsi();
-        }
-        
-        return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2]);
+  private final XMLInputFactory xif = XMLInputFactory.newFactory();
+  private final String DATASET_TAG = "dataset";
+  private String SQL_DIALECT = "";
 
+  public String getSqlStatement(String methodPath) {
+
+    if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("methodpath is invalid");
+    }
+    DatasetType datasetType = getDatasetTypeObject(methodPath);
+
+    JaxbSqlStatement jaxbSqlStatement;
+    try {
+      jaxbSqlStatement = (JaxbSqlStatement) Class.forName(SQL_DIALECT).newInstance();
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+      Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot create instance of " + SQL_DIALECT, ex);
+      jaxbSqlStatement = new JaxbSqlAnsi();
     }
 
-    public void setSqlDialect(String SQL_DIALECT) {
-        this.SQL_DIALECT = SQL_DIALECT;
-    }
+    return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2]);
 
-    public Map<String, Parameter> getParameterSettings(Set<String> keyset, String datasetPath) {
-        
-        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("datasetPath is invalid");
+  }
+
+  public void setSqlDialect(String SQL_DIALECT) {
+    this.SQL_DIALECT = SQL_DIALECT;
+  }
+
+  public Map<String, Parameter> getParameterSettings(Set<String> keyset, String datasetPath) {
+
+    if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("datasetPath is invalid");
+    }
+    Map<String, Parameter> m = new HashMap<>();
+    DatasetType datasetType = getDatasetTypeObject(datasetPath);
+
+    keyset.forEach((String k) -> {
+      TableFieldType field = datasetType.getTable().getField().stream()
+      .filter(t -> t.getId().equals(k))
+      .findFirst()
+      .get();
+      Parameter p = new Parameter();
+      p.setType(field.getType().value());
+      p.setSize(field.getSize());
+      m.put(k, p);
+    });
+
+    return m;
+  }
+
+  public TableFieldType getTableField(String fieldId, String datasetPath) {
+    if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("datasetPath is invalid");
+    }
+    DatasetType datasetType = getDatasetTypeObject(datasetPath);
+    return datasetType.getTable().getField().stream()
+           .filter(t -> t.getId().equals(fieldId))
+           .findFirst()
+           .get();
+  }
+
+  public List<String> getMethodRoles(String methodPath) {
+    if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("methodPath is invalid");
+    }
+    DatasetType datasetType = getDatasetTypeObject(methodPath);
+    String method = methodPath.split("\\.")[2];
+    MethodType methodType = getMethodType(datasetType, method);
+    return methodType.getRoleName();
+  }
+
+  public List<String> getMethodFields(String methodPath) {
+    if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("methodPath is invalid");
+    }
+    DatasetType datasetType = getDatasetTypeObject(methodPath);
+    String method = methodPath.split("\\.")[2];
+    MethodType methodType = getMethodType(datasetType, method);
+    return methodType.getFields().getField();
+  }
+
+  private DatasetType getDatasetTypeObject(String path) {
+
+    DatasetType datasetType = null;
+    XMLStreamReader xsr = null;
+
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + path.split("\\.")[0] + "/resources/db.xml")) {
+
+      xsr = xif.createXMLStreamReader(is, "UTF-8");
+      while (xsr.hasNext()) {
+        int event = xsr.next();
+        if (XMLStreamConstants.START_ELEMENT == event
+            && DATASET_TAG.equals(xsr.getLocalName())
+            && path.split("\\.")[1].equals(xsr.getAttributeValue(0))) {
+          break;
         }
-        Map<String, Parameter> m = new HashMap<>();
-        DatasetType datasetType = getDatasetTypeObject(datasetPath);
+      }
 
-        keyset.forEach((String k) -> {
-            TableFieldType field = datasetType.getTable().getField().stream()
-                    .filter(t -> t.getId().equals(k))
-                    .findFirst()
-                    .get();
-            Parameter p = new Parameter();
-            p.setType(field.getType().value());
-            p.setSize(field.getSize());
-            m.put(k, p);
-        });
-                     
-        return m;
-    }
-    
-    public TableFieldType getTableField(String fieldId, String datasetPath) {
-        if (!datasetPath.matches("[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("datasetPath is invalid");
-        }
-        DatasetType datasetType = getDatasetTypeObject(datasetPath);
-        return datasetType.getTable().getField().stream()
-                .filter(t -> t.getId().equals(fieldId))
-                .findFirst()
-                .get();
+      JAXBContext jc = JAXBContext.newInstance("uk.ac.ucl.eidp.data.jaxb", ObjectFactory.class.getClassLoader());
+      Unmarshaller unmarshaller = jc.createUnmarshaller();
+      JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
+      datasetType = jb.getValue();
+
+    } catch (XMLStreamException | IOException ex) {
+      throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset" , ex);
+    } catch (JAXBException ex) {
+      throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
     }
 
-    public List<String> getMethodRoles(String methodPath) {
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("methodPath is invalid");
-        }
-        DatasetType datasetType = getDatasetTypeObject(methodPath);
-        String method = methodPath.split("\\.")[2];
-        MethodType methodType = getMethodType(datasetType, method);
-        return methodType.getRoleName();
+    try {
+      xsr.close();
+    } catch (XMLStreamException ex) {
+      Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
     }
-    
-    public List<String> getMethodFields(String methodPath) {
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("methodPath is invalid");
-        }
-        DatasetType datasetType = getDatasetTypeObject(methodPath);
-        String method = methodPath.split("\\.")[2];
-        MethodType methodType = getMethodType(datasetType, method);
-        return methodType.getFields().getField();
-    }
-    
-    private DatasetType getDatasetTypeObject(String path) {
-        
-        DatasetType datasetType = null;
-        XMLStreamReader xsr = null;
-        
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + path.split("\\.")[0] + "/resources/db.xml")) {
 
-            xsr = xif.createXMLStreamReader(is, "UTF-8");
-            while (xsr.hasNext()) {
-                int event = xsr.next();
-                if (XMLStreamConstants.START_ELEMENT == event
-                        && DATASET_TAG.equals(xsr.getLocalName())
-                        && path.split("\\.")[1].equals(xsr.getAttributeValue(0))) {
-                    break;
-                }
-            }
+    return datasetType;
+  }
 
-            JAXBContext jc = JAXBContext.newInstance("uk.ac.ucl.eidp.data.jaxb", ObjectFactory.class.getClassLoader());
-            Unmarshaller unmarshaller = jc.createUnmarshaller();
-            JAXBElement<DatasetType> jb = unmarshaller.unmarshal(xsr, DatasetType.class);
-            datasetType = jb.getValue();
+  private MethodType getMethodType(DatasetType datasetType, String method) {
+    return datasetType.getMethod().stream().filter(
+             m -> (m.getId() == null ? method == null : m.getId().equals(method))
+           ).findFirst().get();
+  }
 
-        } catch (XMLStreamException | IOException ex) {
-            throw new UnsupportedOperationException("Could not generate XMLStreamReader for given context or dataset" , ex);
-        } catch (JAXBException ex) {
-            throw new UnsupportedOperationException("JAXB could not unmarshall XMLStreamReader for given context", ex);
-        }
+  public class Parameter {
 
-        try {
-            xsr.close();
-        } catch (XMLStreamException ex) {
-            Logger.getLogger(StatementGenerator.class.getName()).log(Level.SEVERE, "Cannot close XMLStreamReader", ex);
-        }
-        
-        return datasetType;
-    }
-    
-    private MethodType getMethodType(DatasetType datasetType, String method) {
-        return datasetType.getMethod().stream().filter(
-                m -> (m.getId() == null ? method == null : m.getId().equals(method))
-        ).findFirst().get();
-    }
-    
-    public class Parameter {
-           
-        private String type;
-        private Integer size;
+    private String type;
+    private Integer size;
 //        private String format;
 
-        public String getType() {
-            return type;
-        }
+    public String getType() {
+      return type;
+    }
 
-        public void setType(String type) {
-            this.type = type;
-        }
+    public void setType(String type) {
+      this.type = type;
+    }
 
-        public Integer getSize() {
-            return size;
-        }
+    public Integer getSize() {
+      return size;
+    }
 
-        public void setSize(Integer size) {
-            this.size = size;
-        }
-        
+    public void setSize(Integer size) {
+      this.size = size;
+    }
+
 //        public String getFormat() {
 //            return format;
 //        }
-//        
+//
 //        public void setFormat(String format) {
 //            this.format = format;
 //        }
-        
-        public Integer getSqlType() {
-            TableFieldTypeType fieldType = TableFieldTypeType.fromValue(type);
-            switch (fieldType) {
-                case STRING : 
-                    if (getSize() > 254) {
-                        return Types.LONGVARCHAR;
-                    }
-                    return Types.VARCHAR;
-                case INTEGER :
-                    return Types.INTEGER;
-                case FLOAT :
-                    return Types.FLOAT;
-                case DATE :
-                    return Types.DATE;
-                default : return null;
-            }
-        }
 
+    public Integer getSqlType() {
+      TableFieldTypeType fieldType = TableFieldTypeType.fromValue(type);
+      switch (fieldType) {
+      case STRING :
+        if (getSize() > 254) {
+          return Types.LONGVARCHAR;
+        }
+        return Types.VARCHAR;
+      case INTEGER :
+        return Types.INTEGER;
+      case FLOAT :
+        return Types.FLOAT;
+      case DATE :
+        return Types.DATE;
+      default :
+        return null;
+      }
     }
+
+  }
 }

@@ -32,32 +32,32 @@ import javax.inject.Inject;
 @Stateless
 @LocalBean
 public class DBMapping {
-    
-    private final String MAPPING_PROPS = "META-INF/eidp/mapping.properties";
-    private final Properties mappingProperties = new Properties();
-    
-    @Inject
-    private StrategyResolver strategyResolver;
-    
-    @PostConstruct
-    public void loadMapping() {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(MAPPING_PROPS)) {
-            mappingProperties.load(is);
-        } catch (IOException ex) {
-            throw new UnsupportedOperationException("Cannot load mapping.properties " , ex);
-        }
-    }
 
-    public List<Map<String, String>> dbAction(String methodPath, Map<String, String> parameters) {
-        
-        if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
-            throw new IllegalArgumentException("methodPath is invalid");
-        }
-        String databaseNodeId = mappingProperties.getProperty(methodPath);
-        
-        DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
-            
-        return dbMappingStrategy.processDbCall(methodPath, parameters);
+  private final String MAPPING_PROPS = "META-INF/eidp/mapping.properties";
+  private final Properties mappingProperties = new Properties();
+
+  @Inject
+  private StrategyResolver strategyResolver;
+
+  @PostConstruct
+  public void loadMapping() {
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream(MAPPING_PROPS)) {
+      mappingProperties.load(is);
+    } catch (IOException ex) {
+      throw new UnsupportedOperationException("Cannot load mapping.properties " , ex);
     }
-    
+  }
+
+  public List<Map<String, String>> dbAction(String methodPath, Map<String, String> parameters) {
+
+    if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
+      throw new IllegalArgumentException("methodPath is invalid");
+    }
+    String databaseNodeId = mappingProperties.getProperty(methodPath);
+
+    DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
+
+    return dbMappingStrategy.processDbCall(methodPath, parameters);
+  }
+
 }
