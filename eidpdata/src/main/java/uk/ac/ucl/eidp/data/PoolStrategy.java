@@ -43,130 +43,137 @@ import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
 @Stateless
 @NodeQualifier(NodeType.POOL)
 public class PoolStrategy implements DBMappingStrategy {
-    
-    private Properties properties;
-    private final String DS_JNDI_NAME = "datasource-jndi-name";
-    private final String RS_SCROLL_TYPE = "resultset-scroll-type";
-    private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
-    private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
-    private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
-    private Connection connection;
-    private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
-    
-    @Inject
-    @StatementProducer
-    private StatementGenerator statementGenerator;
-    
-    private void initialiseConnection() {
-        if (properties.containsKey(SQL_DIALECT_PROP))
-            SQL_DIALECT = properties.getProperty(SQL_DIALECT_PROP);
 
-        statementGenerator.setSqlDialect(SQL_DIALECT);
-        if (!properties.containsKey(DS_JNDI_NAME)) {
-            throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
-        }
-        String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
-        DataSource source;
-        try {
-            Context context = new InitialContext();
-            source = (DataSource) context.lookup(datasourceJndiName);
-            connection = source.getConnection();
-        } catch (SQLException | NamingException ex) {
-            throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
-        }
+  private Properties properties;
+  private final String DS_JNDI_NAME = "datasource-jndi-name";
+  private final String RS_SCROLL_TYPE = "resultset-scroll-type";
+  private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
+  private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
+  private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
+  private Connection connection;
+  private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
+
+  @Inject
+  @StatementProducer
+  private StatementGenerator statementGenerator;
+
+  private void initialiseConnection() {
+    if (properties.containsKey(SQL_DIALECT_PROP)) {
+      SQL_DIALECT = properties.getProperty(SQL_DIALECT_PROP);
     }
 
-    @Override
-    public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
-        if (null == connection) initialiseConnection();
-        
-        String sqlStatement = statementGenerator.getSqlStatement(methodPath);
-        
-        List<String> fields = getJdbcFields(sqlStatement.split(";")[0]);
-        String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");       
-        
-        String datasetPath = methodPath.substring(0, methodPath.lastIndexOf("."));
-        Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
-        List<Map<String, String>> l = new ArrayList<>();
-        try {
-            int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
-            int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
-            if (properties.containsKey(RS_SCROLL_TYPE)) scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
-            if (properties.containsKey(RS_SCROLL_TYPE)) concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
-            PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
-            setValues(ps, fields, parameters, p);
-            boolean rsbool = ps.execute();
-            
-            if (!rsbool) {
-                int updateCount = ps.getUpdateCount();
-                if (updateCount == 0) {
-                    ps = connection.prepareStatement(jdbcStatement.split(";")[1], scroll_type, concurrency_mode);
-                    fields = getJdbcFields(sqlStatement.split(";")[1]);
-                    setValues(ps, fields, parameters, p);
-                    updateCount = ps.executeUpdate();
-                }
-                Map<String, String> m = new HashMap<>();
-                m.put("updateCount", String.valueOf(updateCount));
-                l.add(m);
-                return l;
-            }
-            
-            List<String> methodFields = statementGenerator.getMethodFields(methodPath);
-            ResultSet resultSet = ps.getResultSet();
-            
-            while (resultSet.next()) {
-                Map<String, String> m = new HashMap<>();
-                for (String k : methodFields) {
-                    String v = resultSet.getString(k);
-                    m.put(k, v);
-                }              
-                l.add(m);
-            }
-            
-        } catch (SQLException ex) {
-            throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
+    statementGenerator.setSqlDialect(SQL_DIALECT);
+    if (!properties.containsKey(DS_JNDI_NAME)) {
+      throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
+    }
+    String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
+    DataSource source;
+    try {
+      Context context = new InitialContext();
+      source = (DataSource) context.lookup(datasourceJndiName);
+      connection = source.getConnection();
+    } catch (SQLException | NamingException ex) {
+      throw new IllegalStateException("Could not get Connection from the specified DataSource", ex);
+    }
+  }
+
+  @Override
+  public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
+    if (null == connection) {
+      initialiseConnection();
+    }
+
+    String sqlStatement = statementGenerator.getSqlStatement(methodPath);
+
+    List<String> fields = getJdbcFields(sqlStatement.split(";")[0]);
+    String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
+
+    String datasetPath = methodPath.substring(0, methodPath.lastIndexOf("."));
+    Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
+    List<Map<String, String>> l = new ArrayList<>();
+    try {
+      int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
+      int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
+      if (properties.containsKey(RS_SCROLL_TYPE)) {
+        scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
+      }
+      if (properties.containsKey(RS_SCROLL_TYPE)) {
+        concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
+      }
+      PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
+      setValues(ps, fields, parameters, p);
+      boolean rsbool = ps.execute();
+
+      if (!rsbool) {
+        int updateCount = ps.getUpdateCount();
+        if (updateCount == 0) {
+          ps = connection.prepareStatement(jdbcStatement.split(";")[1], scroll_type, concurrency_mode);
+          fields = getJdbcFields(sqlStatement.split(";")[1]);
+          setValues(ps, fields, parameters, p);
+          updateCount = ps.executeUpdate();
         }
+        Map<String, String> m = new HashMap<>();
+        m.put("updateCount", String.valueOf(updateCount));
+        l.add(m);
         return l;
+      }
 
-    }
-    
-    private List<String> getJdbcFields(String sqlStatement) {
-        Matcher matcher = findParametersPattern.matcher(sqlStatement); 
-        List<String> fields = new ArrayList<>();
-        while (matcher.find()) { 
-            fields.add(matcher.group().substring(1)); 
+      List<String> methodFields = statementGenerator.getMethodFields(methodPath);
+      ResultSet resultSet = ps.getResultSet();
+
+      while (resultSet.next()) {
+        Map<String, String> m = new HashMap<>();
+        for (String k : methodFields) {
+          String v = resultSet.getString(k);
+          m.put(k, v);
         }
-        return fields;
-    }
-    
-    private void setValues(PreparedStatement ps, List<String> fields, Map<String, String> parameters, Map<String, Parameter> p) throws SQLException {
-       
-        int idx = 1;
-        for (String f : fields) {
-            String value = parameters.get(f);
-            Integer size = p.get(f).getSize();
-            if (value.length() > size) {
-                throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
-            }
-            try {
-                ps.setObject(idx, value, p.get(f).getSqlType());
-            } catch (SQLException ex) {
-                ps.clearParameters();
-                ps.close();
-                throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
-            }
-            idx++;
-        }
-    }
+        l.add(m);
+      }
 
-    @Override
-    public void setProperties(Properties p) {
-        properties = p;
+    } catch (SQLException ex) {
+      throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
     }
+    return l;
 
-    @Override
-    public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  private List<String> getJdbcFields(String sqlStatement) {
+    Matcher matcher = findParametersPattern.matcher(sqlStatement);
+    List<String> fields = new ArrayList<>();
+    while (matcher.find()) {
+      fields.add(matcher.group().substring(1));
     }
-    
+    return fields;
+  }
+
+  private void setValues(PreparedStatement ps, List<String> fields, Map<String, String> parameters, Map<String, Parameter> p) throws SQLException {
+
+    int idx = 1;
+    for (String f : fields) {
+      String value = parameters.get(f);
+      Integer size = p.get(f).getSize();
+      if (value.length() > size) {
+        throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
+      }
+      try {
+        ps.setObject(idx, value, p.get(f).getSqlType());
+      } catch (SQLException ex) {
+        ps.clearParameters();
+        ps.close();
+        throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
+      }
+      idx++;
+    }
+  }
+
+  @Override
+  public void setProperties(Properties p) {
+    properties = p;
+  }
+
+  @Override
+  public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
 }
