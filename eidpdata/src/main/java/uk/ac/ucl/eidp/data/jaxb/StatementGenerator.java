@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 David Guzman <d.guzman at ucl.ac.uk>.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package uk.ac.ucl.eidp.data.jaxb;
 
 import java.io.IOException;
@@ -35,7 +20,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  *
- * @author David Guzman <d.guzman at ucl.ac.uk>
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 public class StatementGenerator {
 
@@ -43,6 +28,7 @@ public class StatementGenerator {
   private final String DATASET_TAG = "dataset";
   private String SQL_DIALECT = "";
   private String DOT_SEP = "\\.";
+  private final int VARCHAR_LIMIT = 254;
 
   public String getSqlStatement(String methodPath) {
 
@@ -167,7 +153,7 @@ public class StatementGenerator {
 
     private String type;
     private Integer size;
-//        private String format;
+    //private String format;
 
     public String getType() {
       return type;
@@ -185,19 +171,19 @@ public class StatementGenerator {
       this.size = size;
     }
 
-//        public String getFormat() {
-//            return format;
-//        }
-//
-//        public void setFormat(String format) {
-//            this.format = format;
-//        }
+    //public String getFormat() {
+    //  return format;
+    //}
+    //
+    //public void setFormat(String format) {
+    //  this.format = format;
+    //}
 
     public Integer getSqlType() {
       TableFieldTypeType fieldType = TableFieldTypeType.fromValue(type);
       switch (fieldType) {
       case STRING :
-        if (getSize() > 254) {
+        if (getSize() > VARCHAR_LIMIT) {
           return Types.LONGVARCHAR;
         }
         return Types.VARCHAR;

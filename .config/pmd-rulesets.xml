@@ -33,6 +33,7 @@
   <rule ref="rulesets/java/codesize.xml/ExcessivePublicCount"/>  
   <rule ref="rulesets/java/codesize.xml/TooManyFields"/>
   
+  <rule ref="rulesets/java/controversial.xml/DefaultPackage"/>
   <rule ref="rulesets/java/controversial.xml/DontImportSun"/>
   <rule ref="rulesets/java/controversial.xml/NullAssignment"/>
   <rule ref="rulesets/java/controversial.xml/UnnecessaryConstructor"/>  
