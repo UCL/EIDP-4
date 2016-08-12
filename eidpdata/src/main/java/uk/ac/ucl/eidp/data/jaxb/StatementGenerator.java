@@ -42,6 +42,7 @@ public class StatementGenerator {
   private final XMLInputFactory xif = XMLInputFactory.newFactory();
   private final String DATASET_TAG = "dataset";
   private String SQL_DIALECT = "";
+  private String DOT_SEP = "\\.";
 
   public String getSqlStatement(String methodPath) {
 
@@ -58,7 +59,7 @@ public class StatementGenerator {
       jaxbSqlStatement = new JaxbSqlAnsi();
     }
 
-    return jaxbSqlStatement.buildStatement(datasetType, methodPath.split("\\.")[2]);
+    return jaxbSqlStatement.buildStatement(datasetType, methodPath.split(DOT_SEP)[2]);
 
   }
 
@@ -104,7 +105,7 @@ public class StatementGenerator {
       throw new IllegalArgumentException("methodPath is invalid");
     }
     DatasetType datasetType = getDatasetTypeObject(methodPath);
-    String method = methodPath.split("\\.")[2];
+    String method = methodPath.split(DOT_SEP)[2];
     MethodType methodType = getMethodType(datasetType, method);
     return methodType.getRoleName();
   }
@@ -114,7 +115,7 @@ public class StatementGenerator {
       throw new IllegalArgumentException("methodPath is invalid");
     }
     DatasetType datasetType = getDatasetTypeObject(methodPath);
-    String method = methodPath.split("\\.")[2];
+    String method = methodPath.split(DOT_SEP)[2];
     MethodType methodType = getMethodType(datasetType, method);
     return methodType.getFields().getField();
   }
@@ -124,14 +125,14 @@ public class StatementGenerator {
     DatasetType datasetType = null;
     XMLStreamReader xsr = null;
 
-    try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + path.split("\\.")[0] + "/resources/db.xml")) {
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + path.split(DOT_SEP)[0] + "/resources/db.xml")) {
 
       xsr = xif.createXMLStreamReader(is, "UTF-8");
       while (xsr.hasNext()) {
         int event = xsr.next();
         if (XMLStreamConstants.START_ELEMENT == event
             && DATASET_TAG.equals(xsr.getLocalName())
-            && path.split("\\.")[1].equals(xsr.getAttributeValue(0))) {
+            && path.split(DOT_SEP)[1].equals(xsr.getAttributeValue(0))) {
           break;
         }
       }
