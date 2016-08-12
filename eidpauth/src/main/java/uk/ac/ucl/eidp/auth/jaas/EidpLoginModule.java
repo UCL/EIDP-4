@@ -42,11 +42,11 @@ import uk.ac.ucl.eidp.auth.model.UserE;
  */
 public class EidpLoginModule implements LoginModule {
 
-  private Subject subject;
+//  private Subject subject;
   private CallbackHandler callbackHandler;
-  private Map<String, ?> sharedState;
-  private Map<String, ?> options;
-  private boolean debug = false;
+//  private Map<String, ?> sharedState;
+//  private Map<String, ?> options;
+//  private boolean debug = false;
 
   private UserController userService;
 
@@ -70,11 +70,11 @@ public class EidpLoginModule implements LoginModule {
 
   @Override
   public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
-    this.subject = subject;
+//    this.subject = subject;
     this.callbackHandler = callbackHandler;
-    this.sharedState = sharedState;
-    this.options = options;
-    this.debug = "true".equalsIgnoreCase((String)options.get("debug"));
+//    this.sharedState = sharedState;
+//    this.options = options;
+//    this.debug = "true".equalsIgnoreCase((String)options.get("debug"));
     setUserService();
   }
 
