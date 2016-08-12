@@ -1,6 +1,5 @@
 package uk.ac.ucl.eidp.auth;
 
-import uk.ac.ucl.eidp.auth.model.RoleE;
 import uk.ac.ucl.eidp.auth.model.UserE;
 import java.util.Set;
 import java.util.UUID;

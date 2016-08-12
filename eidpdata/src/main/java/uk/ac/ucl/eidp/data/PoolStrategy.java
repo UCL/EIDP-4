@@ -88,7 +88,7 @@ public class PoolStrategy implements DBMappingStrategy {
     List<String> fields = getJdbcFields(sqlStatement.split(";")[0]);
     String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
 
-    String datasetPath = methodPath.substring(0, methodPath.lastIndexOf("."));
+    String datasetPath = methodPath.substring(0, methodPath.lastIndexOf('.'));
     Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
     List<Map<String, String>> l = new ArrayList<>();
     try {

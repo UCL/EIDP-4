@@ -33,8 +33,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
       queryFields.add(translateId(f));
     });
 
-    stm.append(String.join(", ", queryFields));
-    stm.append(" FROM ").append(tableType.getName());
+    stm.append(String.join(", ", queryFields)).append(" FROM ").append(tableType.getName());
 
     if (!methodType.getFor().isEmpty()) {
       stm.append(generateWhereClause());
@@ -46,9 +45,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
         if (!stm.substring(stm.length() - 9).equals("ORDER BY ")) {
           stm.append(", ");
         }
-        stm.append(translateId(o.getField()));
-        stm.append(" ");
-        stm.append(o.getSorting().value());
+        stm.append(translateId(o.getField())).append(' ').append(o.getSorting().value());
       });
     }
 
@@ -66,30 +63,22 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
       if (!stm.substring(stm.length() - 4).equals("SET ")) {
         stm.append(", ");
       }
-      stm.append(translateId(f));
-      stm.append(" = :");
-      stm.append(f);
+      stm.append(translateId(f)).append(" = :").append(f);
     });
 
     if (!methodType.getFor().isEmpty()) {
       stm.append(generateWhereClause());
     }
 
-    stm.append(";");
-    stm.append("INSERT INTO ");
-    stm.append(tableType.getName()).append(" (");
+    stm.append(";INSERT INTO ").append(tableType.getName()).append(" (");
     methodType.getFields().getField().forEach((String f) -> {
-      stm.append(translateId(f));
-      stm.append(", ");
+      stm.append(translateId(f)).append(", ");
     });
-    stm.append(tableType.getPrimaryKey());
-    stm.append(") VALUES (");
+    stm.append(tableType.getPrimaryKey()).append(") VALUES (");
     methodType.getFields().getField().forEach((String f) -> {
-      stm.append(":");
-      stm.append(f);
-      stm.append(", ");
+      stm.append(':').append(f).append(", ");
     });
-    stm.append(generateId()).append(")");
+    stm.append(generateId()).append(')');
     return stm.toString();
   }
 
@@ -107,7 +96,7 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     StringBuilder stm = new StringBuilder(" WHERE ");
     methodType.getFor().forEach((MethodForType m) -> {
       if (!stm.substring(stm.length() - 6).equals("WHERE ")) {
-        stm.append(" ").append(m.getType()).append(" ");
+        stm.append(' ').append(m.getType()).append(' ');
       }
       stm.append(translateId(m.getField()));
       boolean noValue = false;
@@ -147,12 +136,11 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
       }
       if (!noValue) {
         if (parenthesis) {
-          stm.append("(");
+          stm.append('(');
         }
-        stm.append(":");
-        stm.append(m.getField());
+        stm.append(':').append(m.getField());
         if (parenthesis) {
-          stm.append(")");
+          stm.append(')');
         }
       }
     });
