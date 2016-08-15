@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 David Guzman <d.guzman at ucl.ac.uk>.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package uk.ac.ucl.eidp.data;
 
 import java.io.IOException;
@@ -21,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
  *
- * @author David Guzman <d.guzman at ucl.ac.uk>
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Stateless
 @LocalBean
 public class DBMapping {
 
-  private final String MAPPING_PROPS = "META-INF/eidp/mapping.properties";
+  private final String propertiesPath = "META-INF/eidp/mapping.properties";
   private final Properties mappingProperties = new Properties();
 
   @Inject
@@ -41,7 +26,7 @@ public class DBMapping {
 
   @PostConstruct
   public void loadMapping() {
-    try (InputStream is = getClass().getClassLoader().getResourceAsStream(MAPPING_PROPS)) {
+    try (InputStream is = getClass().getClassLoader().getResourceAsStream(propertiesPath)) {
       mappingProperties.load(is);
     } catch (IOException ex) {
       throw new UnsupportedOperationException("Cannot load mapping.properties " , ex);
@@ -55,9 +40,9 @@ public class DBMapping {
     }
     String databaseNodeId = mappingProperties.getProperty(methodPath);
 
-    DBMappingStrategy dbMappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
+    DBMappingStrategy mappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
 
-    return dbMappingStrategy.processDbCall(methodPath, parameters);
+    return mappingStrategy.processDbCall(methodPath, parameters);
   }
 
 }
