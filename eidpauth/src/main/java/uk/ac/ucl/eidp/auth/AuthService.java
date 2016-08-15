@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author David Guzman
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Stateless
 public class AuthService implements AuthServiceLocal {

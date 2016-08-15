@@ -16,11 +16,10 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-  @NamedQuery(
+    @NamedQuery(
     name = UserE.FIND_BY_LOGIN_PASSWORD,
-    query = "SELECT u FROM UserE u WHERE u.login = :login AND u.password = :password"
-  )
-})
+    query = "SELECT u FROM UserE u WHERE u.login = :login AND u.password = :password")
+    })
 public class UserE implements Serializable {
 
   private static final long serialVersionUID = 1L;
