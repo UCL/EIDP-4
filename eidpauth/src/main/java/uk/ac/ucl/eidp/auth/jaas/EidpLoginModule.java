@@ -1,5 +1,8 @@
 package uk.ac.ucl.eidp.auth.jaas;
 
+import uk.ac.ucl.eidp.auth.UserController;
+import uk.ac.ucl.eidp.auth.model.UserE;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -18,8 +21,6 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
-import uk.ac.ucl.eidp.auth.UserController;
-import uk.ac.ucl.eidp.auth.model.UserE;
 
 /**
  *
@@ -45,16 +46,23 @@ public class EidpLoginModule implements LoginModule {
         Context context = new InitialContext();
         beanManager = (BeanManager) context.lookup("java:comp/BeanManager");
         Bean<?> bean = beanManager.getBeans(UserController.class).iterator().next();
-        CreationalContext cc = beanManager.createCreationalContext(bean);
-        userService = (UserController) beanManager.getReference(bean, UserController.class, cc);
-      } catch (NamingException e) {
-        logger.log(Level.SEVERE, "Cannot call UserController bean", e);
+        CreationalContext creationalCtx = beanManager.createCreationalContext(bean);
+        userService = (UserController) beanManager.getReference(
+          bean, UserController.class, creationalCtx
+        );
+      } catch (NamingException namingX) {
+        logger.log(Level.SEVERE, "Cannot call UserController bean", namingX);
       }
     }
   }
 
   @Override
-  public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
+  public void initialize(
+      Subject subject, 
+      CallbackHandler callbackHandler, 
+      Map<String, ?> sharedState, 
+      Map<String, ?> options
+    ) {
     //this.subject = subject;
     this.callbackHandler = callbackHandler;
     //this.sharedState = sharedState;
@@ -80,8 +88,8 @@ public class EidpLoginModule implements LoginModule {
       }
 
       return true;
-    } catch (IOException | UnsupportedCallbackException | LoginException e) {
-      logger.log(Level.SEVERE, "login() method failed", e);
+    } catch (IOException | UnsupportedCallbackException | LoginException exception) {
+      logger.log(Level.SEVERE, "login() method failed", exception);
       return false;
     }
   }
