@@ -1,6 +1,7 @@
 package uk.ac.ucl.eidp.auth;
 
 import uk.ac.ucl.eidp.auth.model.UserE;
+
 import java.util.Set;
 import java.util.UUID;
 import javax.ejb.EJB;
@@ -8,7 +9,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author David Guzman
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Stateless
 public class AuthService implements AuthServiceLocal {
