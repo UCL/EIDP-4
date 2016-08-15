@@ -62,7 +62,7 @@ public class EidpLoginModule implements LoginModule {
       CallbackHandler callbackHandler, 
       Map<String, ?> sharedState, 
       Map<String, ?> options
-    ) {
+  ) {
     //this.subject = subject;
     this.callbackHandler = callbackHandler;
     //this.sharedState = sharedState;
