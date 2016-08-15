@@ -24,6 +24,9 @@ public class DBMapping {
   @Inject
   private StrategyResolver strategyResolver;
 
+  /**
+   * Loads into {@link DBMapping} the paths associated with each database method.
+   */
   @PostConstruct
   public void loadMapping() {
     try (InputStream is = getClass().getClassLoader().getResourceAsStream(propertiesPath)) {
@@ -33,6 +36,12 @@ public class DBMapping {
     }
   }
 
+  /**
+   * Returns a {@link java.util.List} containing the results of a database call
+   * @param methodPath the address of the database method to call
+   * @param parameters a {@link java.util.Map} containing the parameters for the database call
+   * @return a list containing the results of the database call, each item corresponds to one row
+   */
   public List<Map<String, String>> dbAction(String methodPath, Map<String, String> parameters) {
 
     if (!methodPath.matches("[\\w-]*\\.[\\w-]*\\.[\\w-]*")) {
