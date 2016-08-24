@@ -25,8 +25,8 @@ public class EidpStrategy implements DBMappingStrategy {
 
   @Override
   public List<Map<String, String>> processDbTransaction(
-    String methodId, 
-    Map<String, String> parameters) {
+      String methodId, 
+      Map<String, String> parameters) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 

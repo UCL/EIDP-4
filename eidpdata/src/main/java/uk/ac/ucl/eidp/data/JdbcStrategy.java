@@ -19,14 +19,14 @@ public class JdbcStrategy implements DBMappingStrategy {
   }
 
   @Override
-  public void setProperties(Properties p) {
+  public void setProperties(Properties properties) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
   @Override
   public List<Map<String, String>> processDbTransaction(
-    String methodId, 
-    Map<String, String> parameters) {
+      String methodId, 
+      Map<String, String> parameters) {
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
