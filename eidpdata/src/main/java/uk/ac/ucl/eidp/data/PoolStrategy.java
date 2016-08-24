@@ -1,19 +1,8 @@
-/*
- * Copyright 2015 David Guzman <d.guzman at ucl.ac.uk>.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package uk.ac.ucl.eidp.data;
+
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
+import uk.ac.ucl.eidp.data.jaxb.StatementGenerator.Parameter;
+import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,24 +21,22 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
-import uk.ac.ucl.eidp.data.jaxb.StatementGenerator.Parameter;
-import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
+
 
 /**
  *
- * @author David Guzman <d.guzman at ucl.ac.uk>
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Stateless
 @NodeQualifier(NodeType.POOL)
 public class PoolStrategy implements DBMappingStrategy {
 
   private Properties properties;
-  private final String DS_JNDI_NAME = "datasource-jndi-name";
-  private final String RS_SCROLL_TYPE = "resultset-scroll-type";
-  private final String RS_CONCURRENCY_MODE = "resultset-concurrency-mode";
-  private final String SQL_DIALECT_PROP = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
-  private String SQL_DIALECT = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
+  private final String dsJndiName = "datasource-jndi-name";
+  private final String rsScrollType = "resultset-scroll-type";
+  private final String rsConcurrencyMode = "resultset-concurrency-mode";
+  private final String sqlDialectProperty = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
+  private String sqlDialect = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
   private Connection connection;
   private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
 
@@ -58,15 +45,15 @@ public class PoolStrategy implements DBMappingStrategy {
   private StatementGenerator statementGenerator;
 
   private void initialiseConnection() {
-    if (properties.containsKey(SQL_DIALECT_PROP)) {
-      SQL_DIALECT = properties.getProperty(SQL_DIALECT_PROP);
+    if (properties.containsKey(sqlDialectProperty)) {
+      sqlDialect = properties.getProperty(sqlDialectProperty);
     }
 
-    statementGenerator.setSqlDialect(SQL_DIALECT);
-    if (!properties.containsKey(DS_JNDI_NAME)) {
-      throw new IllegalStateException("Property " + DS_JNDI_NAME + " not found");
+    statementGenerator.setSqlDialect(sqlDialect);
+    if (!properties.containsKey(dsJndiName)) {
+      throw new IllegalStateException("Property " + dsJndiName + " not found");
     }
-    String datasourceJndiName = properties.getProperty(DS_JNDI_NAME);
+    String datasourceJndiName = properties.getProperty(dsJndiName);
     DataSource source;
     try {
       Context context = new InitialContext();
@@ -78,27 +65,27 @@ public class PoolStrategy implements DBMappingStrategy {
   }
 
   @Override
-  public List<Map<String, String>> processDbCall(String methodPath, Map<String, String> parameters) {
+  public List<Map<String, String>> processDbCall(String methodId, Map<String, String> parameters) {
     if (null == connection) {
       initialiseConnection();
     }
 
-    String sqlStatement = statementGenerator.getSqlStatement(methodPath);
+    String sqlStatement = statementGenerator.getSqlStatement(methodId);
 
     List<String> fields = getJdbcFields(sqlStatement.split(";")[0]);
     String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
 
-    String datasetPath = methodPath.substring(0, methodPath.lastIndexOf('.'));
+    String datasetPath = methodId.substring(0, methodId.lastIndexOf('.'));
     Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
     List<Map<String, String>> l = new ArrayList<>();
     try {
       int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
       int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
-      if (properties.containsKey(RS_SCROLL_TYPE)) {
-        scroll_type = Integer.getInteger(properties.getProperty(RS_SCROLL_TYPE));
+      if (properties.containsKey(rsScrollType)) {
+        scroll_type = Integer.getInteger(properties.getProperty(rsScrollType));
       }
-      if (properties.containsKey(RS_SCROLL_TYPE)) {
-        concurrency_mode = Integer.getInteger(properties.getProperty(RS_CONCURRENCY_MODE));
+      if (properties.containsKey(rsScrollType)) {
+        concurrency_mode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
       }
       PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
       setValues(ps, fields, parameters, p);
@@ -118,7 +105,7 @@ public class PoolStrategy implements DBMappingStrategy {
         return l;
       }
 
-      List<String> methodFields = statementGenerator.getMethodFields(methodPath);
+      List<String> methodFields = statementGenerator.getMethodFields(methodId);
       ResultSet resultSet = ps.getResultSet();
 
       while (resultSet.next()) {
@@ -146,7 +133,11 @@ public class PoolStrategy implements DBMappingStrategy {
     return fields;
   }
 
-  private void setValues(PreparedStatement ps, List<String> fields, Map<String, String> parameters, Map<String, Parameter> p) throws SQLException {
+  private void setValues(
+    PreparedStatement ps, 
+    List<String> fields, 
+    Map<String, String> parameters, 
+    Map<String, Parameter> p) throws SQLException {
 
     int idx = 1;
     for (String f : fields) {
@@ -172,8 +163,10 @@ public class PoolStrategy implements DBMappingStrategy {
   }
 
   @Override
-  public List<Map<String, String>> processDbTransaction(String methodPath, Map<String, String> parameters) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  public List<Map<String, String>> processDbTransaction(
+    String methodId, 
+    Map<String, String> parameters) {
+    throw new UnsupportedOperationException("Not supported yet."); 
   }
 
 }
