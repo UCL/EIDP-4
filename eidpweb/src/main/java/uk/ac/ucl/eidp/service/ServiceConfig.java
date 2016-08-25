@@ -3,8 +3,8 @@ package uk.ac.ucl.eidp.service;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
- *
- * @author David Guzman
+ * Configuration of REST resources.
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 public class ServiceConfig extends ResourceConfig {
 
