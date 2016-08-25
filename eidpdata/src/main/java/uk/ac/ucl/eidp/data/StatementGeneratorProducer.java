@@ -22,7 +22,7 @@ public class StatementGeneratorProducer {
   private final String propertiesFile = "META-INF/eidp.properties";
 
   /**
-   * Injects a producer of a {@link StatementGenerator}. Defaults to {@link JaxbStatementGenerator}.
+   * Injects a producer of a {@link StatementGenerator}.
    */
   @Inject
   public StatementGeneratorProducer() {

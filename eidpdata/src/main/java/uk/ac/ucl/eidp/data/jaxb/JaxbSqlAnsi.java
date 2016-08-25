@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 David Guzman <d.guzman at ucl.ac.uk>.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package uk.ac.ucl.eidp.data.jaxb;
 
 import java.util.ArrayList;
@@ -20,7 +5,7 @@ import java.util.List;
 
 /**
  *
- * @author David Guzman <d.guzman at ucl.ac.uk>
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 public class JaxbSqlAnsi extends JaxbSqlStatement {
 
@@ -29,8 +14,8 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     StringBuilder stm = new StringBuilder("SELECT ");
 
     List<String> queryFields = new ArrayList<>();
-    methodType.getFields().getField().forEach((String f) -> {
-      queryFields.add(translateId(f));
+    methodType.getFields().getField().forEach((String field) -> {
+      queryFields.add(translateId(field));
     });
 
     stm.append(String.join(", ", queryFields)).append(" FROM ").append(tableType.getName());
@@ -41,11 +26,11 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
 
     if (!methodType.getOrder().isEmpty()) {
       stm.append(" ORDER BY ");
-      methodType.getOrder().forEach((MethodOrderType o) -> {
+      methodType.getOrder().forEach((MethodOrderType order) -> {
         if (!stm.substring(stm.length() - 9).equals("ORDER BY ")) {
           stm.append(", ");
         }
-        stm.append(translateId(o.getField())).append(' ').append(o.getSorting().value());
+        stm.append(translateId(order.getField())).append(' ').append(order.getSorting().value());
       });
     }
 
@@ -59,11 +44,11 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     StringBuilder stm = new StringBuilder("UPDATE ");
     stm.append(tableType.getName()).append(" SET ");
 
-    methodType.getFields().getField().forEach((String f) -> {
+    methodType.getFields().getField().forEach((String field) -> {
       if (!stm.substring(stm.length() - 4).equals("SET ")) {
         stm.append(", ");
       }
-      stm.append(translateId(f)).append(" = :").append(f);
+      stm.append(translateId(field)).append(" = :").append(field);
     });
 
     if (!methodType.getFor().isEmpty()) {
@@ -71,12 +56,12 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
     }
 
     stm.append(";INSERT INTO ").append(tableType.getName()).append(" (");
-    methodType.getFields().getField().forEach((String f) -> {
-      stm.append(translateId(f)).append(", ");
+    methodType.getFields().getField().forEach((String field) -> {
+      stm.append(translateId(field)).append(", ");
     });
     stm.append(tableType.getPrimaryKey()).append(") VALUES (");
-    methodType.getFields().getField().forEach((String f) -> {
-      stm.append(':').append(f).append(", ");
+    methodType.getFields().getField().forEach((String field) -> {
+      stm.append(':').append(field).append(", ");
     });
     stm.append(generateId()).append(')');
     return stm.toString();
@@ -94,51 +79,53 @@ public class JaxbSqlAnsi extends JaxbSqlStatement {
 
   protected String generateWhereClause() {
     StringBuilder stm = new StringBuilder(" WHERE ");
-    methodType.getFor().forEach((MethodForType m) -> {
+    methodType.getFor().forEach((MethodForType methodFor) -> {
       if (!stm.substring(stm.length() - 6).equals("WHERE ")) {
-        stm.append(' ').append(m.getType()).append(' ');
+        stm.append(' ').append(methodFor.getType()).append(' ');
       }
-      stm.append(translateId(m.getField()));
+      stm.append(translateId(methodFor.getField()));
       boolean noValue = false;
       boolean parenthesis = false;
-      switch (m.getOperator()) {
-      case EQUAL:
-        stm.append(Operator.EQUAL.getOperator());
-        break;
-      case NOTEQUAL:
-        stm.append(Operator.NOTEQUAL.getOperator());
-        break;
-      case GT:
-        stm.append(Operator.GT.getOperator());
-        break;
-      case GET:
-        stm.append(Operator.GET.getOperator());
-        break;
-      case LT:
-        stm.append(Operator.LT.getOperator());
-        break;
-      case LET:
-        stm.append(Operator.LET.getOperator());
-        break;
-      case ISNULL:
-        stm.append(Operator.ISNULL.getOperator());
-        noValue = true;
-        break;
-      case ISNOTNULL:
-        stm.append(Operator.ISNOTNULL.getOperator());
-        noValue = true;
-        break;
-      case IN:
-        stm.append(Operator.IN.getOperator());
-        parenthesis = true;
-        break;
-
+      switch (methodFor.getOperator()) {
+        case EQUAL:
+          stm.append(Operator.EQUAL.getOperator());
+          break;
+        case NOTEQUAL:
+          stm.append(Operator.NOTEQUAL.getOperator());
+          break;
+        case GT:
+          stm.append(Operator.GT.getOperator());
+          break;
+        case GET:
+          stm.append(Operator.GET.getOperator());
+          break;
+        case LT:
+          stm.append(Operator.LT.getOperator());
+          break;
+        case LET:
+          stm.append(Operator.LET.getOperator());
+          break;
+        case ISNULL:
+          stm.append(Operator.ISNULL.getOperator());
+          noValue = true;
+          break;
+        case ISNOTNULL:
+          stm.append(Operator.ISNOTNULL.getOperator());
+          noValue = true;
+          break;
+        case IN:
+          stm.append(Operator.IN.getOperator());
+          parenthesis = true;
+          break;
+        default:
+          noValue = true;
+          break;
       }
       if (!noValue) {
         if (parenthesis) {
           stm.append('(');
         }
-        stm.append(':').append(m.getField());
+        stm.append(':').append(methodFor.getField());
         if (parenthesis) {
           stm.append(')');
         }
