@@ -29,7 +29,7 @@ import javax.sql.DataSource;
  */
 @Stateless
 @NodeQualifier(NodeType.POOL)
-public class PoolStrategy implements DBMappingStrategy {
+public class PoolStrategy implements DbMappingStrategy {
 
   private Properties properties;
   private final String dsJndiName = "datasource-jndi-name";
@@ -76,51 +76,58 @@ public class PoolStrategy implements DBMappingStrategy {
     String jdbcStatement = sqlStatement.replaceAll(findParametersPattern.patter‌n(), "?");
 
     String datasetPath = methodId.substring(0, methodId.lastIndexOf('.'));
-    Map<String, Parameter> p = statementGenerator.getParameterSettings(parameters.keySet(), datasetPath);
-    List<Map<String, String>> l = new ArrayList<>();
+    Map<String, Parameter> parameterMap = statementGenerator.getParameterSettings(
+         parameters.keySet(), 
+         datasetPath
+    );
+    List<Map<String, String>> resultList = new ArrayList<>();
     try {
-      int scroll_type = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
-      int concurrency_mode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
+      int scrollType = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
+      int concurrencyMode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
       if (properties.containsKey(rsScrollType)) {
-        scroll_type = Integer.getInteger(properties.getProperty(rsScrollType));
+        scrollType = Integer.getInteger(properties.getProperty(rsScrollType));
       }
       if (properties.containsKey(rsScrollType)) {
-        concurrency_mode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
+        concurrencyMode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
       }
-      PreparedStatement ps = connection.prepareStatement(jdbcStatement.split(";")[0], scroll_type, concurrency_mode);
-      setValues(ps, fields, parameters, p);
+      PreparedStatement ps = connection.prepareStatement(
+            jdbcStatement.split(";")[0], scrollType, concurrencyMode
+      );
+      setValues(ps, fields, parameters, parameterMap);
       boolean rsbool = ps.execute();
 
       if (!rsbool) {
         int updateCount = ps.getUpdateCount();
         if (updateCount == 0) {
-          ps = connection.prepareStatement(jdbcStatement.split(";")[1], scroll_type, concurrency_mode);
+          ps = connection.prepareStatement(
+               jdbcStatement.split(";")[1], scrollType, concurrencyMode
+          );
           fields = getJdbcFields(sqlStatement.split(";")[1]);
-          setValues(ps, fields, parameters, p);
+          setValues(ps, fields, parameters, parameterMap);
           updateCount = ps.executeUpdate();
         }
-        Map<String, String> m = new HashMap<>();
-        m.put("updateCount", String.valueOf(updateCount));
-        l.add(m);
-        return l;
+        Map<String, String> updateCountMap = new HashMap<>();
+        updateCountMap.put("updateCount", String.valueOf(updateCount));
+        resultList.add(updateCountMap);
+        return resultList;
       }
 
       List<String> methodFields = statementGenerator.getMethodFields(methodId);
       ResultSet resultSet = ps.getResultSet();
 
       while (resultSet.next()) {
-        Map<String, String> m = new HashMap<>();
+        Map<String, String> rowMap = new HashMap<>();
         for (String k : methodFields) {
-          String v = resultSet.getString(k);
-          m.put(k, v);
+          String value = resultSet.getString(k);
+          rowMap.put(k, value);
         }
-        l.add(m);
+        resultList.add(rowMap);
       }
 
     } catch (SQLException ex) {
       throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
     }
-    return l;
+    return resultList;
 
   }
 
@@ -134,38 +141,38 @@ public class PoolStrategy implements DBMappingStrategy {
   }
 
   private void setValues(
-    PreparedStatement ps, 
-    List<String> fields, 
-    Map<String, String> parameters, 
-    Map<String, Parameter> p) throws SQLException {
+      PreparedStatement ps, 
+      List<String> fields, 
+      Map<String, String> parameters, 
+      Map<String, Parameter> parameterMap) throws SQLException {
 
     int idx = 1;
     for (String f : fields) {
       String value = parameters.get(f);
-      Integer size = p.get(f).getSize();
+      Integer size = parameterMap.get(f).getSize();
       if (value.length() > size) {
         throw new StringIndexOutOfBoundsException("Variable length exceeds column size");
       }
       try {
-        ps.setObject(idx, value, p.get(f).getSqlType());
+        ps.setObject(idx, value, parameterMap.get(f).getSqlType());
       } catch (SQLException ex) {
         ps.clearParameters();
         ps.close();
-        throw new IllegalArgumentException("Could not set parameter object in PreparedStatement", ex);
+        throw new IllegalArgumentException("Could not set parameter map in PreparedStatement", ex);
       }
       idx++;
     }
   }
 
   @Override
-  public void setProperties(Properties p) {
-    properties = p;
+  public void setProperties(Properties properties) {
+    this.properties = properties;
   }
 
   @Override
   public List<Map<String, String>> processDbTransaction(
-    String methodId, 
-    Map<String, String> parameters) {
+      String methodId, 
+      Map<String, String> parameters) {
     throw new UnsupportedOperationException("Not supported yet."); 
   }
 

@@ -11,7 +11,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @NodeQualifier(NodeType.JDBC)
-public class JdbcStrategy implements DBMappingStrategy {
+public class JdbcStrategy implements DbMappingStrategy {
 
   @Override
   public List<Map<String, String>> processDbCall(String methodId, Map<String, String> parameters) {

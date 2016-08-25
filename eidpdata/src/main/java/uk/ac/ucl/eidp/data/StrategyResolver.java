@@ -41,17 +41,17 @@ public class StrategyResolver {
 
     @Inject
     @NodeQualifier(NodeType.POOL)
-    private DBMappingStrategy poolStrategy;
+    private DbMappingStrategy poolStrategy;
     
     @Inject
     @NodeQualifier(NodeType.JDBC)
-    private DBMappingStrategy jdbcStrategy;
+    private DbMappingStrategy jdbcStrategy;
     
     @Inject
     @NodeQualifier(NodeType.EIDP)
-    private DBMappingStrategy eidpStrategy;
+    private DbMappingStrategy eidpStrategy;
 
-    public DBMappingStrategy getDbMappingStrategyForId(String databaseNodeId) {
+    public DbMappingStrategy getDbMappingStrategyForId(String databaseNodeId) {
 
         Properties p;
         if (!databaseNodes.containsKey(databaseNodeId)) {
@@ -59,13 +59,13 @@ public class StrategyResolver {
             try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/eidp/" + databaseNodeId + ".properties")) {
                 p.load(is);
             } catch (IOException ex) {
-                Logger.getLogger(DBMapping.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DbMapping.class.getName()).log(Level.SEVERE, null, ex);
             }
             databaseNodes.put(databaseNodeId, p);
         } else {
             p = databaseNodes.get(databaseNodeId);
         }
-        DBMappingStrategy dbMappingStrategy = null;
+        DbMappingStrategy dbMappingStrategy = null;
         switch (NodeType.valueOf(p.getProperty(NODETYPE_PROP))) {
             case JDBC:
                 dbMappingStrategy = jdbcStrategy;
@@ -79,7 +79,7 @@ public class StrategyResolver {
             case CUSTOM: {
                 try {
                     Context ctx = new InitialContext();
-                    dbMappingStrategy = (DBMappingStrategy) ctx.lookup(p.getProperty(CUSTOM_STRATEGY_JNDI));
+                    dbMappingStrategy = (DbMappingStrategy) ctx.lookup(p.getProperty(CUSTOM_STRATEGY_JNDI));
                 } catch (NamingException ex) {
                     throw new UnsupportedOperationException(CUSTOM_STRATEGY_JNDI + " could not be loaded. ", ex);
                 }

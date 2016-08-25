@@ -11,7 +11,7 @@ import javax.ejb.Local;
  * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Local
-public interface DBMappingStrategy extends Serializable {
+public interface DbMappingStrategy extends Serializable {
 
   void setProperties(Properties properties);
 
