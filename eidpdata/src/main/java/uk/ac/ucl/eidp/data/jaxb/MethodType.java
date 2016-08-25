@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
     "roleName",
     "type",
     "fields",
-    "_for",
+    "forType",
     "order",
     "offset",
     "limit"
