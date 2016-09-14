@@ -21,8 +21,8 @@ import javax.naming.NamingException;
 public class StrategyResolver {
 
   private final Map<String, Properties> databaseNodes = new HashMap<>();
-  private final String nodetypeProperty = "uk.ac.ucl.eidp.data.NodeType";
-  private final String customStrategyJndi = "uk.ac.ucl.eidp.data.DBMappingStrategy";
+  private static final String nodetypeProperty = "uk.ac.ucl.eidp.data.NodeType";
+  private static final String customStrategyJndi = "uk.ac.ucl.eidp.data.DBMappingStrategy";
 
   @Inject
   @NodeQualifier(NodeType.POOL)

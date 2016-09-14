@@ -32,10 +32,10 @@ import javax.sql.DataSource;
 public class PoolStrategy implements DbMappingStrategy {
 
   private Properties properties;
-  private final String dsJndiName = "datasource-jndi-name";
-  private final String rsScrollType = "resultset-scroll-type";
-  private final String rsConcurrencyMode = "resultset-concurrency-mode";
-  private final String sqlDialectProperty = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
+  private static final String dsJndiName = "datasource-jndi-name";
+  private static final String rsScrollType = "resultset-scroll-type";
+  private static final String rsConcurrencyMode = "resultset-concurrency-mode";
+  private static final String sqlDialectProperty = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlStatement";
   private String sqlDialect = "uk.ac.ucl.eidp.data.jaxb.JaxbSqlAnsi";
   private Connection connection;
   private final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");

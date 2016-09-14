@@ -20,7 +20,7 @@ import javax.inject.Qualifier;
 public @interface NodeQualifier {
   
   /**
-   * The NodeType value will tell {@link StrategyResolver} how to connect to a database
+   * The NodeType value will tell {@link StrategyResolver} how to connect to a database.
    * @return {@link NodeType} the type of database node to connect to (pool, remote EIDP, jdbc)
    */ 
   NodeType value();
