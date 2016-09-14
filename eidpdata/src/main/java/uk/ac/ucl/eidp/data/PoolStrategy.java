@@ -81,15 +81,16 @@ public class PoolStrategy implements DbMappingStrategy {
          datasetPath
     );
     List<Map<String, String>> resultList = new ArrayList<>();
-    try {
-      int scrollType = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
-      int concurrencyMode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
-      if (properties.containsKey(rsScrollType)) {
-        scrollType = Integer.getInteger(properties.getProperty(rsScrollType));
-      }
-      if (properties.containsKey(rsScrollType)) {
-        concurrencyMode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
-      }
+    
+    int scrollType = 1004; // defaults to ResultSet.TYPE_SCROLL_INSENSITIVE
+    int concurrencyMode = 1007; // defaults to ResultSet.CONCUR_READ_ONLY
+    if (properties.containsKey(rsScrollType)) {
+      scrollType = Integer.getInteger(properties.getProperty(rsScrollType));
+    }
+    if (properties.containsKey(rsScrollType)) {
+      concurrencyMode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
+    }
+    try {  
       PreparedStatement ps = connection.prepareStatement(
             jdbcStatement.split(";")[0], scrollType, concurrencyMode
       );
@@ -114,7 +115,8 @@ public class PoolStrategy implements DbMappingStrategy {
 
       List<String> methodFields = statementGenerator.getMethodFields(methodId);
       ResultSet resultSet = ps.getResultSet();
-
+      ps.close();
+      
       while (resultSet.next()) {
         Map<String, String> rowMap = new HashMap<>();
         for (String k : methodFields) {
@@ -123,7 +125,7 @@ public class PoolStrategy implements DbMappingStrategy {
         }
         resultList.add(rowMap);
       }
-
+      
     } catch (SQLException ex) {
       throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
     }
