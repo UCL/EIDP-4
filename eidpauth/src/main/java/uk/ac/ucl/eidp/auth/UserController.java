@@ -17,6 +17,12 @@ public class UserController {
   @PersistenceContext(unitName = "eidpauthPU")
   private EntityManager em;
 
+  /**
+   * Searches for a specific user and password combination.
+   * @param login User id
+   * @param password User credential
+   * @return Entity containing information about the authenticated user
+   */
   public UserE findUser(final String login, final String password) {
     TypedQuery<UserE> typedQuery = em.createNamedQuery(UserE.FIND_BY_LOGIN_PASSWORD, UserE.class);
     typedQuery.setParameter("login", login);
