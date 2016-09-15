@@ -4,8 +4,10 @@ import uk.ac.ucl.eidp.auth.model.UserE;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import uk.ac.ucl.eidp.auth.model.RoleE;
 
 /**
  *
@@ -33,7 +35,10 @@ public class AuthService implements AuthServiceLocal {
     UserE user = userController.findByUsernameAndAuthToken(authId, authToken);
     if (user != null) {
       // TODO : Check it might not work
-      return rolesAllowed.containsAll(user.getRoles());
+      Set<String> userRoles = user.getRoles().stream().map(
+              (RoleE role) -> role.getRoleName()
+      ).collect(Collectors.toSet());
+      return rolesAllowed.containsAll(userRoles);
     } else {
       return false;
     }
