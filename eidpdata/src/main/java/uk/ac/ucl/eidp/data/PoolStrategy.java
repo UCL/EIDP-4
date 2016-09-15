@@ -90,44 +90,48 @@ public class PoolStrategy implements DbMappingStrategy {
     if (properties.containsKey(rsScrollType)) {
       concurrencyMode = Integer.getInteger(properties.getProperty(rsConcurrencyMode));
     }
-    try {  
-      PreparedStatement ps = connection.prepareStatement(
+    try (PreparedStatement ps = connection.prepareStatement(
             jdbcStatement.split(";")[0], scrollType, concurrencyMode
-      );
+    )) {
       setValues(ps, fields, parameters, parameterMap);
       boolean rsbool = ps.execute();
 
-      if (!rsbool) {
+      if (rsbool) {
+        List<String> methodFields = statementGenerator.getMethodFields(methodId);
+        ResultSet resultSet = ps.getResultSet();
+
+        while (resultSet.next()) {
+          Map<String, String> rowMap = new HashMap<>();
+          for (String k : methodFields) {
+            String value = resultSet.getString(k);
+            rowMap.put(k, value);
+          }
+          resultList.add(rowMap);
+        }
+      } else {
         int updateCount = ps.getUpdateCount();
         if (updateCount == 0) {
-          ps = connection.prepareStatement(
-               jdbcStatement.split(";")[1], scrollType, concurrencyMode
-          );
-          fields = getJdbcFields(sqlStatement.split(";")[1]);
-          setValues(ps, fields, parameters, parameterMap);
-          updateCount = ps.executeUpdate();
+          try (PreparedStatement psu = connection.prepareStatement(
+                  jdbcStatement.split(";")[1], scrollType, concurrencyMode
+          )) {
+            fields = getJdbcFields(sqlStatement.split(";")[1]);
+            setValues(psu, fields, parameters, parameterMap);
+            updateCount = psu.executeUpdate();
+          } catch (SQLException ex) {
+            throw new IllegalStateException(
+                    "Could not execute PreparedStatement for update" + jdbcStatement.split(";")[1],
+                    ex);
+          }
         }
         Map<String, String> updateCountMap = new HashMap<>();
         updateCountMap.put("updateCount", String.valueOf(updateCount));
         resultList.add(updateCountMap);
-        return resultList;
       }
 
-      List<String> methodFields = statementGenerator.getMethodFields(methodId);
-      ResultSet resultSet = ps.getResultSet();
-      ps.close();
-      
-      while (resultSet.next()) {
-        Map<String, String> rowMap = new HashMap<>();
-        for (String k : methodFields) {
-          String value = resultSet.getString(k);
-          rowMap.put(k, value);
-        }
-        resultList.add(rowMap);
-      }
-      
     } catch (SQLException ex) {
-      throw new IllegalStateException("Could not execute PreparedStatement " + jdbcStatement, ex);
+      throw new IllegalStateException(
+              "Could not execute PreparedStatement " + jdbcStatement.split(";")[0], ex
+      );
     }
     return resultList;
 
