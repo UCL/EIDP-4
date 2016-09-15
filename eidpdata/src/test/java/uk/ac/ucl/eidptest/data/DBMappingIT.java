@@ -35,8 +35,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
-import uk.ac.ucl.eidp.data.DBMapping;
-import uk.ac.ucl.eidp.data.DBMappingStrategy;
+import uk.ac.ucl.eidp.data.DbMapping;
 import uk.ac.ucl.eidp.data.EidpStrategy;
 import uk.ac.ucl.eidp.data.JdbcStrategy;
 import uk.ac.ucl.eidp.data.NodeQualifier;
@@ -46,6 +45,7 @@ import uk.ac.ucl.eidp.data.StatementGeneratorProducer;
 import uk.ac.ucl.eidp.data.StrategyResolver;
 import uk.ac.ucl.eidp.data.jaxb.StatementGenerator;
 import uk.ac.ucl.eidp.data.jaxb.StatementProducer;
+import uk.ac.ucl.eidp.data.DbMappingStrategy;
 
 /**
  *
@@ -56,7 +56,7 @@ public class DBMappingIT extends Arquillian {
     @Deployment
     public static JavaArchive createDeployment() {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(DBMapping.class, StrategyResolver.class, DBMappingStrategy.class, NodeQualifier.class,
+            .addClasses(DbMapping.class, StrategyResolver.class, DbMappingStrategy.class, NodeQualifier.class,
                     PoolStrategy.class, JdbcStrategy.class, EidpStrategy.class, NodeType.class, 
                     StatementGenerator.class, StatementGeneratorProducer.class)
             .addPackage("uk.ac.ucl.eidp.data.jaxb")
@@ -69,7 +69,7 @@ public class DBMappingIT extends Arquillian {
     }
     
     @EJB
-    DBMapping dbMapping;
+    DbMapping dbMapping;
     
     @Inject
     @StatementProducer

@@ -16,7 +16,7 @@ import javax.inject.Inject;
  */
 @Stateless
 @LocalBean
-public class DBMapping {
+public class DbMapping {
 
   private final String propertiesPath = "META-INF/eidp/mapping.properties";
   private final Properties mappingProperties = new Properties();
@@ -25,7 +25,7 @@ public class DBMapping {
   private StrategyResolver strategyResolver;
 
   /**
-   * Loads into {@link DBMapping} the paths associated with each database method.
+   * Loads into {@link DbMapping} the paths associated with each database method.
    */
   @PostConstruct
   public void loadMapping() {
@@ -49,7 +49,7 @@ public class DBMapping {
     }
     String databaseNodeId = mappingProperties.getProperty(methodPath);
 
-    DBMappingStrategy mappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
+    DbMappingStrategy mappingStrategy = strategyResolver.getDbMappingStrategyForId(databaseNodeId);
 
     return mappingStrategy.processDbCall(methodPath, parameters);
   }

@@ -2,6 +2,7 @@ package uk.ac.ucl.eidp.web;
 
 import uk.ac.ucl.eidp.auth.AuthAccess;
 import uk.ac.ucl.eidp.auth.AuthService;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -18,14 +19,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 /**
- *
- * @author David Guzman
+ * An interceptor to carry out the authorisation filter.
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Provider
 public class AuthSecurityInterceptor implements ContainerRequestFilter {
 
   // 401 - Access denied
-  private static final Response ACCESS_UNAUTHORIZED = Response.status(Response.Status.UNAUTHORIZED).entity("Not authorized.").build();
+  private static final Response accessUnauthorised = 
+          Response.status(Response.Status.UNAUTHORIZED).entity("Not authorised.").build();
 
   @EJB
   private AuthService authService;
@@ -50,7 +52,7 @@ public class AuthSecurityInterceptor implements ContainerRequestFilter {
       Set<String> rolesAllowed = new HashSet<>(Arrays.asList(rolesAllowedAnnotation.value()));
 
       if (!authService.isAuthorised(authId, authToken, rolesAllowed)) {
-        crc.abortWith(ACCESS_UNAUTHORIZED);
+        crc.abortWith(accessUnauthorised);
       }
     }
   }

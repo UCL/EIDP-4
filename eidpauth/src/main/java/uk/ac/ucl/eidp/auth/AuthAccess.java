@@ -12,6 +12,7 @@ public class AuthAccess implements Serializable {
 
   public static final String PARAM_AUTH_ID = "auth-id";
   public static final String PARAM_AUTH_TOKEN = "auth-token";
+  private static final long serialVersionUID = -1397319863485379777L;
 
   private String authId;
   private String authToken;
@@ -20,6 +21,12 @@ public class AuthAccess implements Serializable {
   public AuthAccess() {
   }
 
+  /**
+   * Defines parameters for auth process.
+   * @param authId user id
+   * @param authToken authentication token
+   * @param authPermission permissions granted to user
+   */
   public AuthAccess(String authId, String authToken, String authPermission) {
     this.authId = authId;
     this.authToken = authToken;
