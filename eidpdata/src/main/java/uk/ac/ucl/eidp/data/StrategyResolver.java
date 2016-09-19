@@ -47,20 +47,8 @@ public class StrategyResolver {
    */
   public DbMappingStrategy getDbMappingStrategyForId(String databaseNodeId) {
 
-    Properties properties;
-    if (!databaseNodes.containsKey(databaseNodeId)) {
-      properties = new Properties();
-      try (InputStream is = getClass().getClassLoader().getResourceAsStream(
-              "META-INF/eidp/" + databaseNodeId + ".properties"
-          )) {
-        properties.load(is);
-      } catch (IOException ex) {
-        Logger.getLogger(DbMapping.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      databaseNodes.put(databaseNodeId, properties);
-    } else {
-      properties = databaseNodes.get(databaseNodeId);
-    }
+    Properties properties = getPropertiesForDatabaseNodeId(databaseNodeId);
+    
     DbMappingStrategy dbMappingStrategy = null;
     switch (NodeType.valueOf(properties.getProperty(nodetypeProperty))) {
       case JDBC:
@@ -92,6 +80,24 @@ public class StrategyResolver {
     dbMappingStrategy.setProperties(properties);
     return dbMappingStrategy;
 
+  }
+  
+  private Properties getPropertiesForDatabaseNodeId(String databaseNodeId) {
+    Properties properties;
+    if (!databaseNodes.containsKey(databaseNodeId)) {
+      properties = new Properties();
+      try (InputStream is = getClass().getClassLoader().getResourceAsStream(
+              "META-INF/eidp/" + databaseNodeId + ".properties"
+          )) {
+        properties.load(is);
+      } catch (IOException ex) {
+        Logger.getLogger(DbMapping.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      databaseNodes.put(databaseNodeId, properties);
+    } else {
+      properties = databaseNodes.get(databaseNodeId);
+    }
+    return properties;
   }
 
 }
