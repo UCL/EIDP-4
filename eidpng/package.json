@@ -4,10 +4,11 @@
   "description": "Angular 2 application for EIDP4",
   "main": "index.html",
   "scripts": {
-    "start": "npm run tsc:w",
+    "start": "npm run httpserver",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "typings": "typings",
+    "httpserver": "http-server -c-1",
     "postinstall": "typings install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -35,10 +36,13 @@
     "@angular/router": "^3.0.0",
     "@angular/upgrade": "^2.0.0",
     "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.0-beta.12",
+    "systemjs": "^0.19.38",
     "zone.js": "^0.6.23"
   },
   "devDependencies": {
+    "http-server": "^0.9.0",
     "typescript": "^2.0.2",
     "typings": "^1.3.3"
   }
