@@ -4,5 +4,9 @@ import { Component } from '@angular/core';
   styleUrls: ['app/dashboard.component.css']
 })
 export class DashboardComponent {
-    
+    title = 'EIDP4';
+    isCollapsed:boolean = true;
+
+    onLogout() {
+    }
 }
