@@ -6,6 +6,7 @@ import { CollapseModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AppComponent }   from './app.component';
 import { CoverComponent } from './cover.component';
+import { CanvasComponent } from './canvas.component';
 import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
 import { LoginComponent } from './login.component';
@@ -21,6 +22,7 @@ import { routing } from './app.routing';
     ],
   declarations: [
      AppComponent,
+     CanvasComponent,
      CoverComponent,
      DashboardComponent,
      EntriesComponent,
