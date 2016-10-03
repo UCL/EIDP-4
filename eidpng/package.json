@@ -9,7 +9,7 @@
     "tsc:w": "tsc -w",
     "typings": "typings",
     "httpserver": "http-server -c-1",
-    "postinstall": "typings install",
+    "postinstall": "typings install && tsc",
     "test": "tsc && karma start karma.conf.js",
     "test-once": "tsc && karma start karma.conf.js --single-run"
   },

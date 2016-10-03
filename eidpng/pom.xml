@@ -45,19 +45,6 @@
 	    <goals>
 	      <goal>npm</goal>
 	    </goals>
-	    <configuration>
-	      <argument>install</argument>
-	    </configuration>
-	  </execution>
-
-	  <execution>
-	    <id>tsc</id>
-	    <goals>
-	      <goal>npm</goal>
-	    </goals>
-	    <configuration>
-	      <argument>run tsc</argument>
-	    </configuration>
 	  </execution>
 
 	  <execution>
