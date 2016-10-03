@@ -1,10 +1,6 @@
 language: java
 jdk:
 - oraclejdk8
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
 script:
 - mvn verify -P arquillian-glassfish-embedded
 - mvn verify -P arquillian-openejb-embedded
@@ -16,5 +12,3 @@ after_success:
 env:
   global:
     secure: GhY9tXUNxT01rAaHUpkGNShAcHmVvZ3iZYjjf7+JdBVl9KNxDi+AnbQB1SmBhSFGWqTUSIfeBIPPTy/eIzWrT7I1/caHD1a/u9EnamMDAEwaQX2A/EI2Zd8V4ZUEm/2dl8XIaVeDZi3xpo/XJqNJBrJ8tyujbse52+zmPo2X+3Y=
-addons:
-  firefox: "49.0.1"
