@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
-  constructor(private _router: Router) {}
+  constructor(private _router: Router) { }
 
   ngOnInit() {
     console.log('ngOnInit');
@@ -23,18 +23,18 @@ export class LoginComponent implements OnInit {
   }
 
   addIncrement() {
-        if (this.pgbValue == this.timeout) {
-            this.redirectToCover();
-        } else {
-            this.pgbValue += 1;
-        }
+    if (this.pgbValue == this.timeout) {
+      this.redirectToCover();
+    } else {
+      this.pgbValue += 1;
     }
+  }
 
   resetProgressBar() {
     this.pgbValue = 1;
   }
 
   redirectToCover() {
-        this._router.navigate(['/h'])
+    this._router.navigate(['/h']);
   }
 }
