@@ -31,7 +31,14 @@ EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                444
 * **eidpweb**:  WAR module for serving data to client apps
 * **eidpng**:   Angular 2 client app
 
+## Building
+
+### Requirements
+- Java 8
+- Apache Maven 3.1
+
 ```bash
 mvn clean verify -P arquillian-glassfish-remote
 mvn clean verify -P arquillian-wildfly-remote
 ```
+
