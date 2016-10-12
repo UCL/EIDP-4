@@ -9,7 +9,8 @@ import { CoverComponent } from './cover.component';
 import { CanvasComponent } from './canvas.component';
 import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
-import { LoginComponent } from './login.component';
+
+import { LoginModule } from './login/login.module';
 
 import { routing } from './app.routing';
 
@@ -18,6 +19,7 @@ import { routing } from './app.routing';
     BrowserModule,
     AlertModule,
     CollapseModule,
+    LoginModule,
     routing 
     ],
   declarations: [
@@ -25,8 +27,7 @@ import { routing } from './app.routing';
      CanvasComponent,
      CoverComponent,
      DashboardComponent,
-     EntriesComponent,
-     LoginComponent
+     EntriesComponent
      ],
   bootstrap:    [ AppComponent ]
 })

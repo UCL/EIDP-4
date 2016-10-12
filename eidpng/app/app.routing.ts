@@ -5,7 +5,6 @@ import { CanvasComponent } from './canvas.component';
 import { CoverComponent } from './cover.component';
 import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
-import { LoginComponent } from './login.component';
 
 const appRoutes: Routes = [
     {
@@ -19,7 +18,7 @@ const appRoutes: Routes = [
     },
     {
         path: 'l',
-        component: LoginComponent
+        loadChildren: 'app/login/login.module#LoginModule'
     },
     {
         path: 'd',
