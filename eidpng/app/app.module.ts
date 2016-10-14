@@ -10,6 +10,7 @@ import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
 
 import { LoginModule } from './login/login.module';
+import { AuthModule } from './auth/auth.module';
 
 import { routing } from './app.routing';
 
@@ -18,6 +19,7 @@ import { routing } from './app.routing';
     BrowserModule,
     CollapseModule,
     LoginModule,
+    AuthModule,
     routing 
     ],
   declarations: [

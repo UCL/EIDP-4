@@ -6,10 +6,12 @@ import { CoverComponent } from './cover.component';
 import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
 
+import { LoggedInGuard } from './auth/logged-in.guard';
+
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/h',
+        redirectTo: 'h',
         pathMatch: 'full'
     },
     {
@@ -23,6 +25,7 @@ const appRoutes: Routes = [
     {
         path: 'd',
         component: DashboardComponent,
+        canActivate: [ LoggedInGuard ],
         children: [
             {
                 path: '',
