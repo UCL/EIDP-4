@@ -25,7 +25,7 @@ const appRoutes: Routes = [
     {
         path: 'd',
         component: DashboardComponent,
-        canActivate: [ LoggedInGuard ],
+        canActivate: [LoggedInGuard],
         children: [
             {
                 path: '',

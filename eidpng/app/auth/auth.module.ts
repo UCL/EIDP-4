@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { LoggedInGuard } from './logged-in.guard';
 
 @NgModule({
-    imports: [ CommonModule, HttpModule ],
-    providers: [ AuthService, LoggedInGuard ]
+    imports: [CommonModule, HttpModule],
+    providers: [AuthService, LoggedInGuard]
 })
-export class AuthModule {}
+export class AuthModule { }

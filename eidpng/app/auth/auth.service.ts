@@ -1,37 +1,35 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-import { User } from './user';
+//import { User } from './user';
 
 @Injectable()
 export class AuthService {
 
-  private loggedIn = true;
+  private authUrl = 'http://localhost:3001/sessions/create';
+  private loggedIn = false;
 
   constructor(private http: Http) {
     this.loggedIn = !!localStorage.getItem('auth_token');
   }
 
-  login(user: User) {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+  login(username: String, password: String): Observable<Response> {
+    let body = JSON.stringify({ username, password });
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
 
     return this.http
-      .post(
-      '/login',
-      JSON.stringify({ user }),
-      { headers }
-      )
+      .post(this.authUrl, body, options)
       .map(res => res.json())
       .map((res) => {
-        if (res.success) {
-          localStorage.setItem('auth_token', res.auth_token);
+        if (res.id_token) {
+          localStorage.setItem('auth_token', res.id_token);
           this.loggedIn = true;
         }
-
-        return res.success;
-      });
-
+        return res || {};
+      })
+      .catch(this.handleError);
   }
 
   logout() {
@@ -41,6 +39,15 @@ export class AuthService {
 
   isLoggedIn() {
     return this.loggedIn;
+  }
+
+  private handleError(error: any) {
+    // In a real world app, we might use a remote logging infrastructure
+    // We'd also dig deeper into the error to get a better message
+    let errMsg = (error.message) ? error.message :
+      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    console.error(errMsg); // log to console instead
+    return Observable.throw(errMsg);
   }
 
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
-import { User } from '../auth/user';
 
 @Component({
   templateUrl: 'app/login/login.component.html',
@@ -14,10 +13,8 @@ export class LoginComponent implements OnInit {
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
-  user = new User(-1, '', '');
-
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) { }
 
@@ -26,9 +23,12 @@ export class LoginComponent implements OnInit {
     setInterval(() => this.addIncrement(), 1000);
   }
 
-  onLogin() {
-    this.authService.login(this.user).subscribe( (result) => {
+  onLogin(username, password) {
+    this.authService.login(username, password).subscribe((result) => {
       if (result) {
+        this.router.navigate(['d']);
+      } else {
+        console.log("went for else");
         this.router.navigate(['d']);
       }
     });
