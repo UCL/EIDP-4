@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
+import * as models from './model/models';
 //import { User } from './user';
 
 @Injectable()
@@ -10,21 +11,34 @@ export class AuthService {
   private authUrl = 'http://localhost:3001/sessions/create';
   private loggedIn = false;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, @Optional() basePath: string) {
     this.loggedIn = !!localStorage.getItem('auth_token');
+    if (basePath) {
+      this.authUrl = basePath;
+    }
   }
 
-  login(username: String, password: String): Observable<Response> {
-    let body = JSON.stringify({ username, password });
+  login(username: string, password: string): Observable<models.AuthToken> {
+    let credentials = <models.UseridPassword>{};
+    credentials.userid = username;
+    credentials.password = password;
+
+    let body = JSON.stringify(credentials);
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
     return this.http
       .post(this.authUrl, body, options)
-      .map(res => res.json())
+      .map((response: Response) => {
+        if (response.status === 204) {
+          return undefined;
+        } else {
+          return response.json();
+        }
+      })
       .map((res) => {
-        if (res.id_token) {
-          localStorage.setItem('auth_token', res.id_token);
+        if (res.auth_token) {
+          localStorage.setItem('auth_token', res.auth_token);
           this.loggedIn = true;
         }
         return res || {};
