@@ -70,16 +70,29 @@ paths:
           in: body
           description: Data container
           schema:
-            $ref: "#/definitions/Model"
+            $ref: "#/definitions/DataCallParameters"
       responses:
         200:
-          description: Success
+          $ref: "#/responses/DataCall200"
           
 definitions:
-  Model:
+  DataCallParameters:
     properties:
-      foo:
+      method_path:
         type: string
+        pattern: "[\\w-]*\\.[\\w-]*\\.[\\w-]*"
+        minLength: 5
+      parameters_map:
+        $ref: "#/definitions/Entry"
+  DataCallResult:
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/Entry"
+  Entry:
+    additionalProperties:
+      type: string
   AuthToken:
     required:
       - auth_token
@@ -130,6 +143,10 @@ responses:
     description: Unauthorised or authentication failed.
     schema:
       $ref: "#/definitions/Error"
+  DataCall200:
+    description: Database call executed succsesfully.
+    schema:
+      $ref: "#/definitions/DataCallResult"
       
 securityDefinitions:
   bearer:
