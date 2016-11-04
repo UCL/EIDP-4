@@ -11,11 +11,11 @@ import java.util.Properties;
 public class KeystoreProperties {
   
   private final Properties properties = new Properties();
-  private final String propertiesPath = "META-INF/eidpauth.properties";
-  private final String keystoreProp = "javax.net.ssl.keyStore";
-  private final String keystoreDef = "${com.sun.aas.instanceRoot}/config/keystore.jks";
-  private final String passwordProp = "javax.net.ssl.keyStorePassword";
-  private final String passwordDef = "changeme";
+  private static final String propertiesPath = "META-INF/eidpauth.properties";
+  private static final String keystoreProp = "javax.net.ssl.keyStore";
+  private static final String keystoreDef = "${com.sun.aas.instanceRoot}/config/keystore.jks";
+  private static final String passwordProp = "javax.net.ssl.keyStorePassword";
+  private static final String passwordDef = "changeme";
 
   /**
    * Constructor.

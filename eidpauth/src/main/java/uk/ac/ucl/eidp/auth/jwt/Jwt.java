@@ -58,7 +58,8 @@ public class Jwt {
 //  private void parseJwt(String jwt) {
 // 
 //    //This line will throw an exception if it is not a signed JWS (as expected)
-//    Claims claim = Jwts.parser().setSigningKey(jwtConfig.getApiKey()).parseClaimsJws(jwt).getBody();
+//    Claims claim = 
+//  Jwts.parser().setSigningKey(jwtConfig.getApiKey()).parseClaimsJws(jwt).getBody();
 //    System.out.println("ID: " + claim.getId());
 //    System.out.println("Subject: " + claim.getSubject());
 //    System.out.println("Issuer: " + claim.getIssuer());
