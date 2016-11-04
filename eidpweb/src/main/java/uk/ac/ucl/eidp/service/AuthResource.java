@@ -1,8 +1,13 @@
 package uk.ac.ucl.eidp.service;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import uk.ac.ucl.eidp.auth.AuthAccess;
 import uk.ac.ucl.eidp.auth.AuthLogin;
 import uk.ac.ucl.eidp.auth.AuthServiceLocal;
+import uk.ac.ucl.eidp.service.model.AuthToken;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -13,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * REST resource for authentication and authorisation.
@@ -20,6 +26,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Api(protocols = "https")
 public class AuthResource {
 
   @EJB
@@ -34,12 +41,29 @@ public class AuthResource {
   @POST
   @Path("login")
   @PermitAll
-  public AuthAccess login(@Context HttpServletRequest request, AuthLogin loginElement) {
+  @ApiOperation(
+          value = "Authenticates client on an EIDP instance.", 
+          notes = "Authentication based on userid and password. It returns a JWT token.", 
+          response = AuthToken.class, 
+          tags = {  }
+      )
+  @ApiResponses(value = { 
+        @ApiResponse(
+                code = 201, 
+                message = "Authentication successful.", 
+                response = AuthToken.class),
+        @ApiResponse(
+                code = 401, 
+                message = "Unauthorised or authentication failed.", 
+                response = AuthToken.class) 
+      }
+  )
+  public Response login(@Context HttpServletRequest request, AuthLogin loginElement) {
     AuthAccess accessElement = authService.login(loginElement);
     if (accessElement != null) {
       request.getSession().setAttribute(AuthAccess.PARAM_AUTH_ID, accessElement.getAuthId());
       request.getSession().setAttribute(AuthAccess.PARAM_AUTH_TOKEN, accessElement.getAuthToken());
     }
-    return accessElement;
+    return Response.ok().entity("magic!").build();
   }
 }
