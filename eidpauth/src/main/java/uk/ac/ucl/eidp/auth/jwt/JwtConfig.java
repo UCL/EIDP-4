@@ -37,9 +37,6 @@ public class JwtConfig {
       KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
       try (InputStream is = new FileInputStream(keystoreProperties.getKeystorePath())) {
         keyStore.load(is, keystoreProperties.getPasswordKs().toCharArray());
-        KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(
-                keystoreProperties.getPasswordKs().toCharArray()
-        );
         apiKey = keyStore.getKey(secretKeyAlias, keystoreProperties.getPasswordKs().toCharArray());
       } catch (IOException 
               | NoSuchAlgorithmException 

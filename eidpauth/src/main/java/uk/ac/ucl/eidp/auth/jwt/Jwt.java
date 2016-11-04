@@ -1,17 +1,14 @@
 package uk.ac.ucl.eidp.auth.jwt;
 
-import io.jsonwebtoken.Claims;
+//import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import uk.ac.ucl.eidp.auth.AuthLogin;
 
-import java.security.Key;
 import java.util.Date;
-import javax.crypto.spec.SecretKeySpec;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.xml.bind.DatatypeConverter;
 
 /** 
  * Utility class for the generation and validation of JWT tokens.
@@ -58,15 +55,15 @@ public class Jwt {
     return builder.compact();
   }
   
-  private void parseJwt(String jwt) {
- 
-    //This line will throw an exception if it is not a signed JWS (as expected)
-    Claims claim = Jwts.parser().setSigningKey(jwtConfig.getApiKey()).parseClaimsJws(jwt).getBody();
-    System.out.println("ID: " + claim.getId());
-    System.out.println("Subject: " + claim.getSubject());
-    System.out.println("Issuer: " + claim.getIssuer());
-    System.out.println("Expiration: " + claim.getExpiration());
-  }
+//  private void parseJwt(String jwt) {
+// 
+//    //This line will throw an exception if it is not a signed JWS (as expected)
+//    Claims claim = Jwts.parser().setSigningKey(jwtConfig.getApiKey()).parseClaimsJws(jwt).getBody();
+//    System.out.println("ID: " + claim.getId());
+//    System.out.println("Subject: " + claim.getSubject());
+//    System.out.println("Issuer: " + claim.getIssuer());
+//    System.out.println("Expiration: " + claim.getExpiration());
+//  }
 
 
 }

@@ -1,6 +1,5 @@
 package uk.ac.ucl.eidp.auth.jwt;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
 import org.testng.annotations.AfterClass;
@@ -10,7 +9,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.security.Key;
-import java.security.KeyStoreException;
 
 /**
  * Unit test for JwtConfig.
@@ -39,10 +37,9 @@ public class JwtConfigNgTest {
 
   /**
    * Test of initialise method, of class JwtConfig.
-   * @throws java.security.KeyStoreException
    */
   @Test
-  public void testInitialise() throws KeyStoreException {
+  public void testInitialise() {
     System.out.println("initialise");
     JwtConfig instance = new JwtConfig();
     instance.initialise();
@@ -52,10 +49,9 @@ public class JwtConfigNgTest {
 
   /**
    * Test of getApiKey method, of class JwtConfig.
-   * @throws java.security.KeyStoreException
    */
   @Test
-  public void testGetApiKey() throws KeyStoreException {
+  public void testGetApiKey() {
     System.out.println("getApiKey");
     JwtConfig instance = new JwtConfig();
     Key result = instance.getApiKey();
