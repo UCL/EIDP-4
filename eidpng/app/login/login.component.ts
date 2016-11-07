@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthService } from '../auth/auth.service';
+
 @Component({
-  templateUrl: 'app/login.component.html',
-  styleUrls: ['app/login.component.css']
+  templateUrl: 'app/login/login.component.html',
+  styleUrls: ['app/login/login.component.css']
 })
 export class LoginComponent implements OnInit {
 
@@ -11,15 +13,25 @@ export class LoginComponent implements OnInit {
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
-  constructor(private _router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     console.log('ngOnInit');
     setInterval(() => this.addIncrement(), 1000);
   }
 
-  onLogin() {
-    this._router.navigate(['d']);
+  onLogin(username, password) {
+    this.authService.login(username, password).subscribe((result) => {
+      if (result) {
+        this.router.navigate(['d']);
+      } else {
+        console.log("went for else");
+        this.router.navigate(['d']);
+      }
+    });
   }
 
   addIncrement() {
@@ -35,6 +47,6 @@ export class LoginComponent implements OnInit {
   }
 
   redirectToCover() {
-    this._router.navigate(['/h']);
+    this.router.navigate(['/h']);
   }
 }

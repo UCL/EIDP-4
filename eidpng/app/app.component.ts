@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import './rxjs-operators';
+
 @Component({
   selector: 'eidp-app',
   templateUrl: 'app/app.component.html',

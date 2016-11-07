@@ -1,0 +1,155 @@
+---
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: EIDP4 API
+  description: API for connecting client applications with an EIDP instance.
+  license: 
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: API Issues
+    url: https://github.com/UCL/EIDP-4/issues
+  termsOfService: http://swagger.io/terms/
+
+schemes:
+  - https
+
+paths:
+  /login:
+    post:
+      summary: Authenticates client on an EIDP instance.
+      description: Authentication based on userid and password. It returns a JWT token.
+      consumes:
+      - application/json
+      produces: 
+      - application/json
+      parameters:
+        - name: credentials
+          in: body
+          description: Credentials to be authenticated
+          schema:
+            $ref: "#/definitions/UseridPassword"
+      responses:
+        201:
+          $ref: "#/responses/Authentication201"
+        401:
+          $ref: "#/responses/Error401"
+  /logintwo:
+    post:
+      summary: Authenticates client on an EIDP instance.
+      description: Two factor authentication based on password and a one-time integer code. It returns a JWT token.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - name: credentials
+          in: body
+          description: Credentials to be authenticated
+          schema:
+            $ref: "#/definitions/TwoFactor"
+      responses:
+        201:
+          $ref: "#/responses/Authentication201"
+        401:
+          $ref: "#/responses/Error401"
+  /data:
+    post:
+      summary: Calls EIDP for data operations.
+      description: Calls EIDP for data operations.
+      security:
+        - bearer: []
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - name: model
+          in: body
+          description: Data container
+          schema:
+            $ref: "#/definitions/DataCallParameters"
+      responses:
+        200:
+          $ref: "#/responses/DataCall200"
+          
+definitions:
+  DataCallParameters:
+    properties:
+      method_path:
+        type: string
+        pattern: "[\\w-]*\\.[\\w-]*\\.[\\w-]*"
+        minLength: 5
+      parameters_map:
+        $ref: "#/definitions/Entry"
+  DataCallResult:
+    properties:
+      items:
+        type: array
+        items:
+          $ref: "#/definitions/Entry"
+  Entry:
+    additionalProperties:
+      type: string
+  AuthToken:
+    required:
+      - auth_token
+    properties:
+      auth_token:
+        type: string
+  UseridPassword:
+    type: object
+    properties:
+      userid:
+        type: string
+        pattern: "[a-z0-9]{8,64}"
+        minLength: 8
+        maxLength: 64
+      password:
+        type: string
+    required:
+      - userid
+      - password
+  TwoFactor:
+    type: object
+    allOf:
+      - $ref: "#/definitions/UseridPassword"
+    properties:
+      otc:
+        type: integer
+    required:
+      - otc
+  Error:
+    properties:
+      code:
+        type: string
+        enum:
+          - DBERR
+          - NTERR
+          - UNERR
+        readOnly: true
+      message:
+        type: string
+        readOnly: true
+      
+responses:
+  Authentication201:
+    description: Authentication successful.
+    schema:
+      $ref: "#/definitions/AuthToken"
+  Error401:
+    description: Unauthorised or authentication failed.
+    schema:
+      $ref: "#/definitions/Error"
+  DataCall200:
+    description: Database call executed succsesfully.
+    schema:
+      $ref: "#/definitions/DataCallResult"
+      
+securityDefinitions:
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header

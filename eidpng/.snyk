@@ -1,3 +1,6 @@
 version: v1.5.2
 ignore: {}
-patch: {}
+patch:
+  'npm:moment:20161019':
+    - ng2-bootstrap > moment:
+        patched: '2016-10-31T11:32:05.173Z'

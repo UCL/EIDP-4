@@ -2,9 +2,10 @@ language: java
 jdk:
 - oraclejdk8
 script:
-- mvn verify -P arquillian-glassfish-embedded
-- mvn verify -P arquillian-openejb-embedded
-- mvn verify -P arquillian-tomee-embedded
+- mvn verify -pl eidpdata -P arquillian-glassfish-embedded
+- mvn verify -pl eidpdata -P arquillian-openejb-embedded
+- mvn verify -pl eidpdata -P arquillian-tomee-embedded
+- mvn verify -pl eidpauth,eidpweb,eidpng
 - mvn test jacoco:report
 after_success:
 - mvn coveralls:report

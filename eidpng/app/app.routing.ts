@@ -5,12 +5,13 @@ import { CanvasComponent } from './canvas.component';
 import { CoverComponent } from './cover.component';
 import { DashboardComponent } from './dashboard.component';
 import { EntriesComponent } from './entries.component';
-import { LoginComponent } from './login.component';
+
+import { LoggedInGuard } from './auth/logged-in.guard';
 
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/h',
+        redirectTo: 'h',
         pathMatch: 'full'
     },
     {
@@ -19,11 +20,12 @@ const appRoutes: Routes = [
     },
     {
         path: 'l',
-        component: LoginComponent
+        loadChildren: 'app/login/login.module#LoginModule'
     },
     {
         path: 'd',
         component: DashboardComponent,
+        canActivate: [LoggedInGuard],
         children: [
             {
                 path: '',
