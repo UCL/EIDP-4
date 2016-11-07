@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
  */
 public class KeystorePropertiesNgTest {
   
+  private static final KeystoreProperties instance = new KeystoreProperties();
+  
   public KeystorePropertiesNgTest() {
   }
 
@@ -19,7 +21,6 @@ public class KeystorePropertiesNgTest {
   @Test
   public void testGetKeystorePath() {
     System.out.println("getKeystorePath");
-    KeystoreProperties instance = new KeystoreProperties();
     String expResult = "src/test/resources/META-INF/keystore.jks";
     String result = instance.getKeystorePath();
     assertEquals(result, expResult);
@@ -31,9 +32,19 @@ public class KeystorePropertiesNgTest {
   @Test
   public void testGetPasswordKs() {
     System.out.println("getPasswordKs");
-    KeystoreProperties instance = new KeystoreProperties();
     String expResult = "changeme";
     String result = instance.getPasswordKs();
+    assertEquals(result, expResult);
+  }
+  
+  /**
+   * Test of getSecretKeyAlias method, of class KeystoreProperties.
+   */
+  @Test
+  public void testGetSecretKeyAlias() {
+    System.out.println("getSecretKeyAlias");
+    String expResult = "secret";
+    String result = instance.getSecretKeyAlias();
     assertEquals(result, expResult);
   }
   

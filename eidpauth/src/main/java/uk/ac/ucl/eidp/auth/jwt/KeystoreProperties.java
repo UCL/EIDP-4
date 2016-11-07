@@ -46,6 +46,10 @@ public class KeystoreProperties {
     return properties.getProperty(passwordProp, passwordDef);
   }
   
+  /**
+   * Alias of the secret key.
+   * @return The alias
+   */
   public String getSecretKeyAlias() {
     return properties.getProperty(secretKeyAliasProp, secretKeyAliasDef);
   }
