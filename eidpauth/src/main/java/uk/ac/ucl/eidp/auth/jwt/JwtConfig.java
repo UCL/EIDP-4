@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
- * Configuration object for JWT.
+ * JWT configuration.
  * @author rebmdgu
  */
 @ApplicationScoped
