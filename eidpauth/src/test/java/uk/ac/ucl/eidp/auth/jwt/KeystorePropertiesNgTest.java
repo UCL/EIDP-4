@@ -20,7 +20,7 @@ public class KeystorePropertiesNgTest {
   public void testGetKeystorePath() {
     System.out.println("getKeystorePath");
     KeystoreProperties instance = new KeystoreProperties();
-    String expResult = "${com.sun.aas.instanceRoot}/config/keystore.jks";
+    String expResult = "src/test/resources/META-INF/keystore.jks";
     String result = instance.getKeystorePath();
     assertEquals(result, expResult);
   }

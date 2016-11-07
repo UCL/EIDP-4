@@ -16,6 +16,8 @@ public class KeystoreProperties {
   private static final String keystoreDef = "${com.sun.aas.instanceRoot}/config/keystore.jks";
   private static final String passwordProp = "javax.net.ssl.keyStorePassword";
   private static final String passwordDef = "changeme";
+  private static final String secretKeyAliasProp = "eidp.auth.secretKeyAlias";
+  private static final String secretKeyAliasDef = "secret";
 
   /**
    * Constructor.
@@ -44,4 +46,7 @@ public class KeystoreProperties {
     return properties.getProperty(passwordProp, passwordDef);
   }
   
+  public String getSecretKeyAlias() {
+    return properties.getProperty(secretKeyAliasProp, secretKeyAliasDef);
+  }
 }
