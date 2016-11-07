@@ -44,10 +44,11 @@
     "ng2-bootstrap": "^1.1.16",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
+    "snyk": "^1.19.1",
     "systemjs": "^0.19.38",
+    "typescript": "^2.0.7",
     "typings": "^1.5.0",
-    "zone.js": "^0.6.23",
-    "snyk": "^1.19.1"
+    "zone.js": "^0.6.23"
   },
   "devDependencies": {
     "http-server": "^0.9.0",

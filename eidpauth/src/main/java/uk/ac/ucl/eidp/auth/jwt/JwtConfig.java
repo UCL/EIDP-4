@@ -12,7 +12,6 @@ import java.security.cert.CertificateException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 
 /**
@@ -21,9 +20,6 @@ import javax.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class JwtConfig {
-  
-  @Resource
-  private String secretKeyAlias;
     
   private final KeystoreProperties keystoreProperties = new KeystoreProperties();
   private Key apiKey;
@@ -34,10 +30,11 @@ public class JwtConfig {
   @PostConstruct
   public void initialise() {
     try {
-      KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+      KeyStore keyStore = KeyStore.getInstance("JCEKS");
       try (InputStream is = new FileInputStream(keystoreProperties.getKeystorePath())) {
         keyStore.load(is, keystoreProperties.getPasswordKs().toCharArray());
-        apiKey = keyStore.getKey(secretKeyAlias, keystoreProperties.getPasswordKs().toCharArray());
+        apiKey = keyStore.getKey(keystoreProperties.getSecretKeyAlias(), 
+                keystoreProperties.getPasswordKs().toCharArray());
       } catch (IOException 
               | NoSuchAlgorithmException 
               | CertificateException 
