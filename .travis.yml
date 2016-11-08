@@ -12,6 +12,6 @@ after_success:
 - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
 env:
   global:
-    secure: GhY9tXUNxT01rAaHUpkGNShAcHmVvZ3iZYjjf7+JdBVl9KNxDi+AnbQB1SmBhSFGWqTUSIfeBIPPTy/eIzWrT7I1/caHD1a/u9EnamMDAEwaQX2A/EI2Zd8V4ZUEm/2dl8XIaVeDZi3xpo/XJqNJBrJ8tyujbse52+zmPo2X+3Y=
+  - secure: eufYC2a9zxVc3WpyjGEWr4WJ6viTMXYbpWR94lSEUqvz+4/Ym7QVkz+5sLT8sY07bo8RFpCZbB9x/XoI5+c18vRKiiw/AVGUFZ0LMmkkdrBdmE7jh81TMFjt9N3+toLUWuz6hDd8V8JYmCQeCTvDEYPkWumTQlzy8PEZUtv1yAY=
   matrix:
     secure: ieN64BDinM8oImc9Al9yZPOPlzxye4lAwUJccMi/kHwClt78NVsU1JLpn8xcmDrkmN6yey/oVqMFpKrgtLuEa6T7SvOQPT3uz98lpu54E14vm48JkeLmWJgJJkQmDuTvCOaguRgfbjQLKnCG28sibv5hrq0Ocj17nZTN8Xo9VDA=
