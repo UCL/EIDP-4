@@ -18,7 +18,7 @@ import javax.inject.Inject;
 public class Jwt {
   
   @Inject
-  private JwtConfig jwtConfig;
+  JwtConfig jwtConfig;
   
   /**
    * Creates a JWT Token.
