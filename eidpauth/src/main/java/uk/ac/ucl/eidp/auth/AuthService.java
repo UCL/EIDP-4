@@ -18,10 +18,10 @@ import javax.inject.Inject;
 public class AuthService implements AuthServiceLocal {
 
   @EJB
-  private UserController userController;
+  UserController userController;
   
   @Inject
-  private Jwt jwt;
+  Jwt jwt;
 
   @Override
   public AuthAccess login(AuthLogin authLogin) {
