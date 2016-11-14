@@ -25,9 +25,6 @@ public class AuthServiceNgTest {
   
   private AuthService instance;
   private final Set<RoleE> roleSet = new HashSet<>();
-  
-  public AuthServiceNgTest() {
-  }
 
   @BeforeClass
   public static void setUpClass() throws Exception {
@@ -59,11 +56,11 @@ public class AuthServiceNgTest {
   public void testLogin() {
     System.out.println("login");
     RoleE role1 = new RoleE();
-    role1.setId(new Long(0));
+    role1.setId(Long.valueOf(0));
     role1.setRoleName("admin");
     roleSet.add(role1);
     RoleE role2 = new RoleE();
-    role2.setId(new Long(1));
+    role2.setId(Long.valueOf(1));
     role2.setRoleName("public");
     roleSet.add(role2);    
     UserE userMock = mock(UserE.class);
@@ -88,7 +85,7 @@ public class AuthServiceNgTest {
   public void testIsAuthorised() {
     System.out.println("isAuthorised");
     RoleE role1 = new RoleE();
-    role1.setId(new Long(1));
+    role1.setId(Long.valueOf(1));
     role1.setRoleName("public");
     roleSet.add(role1);
     UserE userMock = mock(UserE.class);
