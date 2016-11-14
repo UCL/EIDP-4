@@ -72,8 +72,6 @@ public class AuthServiceNgTest {
             "token",
             "[uk.ac.ucl.eidp.auth.model.RoleE[ id=0 ], uk.ac.ucl.eidp.auth.model.RoleE[ id=1 ]]");
     AuthAccess result = instance.login(authLogin);
-    System.out.println(result.getAuthPermission());
-    System.out.println(expResult.getAuthPermission());
     assertEquals(result.getAuthId(), expResult.getAuthId());
     //assertEquals(result.getAuthToken(), expResult.getAuthToken());
   }
