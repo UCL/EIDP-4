@@ -24,7 +24,6 @@ public class UserController {
    * @return Entity containing information about the authenticated user
    */
   public UserE findUser(String login, String password) {
-    if (em == null) System.out.println("HAAAA");
     TypedQuery<UserE> typedQuery = em.createNamedQuery(UserE.FIND_BY_LOGIN_PASSWORD, UserE.class);
     typedQuery.setParameter("login", login);
     typedQuery.setParameter("password", password);

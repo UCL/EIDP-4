@@ -42,7 +42,7 @@ public class UserControllerNgTest {
   public void tearDownMethod() throws Exception {
   }
 
-  void mockTypedQuery(String name, UserE user) {
+  private void mockTypedQuery(String name, UserE user) {
     TypedQuery<UserE> typedQuery = mock(TypedQuery.class);
     when(typedQuery.getSingleResult()).thenReturn(user);
     when(typedQuery.setParameter(Matchers.anyString(), 
