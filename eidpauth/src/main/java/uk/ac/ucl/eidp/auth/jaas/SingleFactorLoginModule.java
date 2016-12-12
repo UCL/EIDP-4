@@ -4,6 +4,7 @@ import uk.ac.ucl.eidp.auth.UserController;
 import uk.ac.ucl.eidp.auth.model.UserE;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
@@ -26,28 +28,28 @@ import javax.security.auth.spi.LoginModule;
  *
  * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
-public class EidpLoginModule implements LoginModule {
+public class SingleFactorLoginModule implements LoginModule {
 
-  //private Subject subject;
+  private Subject subject;
   private CallbackHandler callbackHandler;
   //private Map<String, ?> sharedState;
   //private Map<String, ?> options;
   //private boolean debug = false;
 
-  private UserController userService;
+  private UserController userController;
 
   private BeanManager beanManager;
 
-  private static final Logger logger = Logger.getLogger(EidpLoginModule.class.getName());
+  private static final Logger logger = Logger.getLogger(SingleFactorLoginModule.class.getName());
 
   private void setUserService() {
-    if (userService == null) {
+    if (userController == null) {
       try {
         Context context = new InitialContext();
         beanManager = (BeanManager) context.lookup("java:comp/BeanManager");
         Bean<?> bean = beanManager.getBeans(UserController.class).iterator().next();
         CreationalContext creationalCtx = beanManager.createCreationalContext(bean);
-        userService = (UserController) beanManager.getReference(
+        userController = (UserController) beanManager.getReference(
           bean, UserController.class, creationalCtx
         );
       } catch (NamingException namingX) {
@@ -63,12 +65,16 @@ public class EidpLoginModule implements LoginModule {
       Map<String, ?> sharedState, 
       Map<String, ?> options
   ) {
-    //this.subject = subject;
+    this.subject = subject;
     this.callbackHandler = callbackHandler;
     //this.sharedState = sharedState;
     //this.options = options;
     //this.debug = "true".equalsIgnoreCase((String)options.get("debug"));
     setUserService();
+  }
+  
+  public void setCallbackHandler(CallbackHandler callbackHandler) {
+    this.callbackHandler = callbackHandler;
   }
 
   @Override
@@ -81,11 +87,15 @@ public class EidpLoginModule implements LoginModule {
       String password = new String(passwordCallback.getPassword());
       nameCallback.setName("");
       passwordCallback.clearPassword();
-      UserE customer = userService.findUser(username, password);
 
-      if (customer == null) {
-        throw new LoginException("Authentication failed");
+      UserE userE = userController.findUser(username, password);
+
+      if (userE == null) {
+        throw new FailedLoginException("Authentication failed: User not found.");
       }
+      
+      Principal loginPrincipal = new LoginPrincipal(username);
+      subject.getPrincipals().add(loginPrincipal);
 
       return true;
     } catch (IOException | UnsupportedCallbackException | LoginException exception) {

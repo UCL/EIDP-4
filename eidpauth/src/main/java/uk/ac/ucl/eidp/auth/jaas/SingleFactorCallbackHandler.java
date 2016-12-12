@@ -3,7 +3,6 @@ package uk.ac.ucl.eidp.auth.jaas;
 import uk.ac.ucl.eidp.auth.AuthLogin;
 
 import java.io.IOException;
-import javax.inject.Inject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
@@ -14,20 +13,25 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  *
  * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
-public class EidpCallbackHandler implements CallbackHandler {
-
-  @Inject
-  private AuthLogin credentials;
+public class SingleFactorCallbackHandler implements CallbackHandler {
+  
+  private final String login;
+  private final String password;
+  
+  public SingleFactorCallbackHandler(AuthLogin authLogin) {
+    this.login = authLogin.getLogin();
+    this.password = authLogin.getPassword();
+  }
 
   @Override
   public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
     for (Callback callback : callbacks) {
       if (callback instanceof NameCallback) {
         NameCallback nameCallback = (NameCallback) callback;
-        nameCallback.setName(credentials.getLogin());
+        nameCallback.setName(this.login);
       } else if (callback instanceof PasswordCallback) {
         PasswordCallback passwordCallback = (PasswordCallback) callback;
-        passwordCallback.setPassword(credentials.getPassword().toCharArray());
+        passwordCallback.setPassword(this.password.toCharArray());
       } else {
         throw new UnsupportedCallbackException(callback);
       }

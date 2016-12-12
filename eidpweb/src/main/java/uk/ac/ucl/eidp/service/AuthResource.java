@@ -5,8 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import uk.ac.ucl.eidp.auth.AuthAccess;
+import uk.ac.ucl.eidp.auth.AuthControllerLocal;
 import uk.ac.ucl.eidp.auth.AuthLogin;
-import uk.ac.ucl.eidp.auth.AuthServiceLocal;
 import uk.ac.ucl.eidp.service.model.AuthToken;
 
 import javax.annotation.security.PermitAll;
@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
 public class AuthResource {
 
   @EJB
-  private AuthServiceLocal authService;
+  private AuthControllerLocal authController;
 
   /**
    * Authenticates user obtaining credentials from the http request.
@@ -59,7 +59,7 @@ public class AuthResource {
       }
   )
   public Response login(@Context HttpServletRequest request, AuthLogin loginElement) {
-    AuthAccess accessElement = authService.login(loginElement);
+    AuthAccess accessElement = authController.login(loginElement);
     if (accessElement != null) {
       request.getSession().setAttribute(AuthAccess.PARAM_AUTH_ID, accessElement.getAuthId());
       request.getSession().setAttribute(AuthAccess.PARAM_AUTH_TOKEN, accessElement.getAuthToken());
