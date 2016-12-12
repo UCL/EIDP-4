@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AuthLogin implements Serializable {
 
+  private static final long serialVersionUID = 412613718380072603L;
+
   private String login;
   private String password;
 

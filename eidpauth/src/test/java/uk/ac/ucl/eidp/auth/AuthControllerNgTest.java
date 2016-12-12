@@ -1,6 +1,5 @@
 package uk.ac.ucl.eidp.auth;
 
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -16,14 +15,17 @@ import uk.ac.ucl.eidp.auth.model.UserE;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.security.auth.login.LoginContext;
+
+
 
 /**
- * Unit tests for AuthService.
+ * Unit tests for AuthController.
  * @author rebmdgu
  */
-public class AuthServiceNgTest {
+public class AuthControllerNgTest {
   
-  private AuthService instance;
+  private AuthController instance;
   private final Set<RoleE> roleSet = new HashSet<>();
 
   @BeforeClass
@@ -39,9 +41,10 @@ public class AuthServiceNgTest {
    */
   @BeforeMethod
   public void setUpMethod() {
-    this.instance = new AuthService();
+    this.instance = new AuthController();
     this.instance.userController = mock(UserController.class);
     this.instance.jwt = mock(Jwt.class);
+    this.instance.loginContext = mock(LoginContext.class);
   }
 
   @AfterMethod
@@ -50,34 +53,7 @@ public class AuthServiceNgTest {
   }
 
   /**
-   * Test of login method, of class AuthService.
-   */
-  @Test
-  public void testLogin() {
-    System.out.println("login");
-    RoleE role1 = new RoleE();
-    role1.setId(Long.valueOf(0));
-    role1.setRoleName("admin");
-    roleSet.add(role1);
-    RoleE role2 = new RoleE();
-    role2.setId(Long.valueOf(1));
-    role2.setRoleName("public");
-    roleSet.add(role2);    
-    UserE userMock = mock(UserE.class);
-    userMock.setRoles(roleSet);
-    when(this.instance.userController.findUser("user", "password")).thenReturn(userMock);    
-    AuthLogin authLogin = new AuthLogin("user","password");
-    when(this.instance.jwt.createJwtToken(authLogin, 0)).thenReturn("token");
-    AuthAccess expResult = new AuthAccess("user",
-            "token",
-            "[uk.ac.ucl.eidp.auth.model.RoleE[ id=0 ], uk.ac.ucl.eidp.auth.model.RoleE[ id=1 ]]");
-    AuthAccess result = instance.login(authLogin);
-    assertEquals(result.getAuthId(), expResult.getAuthId());
-    //assertEquals(result.getAuthToken(), expResult.getAuthToken());
-  }
-
-  /**
-   * Test of isAuthorised method, of class AuthService.
+   * Test of isAuthorised method, of class AuthController.
    */
   @Test
   public void testIsAuthorised() {

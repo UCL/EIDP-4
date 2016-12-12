@@ -8,7 +8,7 @@ import javax.ejb.Local;
  * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Local
-public interface AuthServiceLocal {
+public interface AuthControllerLocal {
 
   AuthAccess login(AuthLogin credentials);
 
