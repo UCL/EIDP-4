@@ -1,7 +1,7 @@
 package uk.ac.ucl.eidp.web;
 
 import uk.ac.ucl.eidp.auth.AuthAccess;
-import uk.ac.ucl.eidp.auth.AuthService;
+import uk.ac.ucl.eidp.auth.AuthController;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -30,7 +30,7 @@ public class AuthSecurityInterceptor implements ContainerRequestFilter {
           Response.status(Response.Status.UNAUTHORIZED).entity("Not authorised.").build();
 
   @EJB
-  private AuthService authService;
+  private AuthController authService;
 
   @Context
   private HttpServletRequest request;
