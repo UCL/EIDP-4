@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.security.Principal;
 
 /**
- *
- * @author rebmdgu
+ * Implementation of {@link Principal} that stores the user's login name.
+ * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 public class LoginPrincipal implements Principal, Serializable {
 

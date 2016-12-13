@@ -1,12 +1,12 @@
 package uk.ac.ucl.eidp.auth;
 
-import java.security.Principal;
-import java.util.Optional;
 import uk.ac.ucl.eidp.auth.jaas.SingleFactorCallbackHandler;
 import uk.ac.ucl.eidp.auth.jwt.Jwt;
 import uk.ac.ucl.eidp.auth.model.RoleE;
 import uk.ac.ucl.eidp.auth.model.UserE;
 
+import java.security.Principal;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +20,7 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 /**
- *
+ * Controller for authentication and authorisation using JAAS.
  * @author David Guzman {@literal d.guzman at ucl.ac.uk}
  */
 @Stateless
@@ -35,9 +35,9 @@ public class AuthController implements AuthControllerLocal {
   LoginContext loginContext;
 
   /**
-   * 
-   * @param authLogin
-   * @return 
+   * Performs authentication using JAAS login method.
+   * @param authLogin Containing user credentials.
+   * @return {@link AuthAccess} containing the user Principals.
    */
   @Override
   public AuthAccess login(AuthLogin authLogin) {
