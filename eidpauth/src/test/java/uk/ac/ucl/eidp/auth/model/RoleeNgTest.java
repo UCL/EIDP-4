@@ -1,6 +1,6 @@
 package uk.ac.ucl.eidp.auth.model;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;

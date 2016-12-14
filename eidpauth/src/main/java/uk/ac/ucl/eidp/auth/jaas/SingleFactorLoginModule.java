@@ -95,7 +95,7 @@ public class SingleFactorLoginModule implements LoginModule {
 
       UserE userE = null;
       
-      if (null == userController) {
+      if (null != userController) {
         userE = userController.findUser(username, password);
       }
 
