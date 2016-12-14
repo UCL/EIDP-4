@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
  */
 public class RoleeNgTest {
   
-  RoleE instance = new RoleE();
+  private RoleE instance = new RoleE();
   
   public RoleeNgTest() {
     instance = resetRoleE(instance);
