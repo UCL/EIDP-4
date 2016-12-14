@@ -83,12 +83,21 @@ public class SingleFactorLoginModule implements LoginModule {
     PasswordCallback passwordCallback = new PasswordCallback("Password : ", false);
     try {
       callbackHandler.handle(new Callback[] {nameCallback, passwordCallback});
+
+      char[] passwordChar = passwordCallback.getPassword();
+      String password = null;
+      if (null != passwordChar) {
+        password = new String(passwordChar);
+      }
       String username = nameCallback.getName();
-      String password = new String(passwordCallback.getPassword());
       nameCallback.setName("");
       passwordCallback.clearPassword();
 
-      UserE userE = userController.findUser(username, password);
+      UserE userE = null;
+      
+      if (null != userController) {
+        userE = userController.findUser(username, password);
+      }
 
       if (userE == null) {
         throw new FailedLoginException("Authentication failed: User not found.");
