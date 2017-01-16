@@ -1,6 +1,7 @@
 package uk.ac.ucl.eidp.auth.jaspic;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -22,7 +23,7 @@ public class HttpHeaderAuthModule implements ServerAuthModule {
     HttpServletRequest.class, HttpServletResponse.class
   };
 
-  public static final String USERNAME_HEADER_KEY = "username_header";
+//  public static final String USERNAME_HEADER_KEY = "username_header";
   private final String requestHeader = "X-Forwarded-User";
   
   private CallbackHandler handler;
@@ -39,7 +40,7 @@ public class HttpHeaderAuthModule implements ServerAuthModule {
 
   @Override
   public Class[] getSupportedMessageTypes() {
-    return MESSAGE_TYPES;
+    return Arrays.copyOf(MESSAGE_TYPES, MESSAGE_TYPES.length);
   }
 
   @Override

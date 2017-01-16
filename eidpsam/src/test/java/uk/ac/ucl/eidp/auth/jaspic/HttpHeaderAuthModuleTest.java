@@ -1,5 +1,6 @@
 package uk.ac.ucl.eidp.auth.jaspic;
 
+import java.security.Principal;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -18,6 +19,8 @@ import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.MessagePolicy;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * Unit tests for HttpHeaderAuthModule.
@@ -35,7 +38,7 @@ public class HttpHeaderAuthModuleTest {
    */
   public HttpHeaderAuthModuleTest() {
     Map<String, String> map = new HashMap<>();
-    map.put(HttpHeaderAuthModule.USERNAME_HEADER_KEY, "X-Forwarded-User");
+    map.put("username_header", "X-Forwarded-User");
     options = Collections.unmodifiableMap(map);
     
     when(mockRequestPolicy.isMandatory()).thenReturn(false);
@@ -60,6 +63,22 @@ public class HttpHeaderAuthModuleTest {
     // when HttpServletRequest header "X-Forwarded-User" returns a String;
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SUCCESS);
   }
+  
+  @Test
+  public void testSupportedMessageTypes() {
+    Class<?>[] messageTypes = new Class<?>[]{HttpServletRequest.class, HttpServletResponse.class};
+    assertEquals(module.getSupportedMessageTypes(), messageTypes);
+  }
+  
+  @Test
+  public void testCleanSubject() throws AuthException {
+    Subject subject = new Subject();
+    Principal principal = () -> "testPrincipal";
+    subject.getPrincipals().add(principal);
+    System.out.println(subject.getPrincipals().size());
+    module.cleanSubject(null, subject);
+    assertEquals(subject.getPrincipals().size(), 0);
+  }
 
   @BeforeMethod
   public void setUpMethod() throws Exception {
@@ -69,4 +88,5 @@ public class HttpHeaderAuthModuleTest {
   @AfterMethod
   public void tearDownMethod() throws Exception {
   }
+  
 }
