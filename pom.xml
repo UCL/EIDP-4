@@ -29,6 +29,7 @@
     <module>eidpauth</module>
     <module>eidpweb</module>
     <module>eidpng</module>
+    <module>eidpsam</module>
   </modules>
   <build>
     <plugins>
