@@ -23,8 +23,7 @@ public class HttpHeaderAuthModule implements ServerAuthModule {
     HttpServletRequest.class, HttpServletResponse.class
   };
 
-//  public static final String USERNAME_HEADER_KEY = "username_header";
-  private final String requestHeader = "X-Forwarded-User";
+  private static final String REQUEST_HEADER = "X-Forwarded-User";
   
   private CallbackHandler handler;
 
@@ -50,7 +49,7 @@ public class HttpHeaderAuthModule implements ServerAuthModule {
           Subject serviceSubject
   ) throws AuthException {
     final HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();
-    final String userName = req.getHeader(requestHeader);
+    final String userName = req.getHeader(REQUEST_HEADER);
     if (null == userName) {
       return AuthStatus.FAILURE;
     }
