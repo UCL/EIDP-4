@@ -18,25 +18,27 @@ import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessageInfo;
 import javax.security.auth.message.MessagePolicy;
+import javax.security.auth.message.callback.PasswordValidationCallback;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
 /**
- * Unit tests for HttpHeaderAuthModule.
+ * Unit tests for HeaderBasicAuthModule.
  * @author rebmdgu
  */
-public class HttpHeaderAuthModuleTest {
+public class HeaderBasicAuthModuleTest {
   
   private final Map<String, String> options;
-  private final HttpHeaderAuthModule module = new HttpHeaderAuthModule();
+  private final HeaderBasicAuthModule module = new HeaderBasicAuthModule();
   private final CallbackHandler handler = mock(CallbackHandler.class);
   private final MessagePolicy mockRequestPolicy = mock(MessagePolicy.class);
   
   /**
    * Initialisation of variables in constructor.
    */
-  public HttpHeaderAuthModuleTest() {
+  public HeaderBasicAuthModuleTest() {
     Map<String, String> map = new HashMap<>();
     map.put("username_header", "X-Forwarded-User");
     options = Collections.unmodifiableMap(map);
@@ -57,10 +59,21 @@ public class HttpHeaderAuthModuleTest {
     final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
     when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
     final Subject client = new Subject();
-    // when HttpServletRequest header "X-Forwarded-User" returns null;
+    
+    // 1a. Not secure connections must return SEND_FAILURE by default
+    assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SEND_FAILURE);
+    
+    // 1b. Return TRUE for isSecure()
+    when(servletRequest.isSecure()).thenReturn(Boolean.TRUE);
+    
+    // 2a. HttpServletRequest header returns null;
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.FAILURE);
-    when(servletRequest.getHeader("X-Forwarded-User")).thenReturn("username");
-    // when HttpServletRequest header "X-Forwarded-User" returns a String;
+    
+    // 2b. Set value of Authorization header to a valid string.
+    when(servletRequest.getHeader("Authorization")).thenReturn("Basic dXNlcjpwYXNzd29yZA==");
+    PasswordValidationCallback pwc = mock(PasswordValidationCallback.class);
+    when(pwc.getResult()).thenReturn(Boolean.TRUE);
+    module.setPasswordValidationCallback(pwc);
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SUCCESS);
   }
   
@@ -75,7 +88,6 @@ public class HttpHeaderAuthModuleTest {
     Subject subject = new Subject();
     Principal principal = () -> "testPrincipal";
     subject.getPrincipals().add(principal);
-    System.out.println(subject.getPrincipals().size());
     module.cleanSubject(null, subject);
     assertEquals(subject.getPrincipals().size(), 0);
   }

@@ -5,7 +5,7 @@ script:
 - mvn verify -pl eidpdata -P arquillian-glassfish-embedded
 - mvn verify -pl eidpdata -P arquillian-openejb-embedded
 - mvn verify -pl eidpdata -P arquillian-tomee-embedded
-- mvn verify -pl eidpauth,eidpweb,eidpng
+- mvn verify -pl eidpauth,eidpweb,eidpng,eidpsam
 - mvn test jacoco:report
 after_success:
 - mvn coveralls:report
