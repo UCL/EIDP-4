@@ -118,7 +118,8 @@ public class HeaderBasicAuthModule implements ServerAuthModule {
       header = header.substring(6).trim();
 
       // Decode and parse the authorization header
-      byte[] decBytes = Base64.getDecoder().decode(header.getBytes());
+      byte[] headerBytes = header.getBytes(Charset.forName(credentialsEncoding));
+      byte[] decBytes = Base64.getDecoder().decode(headerBytes);
       String decoded = new String(decBytes, Charset.forName(credentialsEncoding));
 
       int colon = decoded.indexOf(':');
