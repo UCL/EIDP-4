@@ -1,6 +1,7 @@
 package uk.ac.ucl.eidp.auth.jaspic;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
@@ -28,9 +29,14 @@ public class HeaderBasicAuthModule implements ServerAuthModule {
 
   // Not secure connections must be allowed explicitly
   private boolean allowNotSecure = false;
+  // Initially set to UTF-8
+  private String credentialsEncoding = "UTF-8";
   private static final String BASIC = "Basic";
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String ALLOW_NOTSECURE_NAME = "allow.notsecure";
+  private static final String CREDENTIALS_ENCODING_NAME = "credentials.encoding";
+  private static final String DEF_ENC = "UTF-8";
+  private static final String DEF_NOT_SEC = "false";
   
   // private static final String MESSAGES = "META-INF/Messages";
   
@@ -49,7 +55,10 @@ public class HeaderBasicAuthModule implements ServerAuthModule {
     if (null != options) {
       this.options = options;
       if (null != this.options) {
-        allowNotSecure = Boolean.parseBoolean((String) options.get(ALLOW_NOTSECURE_NAME));
+        allowNotSecure = Boolean.parseBoolean(
+                (String) options.getOrDefault(ALLOW_NOTSECURE_NAME, DEF_NOT_SEC)
+        );
+        credentialsEncoding = (String) options.getOrDefault(CREDENTIALS_ENCODING_NAME, DEF_ENC);
       }
     }
   }
@@ -109,7 +118,8 @@ public class HeaderBasicAuthModule implements ServerAuthModule {
       header = header.substring(6).trim();
 
       // Decode and parse the authorization header
-      String decoded = new String(Base64.getDecoder().decode(header.getBytes()));
+      byte[] decBytes = Base64.getDecoder().decode(header.getBytes());
+      String decoded = new String(decBytes, Charset.forName(credentialsEncoding));
 
       int colon = decoded.indexOf(':');
       if (colon <= 0 || colon == decoded.length() - 1) {
