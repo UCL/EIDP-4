@@ -19,8 +19,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class JwtTest {
   
-  private final String apiKeySecret = "lIySuazq3y2dCKaJhmJyuA==";
-  private final String credentialsEncoding = "UTF-8";
+  private static final String apiKeySecret = "lIySuazq3y2dCKaJhmJyuA==";
+  private static final String credentialsEncoding = "UTF-8";
   private final Key apiKey;
   private String token;
   private CallerClaims expected;
@@ -34,7 +34,6 @@ public class JwtTest {
     expected = new CallerClaims("usertest@ucl.ac.uk","eidp");
     long millisInYear = 31536000000L;
     token = Jwt.createJwtToken(expected, apiKey, millisInYear);
-    System.out.println(token);
     String jwtRegex = "^[a-zA-Z0-9\\-_]+?\\.[a-zA-Z0-9\\-_]+?\\.([a-zA-Z0-9\\-_]+)?$";
     Pattern pattern = Pattern.compile(jwtRegex);
     Matcher matcher = pattern.matcher(token);

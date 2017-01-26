@@ -31,11 +31,18 @@ public class CallerClaims {
     return uid.toString();
   }
   
+  /**
+   * Returns the expiration date.
+   * @return returns a clone copy of the data of expiration.
+   */
   public Date getExp() {
+    if (null != exp) {
+      return (Date) exp.clone();
+    }
     return exp;
   }
   
   public void setExp(Date exp) {
-    this.exp = exp;
+    this.exp = new Date(exp.getTime());
   }
 }
