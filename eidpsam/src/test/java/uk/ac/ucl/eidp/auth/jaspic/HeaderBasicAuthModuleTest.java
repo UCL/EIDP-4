@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Unit tests for HeaderBasicAuthModule.
- * @author rebmdgu
+ * @author David Guzman
  */
 public class HeaderBasicAuthModuleTest {
   
@@ -40,7 +40,8 @@ public class HeaderBasicAuthModuleTest {
    */
   public HeaderBasicAuthModuleTest() {
     Map<String, String> map = new HashMap<>();
-    map.put("username_header", "X-Forwarded-User");
+    map.put("jwt.secret", "lIySuazq3y2dCKaJhmJyuA==");
+    map.put("jwt.validfor", "600000");
     options = Collections.unmodifiableMap(map);
     
     when(mockRequestPolicy.isMandatory()).thenReturn(false);
@@ -54,26 +55,65 @@ public class HeaderBasicAuthModuleTest {
   }
   
   @Test
-  public void testValidateRequest() throws AuthException {
+  public void testValidateRequestSecure() throws AuthException {
     final MessageInfo messageInfo = mock(MessageInfo.class);
     final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
     when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
     final Subject client = new Subject();
     
-    // 1a. Not secure connections must return SEND_FAILURE by default
+    // Connections that are not secure must return SEND_FAILURE by default
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SEND_FAILURE);
-    
-    // 1b. Return TRUE for isSecure()
+  }
+  
+  @Test
+  public void testValidateRequestAuthHeader() throws AuthException {
+    final MessageInfo messageInfo = mock(MessageInfo.class);
+    final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+    when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+    final Subject client = new Subject();
+    // Return TRUE for isSecure()
     when(servletRequest.isSecure()).thenReturn(Boolean.TRUE);
-    
-    // 2a. HttpServletRequest header returns null;
+    // Token authorisation mandatory for all resources except for authentication
+    when(mockRequestPolicy.isMandatory()).thenReturn(Boolean.FALSE);
+    // HttpServletRequest header returns null;
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.FAILURE);
+  }
+  
+  @Test
+  public void testValidateRequestAuthBasic() throws AuthException {
+    final MessageInfo messageInfo = mock(MessageInfo.class);
+    final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+    when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+    final Subject client = new Subject();
+    // Return TRUE for isSecure()
+    when(servletRequest.isSecure()).thenReturn(Boolean.TRUE);
+    // Token authorisation mandatory for all resources except for authentication
+    when(mockRequestPolicy.isMandatory()).thenReturn(Boolean.FALSE);
     
-    // 2b. Set value of Authorization header to a valid string.
     when(servletRequest.getHeader("Authorization")).thenReturn("Basic dXNlcjpwYXNzd29yZA==");
     PasswordValidationCallback pwc = mock(PasswordValidationCallback.class);
     when(pwc.getResult()).thenReturn(Boolean.TRUE);
     module.setPasswordValidationCallback(pwc);
+    assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SUCCESS);
+  }
+  
+  @Test
+  public void testValidateRequestToken() throws AuthException {
+    final MessageInfo messageInfo = mock(MessageInfo.class);
+    final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+    when(messageInfo.getRequestMessage()).thenReturn(servletRequest);
+    final Subject client = new Subject();
+
+    // Return TRUE for isSecure()
+    when(servletRequest.isSecure()).thenReturn(Boolean.TRUE);
+    
+    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlaWRwIiwiaWF0IjoxNDg1MzYxNDkzLC"
+            + "JleHAiOjE1MTY4OTc5NjYsImF1ZCI6IiIsInN1YiI6InVzZXJ0ZXN0QHVjbC5hYy51ayIsIkdpdmVuTmFtZS"
+            + "I6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2"
+            + "xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.9wNDLzO2UQWen2cCHG-5-iolwBpgXA"
+            + "PTrJWZAuX0zwc";
+    when(mockRequestPolicy.isMandatory()).thenReturn(Boolean.TRUE);
+    when(servletRequest.getHeader("Authorization")).thenReturn("Bearer " + token);
     assertEquals(module.validateRequest(messageInfo, client, null), AuthStatus.SUCCESS);
   }
   
