@@ -1,5 +1,9 @@
 version: v1.5.2
-ignore: {}
+ignore:
+  'npm:qs:20170213':
+    - snyk > request > qs:
+        reason: None given
+        expires: '2017-04-05T11:49:45.673Z'
 patch:
   'npm:moment:20161019':
     - ng2-bootstrap > moment:
