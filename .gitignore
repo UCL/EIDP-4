@@ -15,3 +15,5 @@ target/
 .vagrant/
 
 *~
+
+nb-configuration.xml
