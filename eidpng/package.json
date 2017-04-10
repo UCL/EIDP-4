@@ -19,6 +19,13 @@
     "tslint": "^3.15.1",
     "typescript": "~2.1.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UCL/EIDP-4.git"
+  },
+  "keywords": [
+    "angular"
+  ],
   "name": "eidpng",
   "version": "4.0.0",
   "description": "Angular 2 application for EIDP4",
@@ -63,6 +70,5 @@
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4"
-  },
-  "snyk": true
+  }
 }
