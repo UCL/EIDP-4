@@ -13,8 +13,9 @@ module.exports = function(config) {
 
     plugins: [
       require('karma-jasmine'),
-      require('karma-chrome-launcher'),
-      require('karma-jasmine-html-reporter')
+      require('karma-firefox-launcher'),
+      require('karma-phantomjs-launcher'),
+      require('karma-jasmine-html-reporter') // click "Debug" in browser to see it
     ],
 
     client: {
@@ -72,9 +73,9 @@ module.exports = function(config) {
 
       // Paths for debugging with source maps in dev tools
       { pattern: appBase + '**/*.ts', included: false, watched: false },
-      { pattern: appBase + '**/*.js.map', included: false, watched: false },
+      { pattern: appBase + '**/*.map', included: false, watched: false },
       { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
-      { pattern: testingBase + '**/*.js.map', included: false, watched: false}
+      { pattern: testingBase + '**/*.map', included: false, watched: false}
     ],
 
     // Proxied base paths for loading assets
@@ -91,7 +92,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
     singleRun: false
   })
 }
