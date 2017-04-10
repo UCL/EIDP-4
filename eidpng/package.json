@@ -48,8 +48,7 @@
     "start": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "pree2e": "npm run build:e2e",
     "snyk-test": "snyk test",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "snyk-protect": "snyk protect"
   },
   "keywords": [],
   "author": "",
