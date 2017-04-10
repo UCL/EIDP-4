@@ -47,16 +47,6 @@
           </execution>
 
           <execution>
-            <id>npm-snyk</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>run snyk-test</arguments>
-            </configuration>
-          </execution>
-
-          <execution>
             <id>karma-tests</id>
             <goals>
               <goal>karma</goal>
