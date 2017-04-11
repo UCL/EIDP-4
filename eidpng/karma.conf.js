@@ -35,6 +35,7 @@ module.exports = function(config) {
     files: [
       // System.js for module loading
       'node_modules/systemjs/dist/system.src.js',
+      'node_modules/systemjs/dist/system-polyfills.js',
 
       // Polyfills
       'node_modules/core-js/client/shim.js',
@@ -72,7 +73,7 @@ module.exports = function(config) {
       { pattern: appBase + '**/*.css', included: false, watched: true },
 
       // Paths for debugging with source maps in dev tools
-      { pattern: appBase + '**/*.ts', included: false, watched: false },
+      { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
       { pattern: appBase + '**/*.map', included: false, watched: false },
       { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
       { pattern: testingBase + '**/*.map', included: false, watched: false}
@@ -93,6 +94,6 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['PhantomJS'],
-    singleRun: false
+    singleRun: true
   })
 }
