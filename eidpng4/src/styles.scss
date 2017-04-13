@@ -1,3 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'variables'; 
 @import '../node_modules/bootstrap/scss/bootstrap';
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.full-height-container {
+    height: 100%;
+    padding: 0;
+}
