@@ -35,6 +35,7 @@ module.exports = function (config) {
               ? ['progress', 'coverage-istanbul']
               : ['progress', 'kjhtml'],
     port: 9876,
+    browserNoActivityTimeout: 15000,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,

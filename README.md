@@ -37,8 +37,37 @@ EEEEEEEEEEEEEEEEEEEEEEIIIIIIIIIIDDDDDDDDDDDDD      PPPPPPPPPP                444
 - Java 8
 - Apache Maven 3.1
 
+## Development
+
+### Cloud 9
+
+The default locale (C.UTF-8) in Cloud 9 needs to be updated:
+
 ```bash
-mvn clean verify -P arquillian-glassfish-remote
-mvn clean verify -P arquillian-wildfly-remote
+sudo locale-gen en_GB.UTF-8
 ```
 
+Add the following lines to `~/.bashrc` after the line sourcing `/etc/apache2/envvars`:
+
+```bash
+export LC_ALL=en_GB.UTF-8
+export LANG=en_GB.UTF-8
+export LANGUAGE=en_GB.UTF-8
+```
+
+Close terminal and open a new one
+
+#### eidpng
+
+Update nodejs to version 6:
+
+```bash
+nvm install 6
+nvm alias default 6
+```
+
+Install Angular CLI:
+
+```bash
+npm install -g @angular/cli
+```
