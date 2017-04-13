@@ -7,12 +7,19 @@ import { LoginComponent } from './login.component';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authServiceStub: {};
 
   beforeEach(async(() => {
+
+    authServiceStub = {
+    };
+
     TestBed.configureTestingModule({
       declarations: [ LoginComponent ],
       imports: [ RouterTestingModule ],
-      providers: [ AuthService ]
+      providers: [
+        {provide: AuthService, useValue: authServiceStub}
+      ]
     })
     .compileComponents();
   }));

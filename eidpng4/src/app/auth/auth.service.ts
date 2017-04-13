@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import * as models from './model/models';
+import * as models from './model/authmodel';
 
 @Injectable()
 export class AuthService {

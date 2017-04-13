@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 describe('AuthService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
+      imports: [ HttpModule ],
       providers: [
         AuthService,
         { provide: ConnectionBackend, useClass: MockBackend }
