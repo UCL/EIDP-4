@@ -9,6 +9,7 @@ import { CoverComponent } from './cover/cover.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AuthModule } from './auth/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { LoginModule } from './login/login.module';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { LoginModule } from './login/login.module';
     AppRoutingModule,
     AuthModule,
     BrowserModule,
+    DashboardModule,
     FormsModule,
     HttpModule,
     LoginModule
