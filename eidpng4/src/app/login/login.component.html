@@ -1,3 +1,44 @@
-<p>
-  login works!
-</p>
+<div (mousemove)="resetProgressBar()" (keypress)="resetProgressBar()" class="container full-height-container">
+  <div class="full-height-row">
+    <div class="full-height-wrapper">
+      <div class="full-height-inner">
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-4">
+            <pre>
+              <code>
+ _____ _  ____  ____     _
+/  __// \/  _ \/  __\/\ / |
+|  \  | || | \||  \/|\_\| |
+|  /_ | || |_/||  __/   | |
+\____\\_/\____/\_/      \_|
+
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-4">
+            <form class="form-signin" (ngSubmit)="onLogin(username.value, password.value)" #authForm="ngForm">
+              <h2 class="form-signin-heading">{{heading}}</h2>
+              <div class="form-group">
+                <label class="sr-only" for="inputUsername">Username</label>
+                <input type="text" #username class="form-control" id="inputUsername" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="inputPassword">Password</label>
+                <input type="password" #password class="form-control" id="inputPassword" placeholder="Password">
+              </div>
+              <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!authForm.form.valid">Sign in</button>
+            </form>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-4">
+            <progress class="progress progress-striped" value="{{pgbValue}}" max="{{timeout}}"></progress>
+            <alert type="info">Hello from ng2-bootstrap</alert>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { CoverComponent } from './cover/cover.component';
 
 import { AppRoutingModule } from './app-routing.module';
+
+import { AuthModule } from './auth/auth.module';
 import { LoginModule } from './login/login.module';
 
 @NgModule({
@@ -16,6 +18,7 @@ import { LoginModule } from './login/login.module';
   ],
   imports: [
     AppRoutingModule,
+    AuthModule,
     BrowserModule,
     FormsModule,
     HttpModule,

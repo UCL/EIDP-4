@@ -9,20 +9,31 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  
+
   timeout = 180; // 3 minutes
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
   constructor(
     private authService: AuthService,
-    private router: Router  
+    private router: Router
   ) { }
 
   ngOnInit() {
     console.log('ngOnInit');
     setInterval(() => this.addIncrement(), 1000);
   }
+
+  onLogin(username, password) {
+    this.authService.login(username, password).subscribe((result) => {
+      if (result) {
+        this.router.navigate(['d']);
+      } else {
+        console.log("went for else");
+        this.router.navigate(['d']);
+      }
+    });
+}
 
   addIncrement() {
     if (this.pgbValue == this.timeout) {
@@ -39,5 +50,5 @@ export class LoginComponent implements OnInit {
   redirectToCover() {
     this.router.navigate(['/h']);
   }
-  
+
 }
