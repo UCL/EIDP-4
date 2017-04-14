@@ -5,6 +5,8 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { CanvasComponent } from './canvas/canvas.component';
+import { EntriesComponent } from './entries/entries.component';
 
 @NgModule({
   imports: [
@@ -12,6 +14,6 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     CommonModule,
     DashboardRoutingModule
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, CanvasComponent, EntriesComponent]
 })
 export class DashboardModule { }
