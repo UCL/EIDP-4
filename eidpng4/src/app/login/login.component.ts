@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('ngOnInit');
     setInterval(() => this.addIncrement(), 1000);
   }
 
@@ -50,5 +49,7 @@ export class LoginComponent implements OnInit {
   redirectToCover() {
     this.router.navigate(['/h']);
   }
+
+
 
 }

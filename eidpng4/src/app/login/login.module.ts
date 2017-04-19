@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
@@ -12,7 +13,8 @@ import { LoginComponent } from './login.component';
     AlertModule.forRoot(),
     CommonModule,
     FormsModule,
-    LoginRoutingModule
+    LoginRoutingModule,
+    ProgressbarModule.forRoot()
   ],
   declarations: [LoginComponent]
 })
