@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
@@ -14,13 +15,26 @@ export class LoginComponent implements OnInit {
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
+  authForm: FormGroup;
+  username: string;
+  password: string;
+
   constructor(
     private authService: AuthService,
+    private formBuilder: FormBuilder,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.buildForm();
     setInterval(() => this.addIncrement(), 1000);
+  }
+
+  buildForm(): void {
+    this.authForm = this.formBuilder.group({
+      'inputUsername' : [this.username, Validators.required],
+      'inputPassword' : [this.password, Validators.required]
+    });
   }
 
   onLogin(username, password) {

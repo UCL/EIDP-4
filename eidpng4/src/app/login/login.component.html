@@ -10,23 +10,23 @@
     <div class="col-6">
       <div class="row">
         <div class="col-10">
-          <form class="form-signin" (ngSubmit)="onLogin(username.value, password.value)" #authForm="ngForm">
+          <form [formGroup]="authForm" class="form-signin" (ngSubmit)="onLogin(username.value, password.value)">
             <div class="form-group">
               <label class="sr-only" for="inputUsername">Username</label>
-              <input type="text" #username class="form-control" id="inputUsername" placeholder="Username">
+              <input type="text" class="form-control" formControlName="inputUsername" id="inputUsername" placeholder="Username" required>
             </div>
             <div class="form-group">
               <label class="sr-only" for="inputPassword">Password</label>
-              <input type="password" #password class="form-control" id="inputPassword" placeholder="Password">
+              <input type="password" class="form-control" formControlName="inputPassword" id="inputPassword" placeholder="Password" required>
             </div>
-            <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!authForm.form.valid">Sign in</button>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!authForm.valid">Sign in</button>
           </form>
         </div>
       </div>
       <div class="row">
         <div class="col-10">
           <progress class="progress progress-striped w-100" [value]="pgbValue" [max]="timeout"></progress>
-          <alert type="info">Hello from ng2-bootstrap</alert>
+          <alert type="info">Alert from ngx-bootstrap</alert>
         </div>
       </div>
     </div>
