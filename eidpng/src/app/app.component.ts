@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'eidp-app',
-  templateUrl: 'app/app.component.html'
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent  { }
+export class AppComponent {
+  messages = 'Messages';
+}

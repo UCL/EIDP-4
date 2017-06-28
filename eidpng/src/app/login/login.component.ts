@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
 
 @Component({
-  templateUrl: 'app/login/login.component.html',
-  styleUrls: ['app/login/login.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -13,17 +15,30 @@ export class LoginComponent implements OnInit {
   pgbValue = 1;
   heading = 'EIDP4 Database';
 
+  authForm: FormGroup;
+  username: string = '';
+  password: string = '';
+  errorMessage = '';
+
   constructor(
     private authService: AuthService,
+    private formBuilder: FormBuilder,
     private router: Router
   ) { }
 
   ngOnInit() {
-    console.log('ngOnInit');
+    this.buildForm();
     setInterval(() => this.addIncrement(), 1000);
   }
 
-  onLogin(username: string, password: string) {
+  buildForm(): void {
+    this.authForm = this.formBuilder.group({
+      inputUsername : [this.username, Validators.required],
+      inputPassword : [this.password, Validators.required]
+    });
+  }
+
+  onLogin(username, password) {
     this.authService.login(username, password).subscribe((result) => {
       if (result) {
         this.router.navigate(['d']);
@@ -48,5 +63,11 @@ export class LoginComponent implements OnInit {
 
   redirectToCover() {
     this.router.navigate(['/h']);
+  }
+
+  validationMessages = {
+    'required': 'Field value is required.',
+    'minlength': 'Field value must be at least 4 characters long.',
+    'maxlength': 'Field value cannot be more than 24 characters long.'
   }
 }

@@ -1,44 +1,35 @@
-<div (mousemove)="resetProgressBar()" (keypress)="resetProgressBar()" class="container full-height-container">
-  <div class="full-height-row">
-    <div class="full-height-wrapper">
-      <div class="full-height-inner">
-        <div class="row">
-          <div class="col-xs-4 col-xs-offset-4">
-            <pre>
-              <code>
- _____ _  ____  ____     _ 
-/  __// \/  _ \/  __\/\ / |
-|  \  | || | \||  \/|\_\| |
-|  /_ | || |_/||  __/   | |
-\____\\_/\____/\_/      \_|
-                           
-              </code>
-            </pre>
-          </div>
+<div (mousemove)="resetProgressBar()" (keypress)="resetProgressBar()" class="container">
+
+  <div class="row align-items-center h-100 bg-inverse bg-shader">
+    <div class="col">
+      <div class="jumbotron login-heading">
+        <h2 class="display-3 text-white">{{heading}}</h2>
+        <p class="lead text-white">Login to {{heading}}</p>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <div class="col-10">
+          <form [formGroup]="authForm" class="form-signin" (ngSubmit)="onLogin(username.value, password.value)">
+            <div class="form-group">
+              <label class="sr-only" for="inputUsername">Username</label>
+              <input type="text" class="form-control" formControlName="inputUsername" id="inputUsername" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="inputPassword">Password</label>
+              <input type="password" class="form-control" formControlName="inputPassword" id="inputPassword" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!authForm.valid">Sign in</button>
+          </form>
         </div>
-        <div class="row">
-          <div class="col-xs-4 col-xs-offset-4">
-            <form class="form-signin" (ngSubmit)="onLogin(username.value, password.value)" #authForm="ngForm">
-              <h2 class="form-signin-heading">{{heading}}</h2>
-              <div class="form-group">
-                <label class="sr-only" for="inputUsername">Username</label>
-                <input type="text" #username class="form-control" id="inputUsername" placeholder="Username">
-              </div>
-              <div class="form-group">
-                <label class="sr-only" for="inputPassword">Password</label>
-                <input type="password" #password class="form-control" id="inputPassword" placeholder="Password">
-              </div>
-              <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!authForm.form.valid">Sign in</button>
-            </form>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4 col-xs-offset-4">
-            <progress class="progress progress-striped" value="{{pgbValue}}" max="{{timeout}}"></progress>
-            <alert type="info">Hello from ng2-bootstrap</alert>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-10">
+          <progress class="progress progress-striped w-100" [value]="pgbValue" [max]="timeout"></progress>
+          <alert *ngIf="errorMessage" type="danger">Alert from ngx-bootstrap</alert>
         </div>
       </div>
     </div>
   </div>
+
 </div>

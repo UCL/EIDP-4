@@ -1,35 +1,32 @@
-import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
-import { CollapseModule } from 'ngx-bootstrap';
-import { ButtonsModule } from 'ngx-bootstrap';
+import { AppComponent } from './app.component';
+import { CoverComponent } from './cover/cover.component';
 
-import { AppComponent }  from './app.component';
-import { CoverComponent } from './cover.component';
-import { CanvasComponent } from './canvas.component';
-import { DashboardComponent } from './dashboard.component';
-import { EntriesComponent } from './entries.component';
+import { AppRoutingModule } from './app-routing.module';
 
-import { AppRoutingModule } from './app.routing.module';
-import { LoginModule } from './login/login.module';
 import { AuthModule } from './auth/auth.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { LoginModule } from './login/login.module';
 
 @NgModule({
-  imports:      [ 
-    BrowserModule,
-    AppRoutingModule,
-    LoginModule,
-    AuthModule,
-    CollapseModule.forRoot(),
-    ButtonsModule.forRoot()
-  ],
-  declarations: [ 
+  declarations: [
     AppComponent,
-    CoverComponent,
-    CanvasComponent,
-    DashboardComponent,
-    EntriesComponent
+    CoverComponent
   ],
-  bootstrap:    [ AppComponent ]
+  imports: [
+    AppRoutingModule,
+    AuthModule,
+    BrowserModule,
+    DashboardModule,
+    FormsModule,
+    HttpModule,
+    LoginModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

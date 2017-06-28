@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgForm } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertComponent, AlertConfig } from 'ngx-bootstrap/alert';
 
@@ -18,8 +18,8 @@ describe('LoginComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ AlertComponent, LoginComponent, NgForm ],
-      imports: [ RouterTestingModule ],
+      declarations: [ AlertComponent, LoginComponent ],
+      imports: [ ReactiveFormsModule, RouterTestingModule ],
       providers: [
         AlertConfig,
         {provide: AuthService, useValue: authServiceStub}
