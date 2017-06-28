@@ -19,54 +19,41 @@
   <build>
     <plugins>
       <plugin>
-	<groupId>com.github.eirslett</groupId>
+        <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-	<version>1.4</version>
-	<configuration>
+        <version>1.4</version>
+        <configuration>
           <installDirectory>target</installDirectory>
         </configuration>
 
-	<executions>
+        <executions>
 
-	  <execution>
-	    <id>install-node-and-npm</id>
-	    <goals>
-	      <goal>install-node-and-npm</goal>
-	    </goals>
-	    <phase>generate-resources</phase>
-	    <configuration>
-	      <nodeVersion>v6.9.5</nodeVersion>
-<!--
-	      <npmVersion>3.10.8</npmVersion>
--->
-	    </configuration>
-	  </execution>
+          <execution>
+            <id>install-node-and-npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <nodeVersion>v6.11.0</nodeVersion>
+            </configuration>
+          </execution>
 
-	  <execution>
-	    <id>npm-install</id>
-	    <goals>
-	      <goal>npm</goal>
-	    </goals>
-	  </execution>
+          <execution>
+            <id>npm-install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
 
-	  <execution>
-	    <id>npm-snyk</id>
-	    <goals>
-	      <goal>npm</goal>
-	    </goals>
-	    <configuration>
-	      <arguments>run snyk-test</arguments>
-	    </configuration>
-	  </execution>
-
-	  <execution>
+          <execution>
             <id>karma-tests</id>
             <goals>
               <goal>karma</goal>
             </goals>
           </execution>
-	  
-	</executions>
+
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -23,6 +23,9 @@
   </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- versions -->
+    <plu.coveralls.version>4.3.0</plu.coveralls.version>
+    <plu.jacoco.version>0.7.9</plu.jacoco.version>
   </properties>
   <modules>
     <module>eidpdata</module>
@@ -36,7 +39,7 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
+        <version>${plu.coveralls.version}</version>
         <configuration>
           <repoToken>${env.COVERALLS_REPO_KEY}</repoToken>
         </configuration>
@@ -44,7 +47,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.9</version>
+        <version>${plu.jacoco.version}</version>
         <executions>
           <execution>
             <goals>
