@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   authForm: FormGroup;
   username: string;
   password: string;
+  errorMessage = '';
 
   constructor(
     private authService: AuthService,
@@ -46,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['d']);
       }
     });
-}
+  }
 
   addIncrement() {
     if (this.pgbValue == this.timeout) {
@@ -64,6 +65,9 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/h']);
   }
 
-
-
+  validationMessages = {
+    'required': 'Field value is required.',
+    'minlength': 'Field value must be at least 4 characters long.',
+    'maxlength': 'Field value cannot be more than 24 characters long.'
+  }
 }
